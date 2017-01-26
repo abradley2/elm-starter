@@ -1,5 +1,6 @@
 module Messages exposing (..)
 
+import Home.Messages
 
 type Msg
-    = NoOp
+    = HomeMsg Home.Messages.Msg
