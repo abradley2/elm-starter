@@ -1,14 +1,11 @@
-module View exposing (rootView)
+module View exposing (..)
 
-import Types exposing (Msg, Model)
-import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (..)
-import Login.View exposing (loginView)
+import Html exposing (Html, div, text)
+import Messages exposing (Msg)
+import Models exposing (Model)
 
 
-rootView : Model -> Html Msg
-rootView model =
-    div
-        [ class "container" ]
-        [ loginView model ]
+view : Model -> Html Msg
+view model =
+    div []
+        [ text model ]
