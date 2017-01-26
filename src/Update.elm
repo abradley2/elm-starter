@@ -10,7 +10,7 @@ update msg model =
     case msg of
         HomeMsg subMsg ->
             let
-                ( updatedPeople, cmd ) =
-                    Home.Update.update subMsg model.people
+                ( updatedHome, cmd ) =
+                    Home.Update.update subMsg model.home
             in
-                ( { model | people = updatedPeople }, Cmd.map HomeMsg cmd )
+                ( { model | home = updatedHome }, Cmd.map HomeMsg cmd )

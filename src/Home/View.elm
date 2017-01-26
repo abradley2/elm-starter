@@ -1,16 +1,20 @@
 module Home.View exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (..)
+import Html.Events exposing (..)
 import Home.Messages exposing (..)
 import Home.Models exposing (Person)
+import Models exposing (Model)
 
 
-view : List Person -> Html Msg
-view people =
+view : Model -> Html Msg
+view model =
     div []
-        [ nav people
-        , list people
+        [ nav model.home.people
+        , input [ value model.home.newName, onInput EditNewName ] []
+        , button [ onClick (AddPerson model.home.newName) ] [ text "Add Person" ]
+        , list model.home.people
         ]
 
 

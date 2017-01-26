@@ -8145,19 +8145,185 @@ var _elm_lang$html$Html_Attributes$classList = function (list) {
 };
 var _elm_lang$html$Html_Attributes$style = _elm_lang$virtual_dom$VirtualDom$style;
 
+var _elm_lang$html$Html_Events$keyCode = A2(_elm_lang$core$Json_Decode$field, 'keyCode', _elm_lang$core$Json_Decode$int);
+var _elm_lang$html$Html_Events$targetChecked = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'checked',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$bool);
+var _elm_lang$html$Html_Events$targetValue = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'value',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$string);
+var _elm_lang$html$Html_Events$defaultOptions = _elm_lang$virtual_dom$VirtualDom$defaultOptions;
+var _elm_lang$html$Html_Events$onWithOptions = _elm_lang$virtual_dom$VirtualDom$onWithOptions;
+var _elm_lang$html$Html_Events$on = _elm_lang$virtual_dom$VirtualDom$on;
+var _elm_lang$html$Html_Events$onFocus = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'focus',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onBlur = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'blur',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onSubmitOptions = _elm_lang$core$Native_Utils.update(
+	_elm_lang$html$Html_Events$defaultOptions,
+	{preventDefault: true});
+var _elm_lang$html$Html_Events$onSubmit = function (msg) {
+	return A3(
+		_elm_lang$html$Html_Events$onWithOptions,
+		'submit',
+		_elm_lang$html$Html_Events$onSubmitOptions,
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onCheck = function (tagger) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'change',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetChecked));
+};
+var _elm_lang$html$Html_Events$onInput = function (tagger) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'input',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetValue));
+};
+var _elm_lang$html$Html_Events$onMouseOut = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseout',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseOver = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseover',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseLeave = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseleave',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseEnter = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseenter',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseUp = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseup',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseDown = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mousedown',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onDoubleClick = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'dblclick',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onClick = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'click',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$Options = F2(
+	function (a, b) {
+		return {stopPropagation: a, preventDefault: b};
+	});
+
+var _user$project$Home_Messages$AddPerson = function (a) {
+	return {ctor: 'AddPerson', _0: a};
+};
+var _user$project$Home_Messages$EditNewName = function (a) {
+	return {ctor: 'EditNewName', _0: a};
+};
 var _user$project$Home_Messages$NoOp = {ctor: 'NoOp'};
 
-var _user$project$Home_Models$new = {id: '0', name: ''};
+var _user$project$Home_Models$home = {
+	people: {
+		ctor: '::',
+		_0: {id: '0', name: 'Tony'},
+		_1: {ctor: '[]'}
+	},
+	newName: 'New Person'
+};
 var _user$project$Home_Models$Person = F2(
 	function (a, b) {
 		return {id: a, name: b};
 	});
+var _user$project$Home_Models$HomeModel = F2(
+	function (a, b) {
+		return {people: a, newName: b};
+	});
 
 var _user$project$Home_Update$update = F2(
-	function (message, people) {
+	function (message, homeModel) {
 		var _p0 = message;
-		return {ctor: '_Tuple2', _0: people, _1: _elm_lang$core$Platform_Cmd$none};
+		switch (_p0.ctor) {
+			case 'AddPerson':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						homeModel,
+						{
+							newName: 'New Person',
+							people: A2(
+								_elm_lang$core$List$append,
+								homeModel.people,
+								{
+									ctor: '::',
+									_0: {id: '1', name: _p0._0},
+									_1: {ctor: '[]'}
+								})
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'EditNewName':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						homeModel,
+						{newName: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				return {ctor: '_Tuple2', _0: homeModel, _1: _elm_lang$core$Platform_Cmd$none};
+		}
 	});
+
+var _user$project$Models$initialModel = {home: _user$project$Home_Models$home};
+var _user$project$Models$Model = function (a) {
+	return {home: a};
+};
 
 var _user$project$Home_View$playerRow = function (person) {
 	return A2(
@@ -8290,17 +8456,48 @@ var _user$project$Home_View$nav = function (people) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Home_View$view = function (people) {
+var _user$project$Home_View$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: _user$project$Home_View$nav(people),
+			_0: _user$project$Home_View$nav(model.home.people),
 			_1: {
 				ctor: '::',
-				_0: _user$project$Home_View$list(people),
-				_1: {ctor: '[]'}
+				_0: A2(
+					_elm_lang$html$Html$input,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$value(model.home.newName),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onInput(_user$project$Home_Messages$EditNewName),
+							_1: {ctor: '[]'}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$button,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onClick(
+								_user$project$Home_Messages$AddPerson(model.home.newName)),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Add Person'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: _user$project$Home_View$list(model.home.people),
+						_1: {ctor: '[]'}
+					}
+				}
 			}
 		});
 };
@@ -8309,28 +8506,17 @@ var _user$project$Messages$HomeMsg = function (a) {
 	return {ctor: 'HomeMsg', _0: a};
 };
 
-var _user$project$Models$initialModel = {
-	people: {
-		ctor: '::',
-		_0: A2(_user$project$Home_Models$Person, '1', 'Tony'),
-		_1: {ctor: '[]'}
-	}
-};
-var _user$project$Models$Model = function (a) {
-	return {people: a};
-};
-
 var _user$project$Update$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
-		var _p1 = A2(_user$project$Home_Update$update, _p0._0, model.people);
-		var updatedPeople = _p1._0;
+		var _p1 = A2(_user$project$Home_Update$update, _p0._0, model.home);
+		var updatedHome = _p1._0;
 		var cmd = _p1._1;
 		return {
 			ctor: '_Tuple2',
 			_0: _elm_lang$core$Native_Utils.update(
 				model,
-				{people: updatedPeople}),
+				{home: updatedHome}),
 			_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Messages$HomeMsg, cmd)
 		};
 	});
@@ -8339,7 +8525,7 @@ var _user$project$View$page = function (model) {
 	return A2(
 		_elm_lang$html$Html$map,
 		_user$project$Messages$HomeMsg,
-		_user$project$Home_View$view(model.people));
+		_user$project$Home_View$view(model));
 };
 var _user$project$View$view = function (model) {
 	return A2(

@@ -1,14 +1,14 @@
 module Models exposing (..)
 
-import Home.Models exposing (Person)
+import Home.Models exposing (HomeModel, home)
 
 
 type alias Model =
-    { people : List Person
+    { home : HomeModel
     }
 
 
 initialModel : Model
 initialModel =
-    { people = [ Person "1" "Tony" ]
+    { home = home
     }

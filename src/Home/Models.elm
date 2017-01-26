@@ -10,9 +10,15 @@ type alias Person =
     , name : String
     }
 
+type alias HomeModel =
+    { people : List Person
+    , newName : String
+    }
 
-new : Person
-new =
-    { id = "0"
-    , name = ""
+home : HomeModel
+home =
+    { people =
+        [ { id = "0", name = "Tony" }
+        ]
+    , newName = "New Person"
     }
