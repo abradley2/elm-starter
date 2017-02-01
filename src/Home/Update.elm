@@ -5,6 +5,18 @@ import Home.Models exposing (HomeModel)
 import List exposing (..)
 
 
+getMessage : -> Cmd Msg
+getMessage =
+    let
+        url =
+            "http://localhost:3000/api/message"
+        request =
+            Http.get url decodeGifUrl
+    in
+        Http.send GetMessage request
+
+
+
 update : Msg -> HomeModel -> ( HomeModel, Cmd Msg )
 update message homeModel =
     case message of
