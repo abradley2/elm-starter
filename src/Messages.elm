@@ -1,9 +1,8 @@
 module Messages exposing (..)
 
-import Home.Messages
-import Ui.Messages
+import Home.Messages exposing (HomeMsg)
 
 
 type Msg
-    = HomeMsg Home.Messages.Msg
-    | UiMsg Ui.Messages.Msg
+    = AppMsg
+    | HomeMsg

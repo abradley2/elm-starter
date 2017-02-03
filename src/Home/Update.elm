@@ -1,17 +1,14 @@
 module Home.Update exposing (..)
 
-import Http
-import Home.Messages exposing (Msg(..))
 import Home.Models exposing (HomeModel)
-import List exposing (..)
-import Json.Decode exposing (..)
+import Home.Messages exposing (Msg(..))
 
 
-update : Msg -> HomeModel -> ( HomeModel, Cmd Msg )
-update message homeModel =
+update : HomeModel -> Msg -> ( HomeModel, Cmd AppMsg )
+update homeModel message =
     case message of
         EditMessage message ->
             ( { homeModel | message = message }, Cmd.none )
 
         NoOp ->
-            ( homeModel, Cmd.none )
+            ( hommeModel, Cmd.none )
