@@ -6,12 +6,12 @@ import Models exposing (Model)
 import Home.View
 
 
-view : Model -> Html AppMsg
+view : Model -> Html Msg
 view model =
     div []
         [ page model ]
 
 
-page : Model -> Html AppMsg
+page : Model -> Html Msg
 page model =
-    Html.map AppMsg (Home.View.view model)
+    Html.map HomeMsg (Home.View.view model)

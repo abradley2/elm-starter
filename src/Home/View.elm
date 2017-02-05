@@ -3,12 +3,17 @@ module Home.View exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Messages exposing (Msg(..))
 import Models exposing (Model)
+import Home.Messages exposing (Msg(..))
 
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ h3 [] [ text "Hello World!" ]
-        ]
+    let
+        home =
+            model.home
+    in
+        div []
+            [ h3 [] [ text home.message ]
+            , input [ type_ "text", value home.message, onInput EditMessage ] []
+            ]

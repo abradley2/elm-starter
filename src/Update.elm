@@ -1,17 +1,17 @@
 module Update exposing (..)
 
-import Messages exposing (Msg, Msg(..))
+import Messages exposing (Msg(..))
 import Models exposing (Model)
 import Home.Update
 
 
-update : Msg -> Model -> ( Model, Cmd AppMsg )
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        HomeMsg subMsg ->
+        HomeMsg msg ->
             let
                 ( home, cmd ) =
-                    Home.Update.update subMsg model.home
+                    Home.Update.update model.home msg
             in
                 ( { model | home = home }, Cmd.map HomeMsg cmd )
 
