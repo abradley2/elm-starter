@@ -14,4 +14,4 @@ view model =
 
 page : Model -> Html Msg
 page model =
-    Html.map HomeMsg (Home.View.view model)
+    Html.map HomeMsg (Home.View.view model.taco model)
