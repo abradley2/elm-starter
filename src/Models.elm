@@ -4,7 +4,7 @@ import Home.Models exposing (HomeModel, home)
 
 
 type alias Taco =
-    { tacoMessage : String
+    { message : String
     }
 
 
@@ -16,7 +16,7 @@ type alias Model =
 
 taco : Taco
 taco =
-    { tacoMessage = "I am a Taco"
+    { message = "I am a Taco"
     }
 
 

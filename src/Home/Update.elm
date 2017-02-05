@@ -9,4 +9,10 @@ update : HomeModel -> Msg -> ( HomeModel, Cmd Msg, TacoMsg )
 update homeModel message =
     case message of
         EditMessage message ->
-            ( { homeModel | message = message }, Cmd.none, NoOp )
+            ( { homeModel | message = message }, Cmd.none, NoOp_ )
+
+        EditTacoMessage message ->
+            ( homeModel, Cmd.none, EditMessage_ message )
+
+        NoOp ->
+            ( homeModel, Cmd.none, NoOp_ )

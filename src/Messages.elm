@@ -4,7 +4,8 @@ import Home.Messages
 
 
 type TacoMsg
-    = NoOp
+    = NoOp_
+    | EditMessage_ String
 
 
 type Msg

@@ -16,11 +16,14 @@ updateModel msg model =
                 ( { model | home = home }, Cmd.map HomeMsg cmd, tacoMsg )
 
 
-updateTaco : TacoMsg -> Taco -> ( Taco, Cmd Msg )
-updateTaco tacoMsg taco =
-    case tacoMsg of
-        NoOp ->
-            ( taco, Cmd.none )
+updateTaco : TacoMsg -> Taco -> Taco
+updateTaco msg taco =
+    case msg of
+        EditMessage_ message ->
+            { taco | message = message }
+
+        NoOp_ ->
+            taco
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -29,8 +32,4 @@ update msg model =
         ( newModel, cmds, tacoMsg ) =
             updateModel msg model
     in
-        let
-            ( newTaco, tacoCmd ) =
-                updateTaco tacoMsg newModel.taco
-        in
-            ( { newModel | taco = newTaco }, Cmd.batch [ cmds, tacoCmd ] )
+        ( { newModel | taco = updateTaco tacoMsg newModel.taco }, cmds )

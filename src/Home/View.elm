@@ -16,4 +16,7 @@ view taco model =
         div []
             [ h3 [] [ text home.message ]
             , input [ type_ "text", value home.message, onInput EditMessage ] []
+            , hr [] []
+            , h3 [] [ text taco.message ]
+            , input [ type_ "text", value taco.message, onInput EditTacoMessage ] []
             ]
