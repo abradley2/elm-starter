@@ -1,7 +1,7 @@
 module Update exposing (..)
 
 import Messages exposing (Msg(..), TacoMsg(..))
-import Models exposing (Taco, Model)
+import Models exposing (Model, Taco)
 import Home.Update
 
 
@@ -16,17 +16,21 @@ updateModel msg model =
                 ( { model | home = home }, Cmd.map HomeMsg cmd, tacoMsg )
 
 
-updateTaco : TacoMsg -> Taco -> Taco
+updateTaco : TacoMsg -> Taco -> ( Taco, Cmd Msg )
 updateTaco tacoMsg taco =
     case tacoMsg of
         NoOp ->
-            taco
+            ( taco, Cmd.none )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
-        ( model, cmds, tacoMsg ) =
+        ( newModel, cmds, tacoMsg ) =
             updateModel msg model
     in
-        ( { model | taco = updateTaco tacoMsg }, cmds )
+        let
+            ( newTaco, tacoCmd ) =
+                updateTaco tacoMsg newModel.taco
+        in
+            ( { newModel | taco = newTaco }, Cmd.batch [ cmds, tacoCmd ] )
