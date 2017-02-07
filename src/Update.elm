@@ -29,7 +29,7 @@ updateModel msg model =
                 ( home, cmd, tacoMsg ) =
                     Pages.Home.update model.home msg
             in
-                ( { model | home = home }, Cmd.map HomeMsg cmd, tacoMsg )
+                ( { model | home = home }, Cmd.none, tacoMsg )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
