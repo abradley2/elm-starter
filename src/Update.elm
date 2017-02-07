@@ -5,7 +5,7 @@ import Pages.Home
 
 
 type Msg
-    = HomeMsg Pages.Home.Msg
+    = HomeMsg Pages.Home.HomeMsg
 
 
 type alias Model =

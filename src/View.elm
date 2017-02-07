@@ -7,4 +7,4 @@ import Pages.Home
 
 view : Model -> Html Msg
 view model =
-    Html.map HomeMsg (Pages.Home.view model.home)
+    Html.map Pages.Home.HomeMsg (Pages.Home.view model.home)
