@@ -2,22 +2,27 @@ module Main exposing (..)
 
 import Taco exposing (Taco, taco, TacoMsg(..))
 import Html exposing (..)
+import Navigation exposing (Location)
+import Routing exposing (Route, parseLocation)
 import Pages.Home
 
 
 type Msg
-    = HomeMsg Pages.Home.HomeMsg
+    = OnLocationChange Location
+    | HomeMsg Pages.Home.HomeMsg
 
 
 type alias Model =
     { taco : Taco
+    , route : Routing.Route
     , home : Pages.Home.Model
     }
 
 
-model : Model
-model =
+initialModel : Route -> Model
+initialModel route =
     { home = Pages.Home.model
+    , route = route
     , taco = taco
     }
 
@@ -25,6 +30,13 @@ model =
 updateModel : Msg -> Model -> ( Model, Cmd Msg, TacoMsg )
 updateModel msg model =
     case msg of
+        OnLocationChange location ->
+            let
+                newLocation =
+                    location
+            in
+                ( { model | route = parseLocation newLocation }, Cmd.none, Taco_NoOp )
+
         HomeMsg msg ->
             let
                 ( home, cmd, tacoMsg ) =
@@ -47,9 +59,9 @@ view model =
     Html.map HomeMsg (Pages.Home.view model.home)
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( model, Cmd.none )
+init : Location -> ( Model, Cmd Msg )
+init location =
+    ( initialModel (parseLocation location), Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -59,7 +71,7 @@ subscriptions model =
 
 main : Program Never Model Msg
 main =
-    Html.program
+    Navigation.program OnLocationChange
         { init = init
         , view = view
         , update = update
