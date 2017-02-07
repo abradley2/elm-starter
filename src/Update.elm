@@ -1,29 +1,35 @@
-module Update exposing (..)
+module Update exposing (Model, Msg)
 
-import Messages exposing (Msg(..), TacoMsg(..))
-import Models exposing (Model, Taco)
-import Home.Update
+import Taco exposing (Taco, taco, TacoMsg(..))
+import Pages.Home exposing (HomeModel, HomeMsg)
+
+
+type Msg
+    = HomeMsg
+
+
+type alias Model =
+    { taco : Taco
+    , home : HomeModel
+    }
+
+
+model : Model
+model =
+    { home = Pages.Home.model
+    , taco = taco
+    }
 
 
 updateModel : Msg -> Model -> ( Model, Cmd Msg, TacoMsg )
 updateModel msg model =
     case msg of
-        HomeMsg msg ->
+        HomeMsg ->
             let
                 ( home, cmd, tacoMsg ) =
-                    Home.Update.update model.home msg
+                    Pages.Home.update model.home msg
             in
                 ( { model | home = home }, Cmd.map HomeMsg cmd, tacoMsg )
-
-
-updateTaco : TacoMsg -> Taco -> Taco
-updateTaco msg taco =
-    case msg of
-        EditMessage_ message ->
-            { taco | message = message }
-
-        NoOp_ ->
-            taco
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -32,4 +38,4 @@ update msg model =
         ( newModel, cmds, tacoMsg ) =
             updateModel msg model
     in
-        ( { newModel | taco = updateTaco tacoMsg newModel.taco }, cmds )
+        ( { newModel | taco = Taco.update tacoMsg newModel.taco }, cmds )

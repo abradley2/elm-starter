@@ -1,9 +1,7 @@
 module Main exposing (..)
 
 import Html exposing (Html)
-import Messages exposing (Msg(..))
-import Models exposing (initialModel, Model)
-import Update exposing (update)
+import Update exposing (Msg, Model, model)
 import View exposing (view)
 
 
@@ -15,10 +13,6 @@ init =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.none
-
-
-
--- MAIN
 
 
 main : Program Never Model Msg
