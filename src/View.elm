@@ -1,16 +1,10 @@
 module View exposing (..)
 
 import Html exposing (Html, div, text)
-import Update exposing (Model, Msg)
+import Update exposing (Model, Msg, Msg(..))
 import Pages.Home
 
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ page model ]
-
-
-page : Model -> Html Msg
-page model =
-    Html.map HomeMsg (Pages.Home.view model.taco model)
+    Html.map Msg (Pages.Home.view model)

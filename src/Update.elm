@@ -1,16 +1,16 @@
 module Update exposing (Model, Msg)
 
 import Taco exposing (Taco, taco, TacoMsg(..))
-import Pages.Home exposing (HomeModel, HomeMsg)
+import Pages.Home
 
 
 type Msg
-    = HomeMsg
+    = HomeMsg Pages.Home.Msg
 
 
 type alias Model =
     { taco : Taco
-    , home : HomeModel
+    , home : Pages.Home.Model
     }
 
 
@@ -24,7 +24,7 @@ model =
 updateModel : Msg -> Model -> ( Model, Cmd Msg, TacoMsg )
 updateModel msg model =
     case msg of
-        HomeMsg ->
+        HomeMsg msg ->
             let
                 ( home, cmd, tacoMsg ) =
                     Pages.Home.update model.home msg
