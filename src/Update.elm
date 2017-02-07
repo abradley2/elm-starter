@@ -1,6 +1,7 @@
-module Update exposing (Model, Msg)
+module Update exposing (Model, Msg, model, update, view)
 
 import Taco exposing (Taco, taco, TacoMsg(..))
+import Html exposing (..)
 import Pages.Home
 
 
@@ -39,3 +40,8 @@ update msg model =
             updateModel msg model
     in
         ( { newModel | taco = Taco.update tacoMsg newModel.taco }, cmds )
+
+
+view : Model -> Html Msg
+view model =
+    Html.map (\msg -> HomeMsg msg) (Pages.Home.view model.home)
