@@ -1,4 +1,4 @@
-module Pages.Home exposing (Model, HomeMsg(..), model, update, view)
+module Pages.Home exposing (Model, Msg(..), model, update, view)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -6,13 +6,13 @@ import Html.Events exposing (..)
 import Taco exposing (Taco, TacoMsg(..))
 
 
-type HomeMsg
-    = NoOp
-
-
 type alias Model =
     { greeting : String
     }
+
+
+type Msg
+    = NoOp
 
 
 model : Model
@@ -21,7 +21,7 @@ model =
     }
 
 
-update : Model -> HomeMsg -> ( Model, Cmd HomeMsg, TacoMsg )
+update : Model -> HomeMsg -> ( Model, Cmd Msg, TacoMsg )
 update model msg =
     case msg of
         NoOp ->

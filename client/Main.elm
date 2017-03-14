@@ -7,11 +7,6 @@ import Routing exposing (Route, parseLocation)
 import Pages.Home
 
 
-type Msg
-    = OnLocationChange Location
-    | HomeMsg Pages.Home.HomeMsg
-
-
 type alias Model =
     { taco : Taco
     , route : Routing.Route
@@ -25,6 +20,11 @@ initialModel route =
     , route = route
     , taco = taco
     }
+
+
+type Msg
+    = OnLocationChange Location
+    | HomeMsg Pages.Home.Msg
 
 
 updateModel : Msg -> Model -> ( Model, Cmd Msg, TacoMsg )

@@ -1,0 +1,29 @@
+{
+  "name": "elm-starter",
+  "version": "1.0.0",
+  "description": "Elm Taco Example",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:client": "elm make ./client/Main.elm --output ./public/main.bundle.js",
+    "watch:client": "chokidar '**/*.elm' -c 'elm make ./client/Main.elm --output ./public/main.bundle.js' --initial",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abradley2/elm-starter.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abradley2/elm-starter/issues"
+  },
+  "homepage": "https://github.com/abradley2/elm-starter#readme",
+  "xo": {
+    "space": 4
+  },
+  "devDependencies": {
+    "chokidar": "^1.6.1",
+    "chokidar-cli": "^1.2.0"
+  }
+}
