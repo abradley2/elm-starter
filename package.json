@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:client": "elm make ./client/Main.elm --output ./public/main.bundle.js",
-    "watch:client": "chokidar '**/*.elm' -c 'elm make ./client/Main.elm --output ./public/main.bundle.js' --initial",
+    "watch:client": "chokidar '**/*.elm' -c 'elm make client/Main.elm --output public/main.bundle.js' --initial",
     "start": "node server.js"
   },
   "repository": {
