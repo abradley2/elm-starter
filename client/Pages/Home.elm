@@ -21,13 +21,13 @@ model =
     }
 
 
-update : Model -> HomeMsg -> ( Model, Cmd Msg, TacoMsg )
+update : Model -> Msg -> ( Model, Cmd Msg, TacoMsg )
 update model msg =
     case msg of
         NoOp ->
             ( model, Cmd.none, Taco_NoOp )
 
 
-view : Model -> Html HomeMsg
+view : Model -> Html Msg
 view model =
-    h3 [] [ text "A simple view" ]
+    h3 [] [ text "A simple elleven" ]
