@@ -28,6 +28,6 @@ update model msg =
             ( model, Cmd.none, Taco_NoOp )
 
 
-view : Model -> Html Msg
-view model =
+view : Taco -> Model -> Html Msg
+view taco model =
     h3 [] [ text "A simple elleven" ]

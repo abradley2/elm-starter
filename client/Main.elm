@@ -56,7 +56,7 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    Html.map HomeMsg (Pages.Home.view model.home)
+    Html.map HomeMsg (Pages.Home.view model.taco model.home)
 
 
 init : Location -> ( Model, Cmd Msg )
