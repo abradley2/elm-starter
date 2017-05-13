@@ -1,4 +1,4 @@
-module Pages.Navbar exposing (Model, Msg(..), model, update, view)
+module Navbar.Navbar exposing (Model, Msg(..), model, update, view)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)

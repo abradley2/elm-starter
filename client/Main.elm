@@ -3,27 +3,27 @@ module Main exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Navigation exposing (Location)
-import Pages.Home
-import Pages.Navbar
-import Pages.About
 import Routing exposing (Route, parseLocation)
 import Taco exposing (Taco, TacoMsg, TacoMsg(..), taco)
+import Home.Home as Home
+import Navbar.Navbar as Navbar
+import About.About as About
 
 
 type alias Model =
     { taco : Taco
     , route : Routing.Route
-    , home : Pages.Home.Model
-    , about : Pages.About.Model
-    , navbar : Pages.Navbar.Model
+    , home : Home.Model
+    , about : About.Model
+    , navbar : Navbar.Model
     }
 
 
 initialModel : Route -> Model
 initialModel route =
-    { home = Pages.Home.model
-    , about = Pages.About.model
-    , navbar = Pages.Navbar.model
+    { home = Home.model
+    , about = About.model
+    , navbar = Navbar.model
     , route = route
     , taco = taco
     }
@@ -31,9 +31,9 @@ initialModel route =
 
 type Msg
     = OnLocationChange Location
-    | NavbarMsg Pages.Navbar.Msg
-    | HomeMsg Pages.Home.Msg
-    | AboutMsg Pages.About.Msg
+    | NavbarMsg Navbar.Msg
+    | HomeMsg Home.Msg
+    | AboutMsg About.Msg
 
 
 updateModel : Msg -> Model -> ( Model, Cmd Msg, TacoMsg )
@@ -49,21 +49,21 @@ updateModel msg model =
         NavbarMsg msg ->
             let
                 ( navbar, cmd, tacoMsg ) =
-                    Pages.Navbar.update model.navbar msg
+                    Navbar.update model.navbar msg
             in
                 ( { model | navbar = navbar }, Cmd.map NavbarMsg cmd, tacoMsg )
 
         HomeMsg msg ->
             let
                 ( home, cmd, tacoMsg ) =
-                    Pages.Home.update model.home msg
+                    Home.update model.home msg
             in
                 ( { model | home = home }, Cmd.map HomeMsg cmd, tacoMsg )
 
         AboutMsg msg ->
             let
                 ( about, cmd, tacoMsg ) =
-                    Pages.About.update model.about msg
+                    About.update model.about msg
             in
                 ( { model | about = about }, Cmd.map AboutMsg cmd, tacoMsg )
 
@@ -74,16 +74,16 @@ view model =
         activeView =
             case model.route of
                 Routing.HomeRoute ->
-                    Html.map HomeMsg (Pages.Home.view model.taco model)
+                    Html.map HomeMsg (Home.view model.taco model)
 
                 Routing.AboutRoute ->
-                    Html.map AboutMsg (Pages.About.view model.taco model)
+                    Html.map AboutMsg (About.view model.taco model)
 
                 Routing.NotFoundRoute ->
                     notFound
     in
         div []
-            [ Html.map NavbarMsg (Pages.Navbar.view model.taco model)
+            [ Html.map NavbarMsg (Navbar.view model.taco model)
             , activeView
             ]
 
