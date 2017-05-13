@@ -74,16 +74,16 @@ view model =
         activeView =
             case model.route of
                 Routing.HomeRoute ->
-                    Html.map HomeMsg (Pages.Home.view model.taco model.home)
+                    Html.map HomeMsg (Pages.Home.view model.taco model)
 
                 Routing.AboutRoute ->
-                    Html.map AboutMsg (Pages.About.view model.taco model.about)
+                    Html.map AboutMsg (Pages.About.view model.taco model)
 
                 Routing.NotFoundRoute ->
                     notFound
     in
         div []
-            [ Html.map NavbarMsg (Pages.Navbar.view model.taco model.navbar)
+            [ Html.map NavbarMsg (Pages.Navbar.view model.taco model)
             , activeView
             ]
 

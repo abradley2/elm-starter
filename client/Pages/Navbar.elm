@@ -10,6 +10,12 @@ type alias Model =
     {}
 
 
+type alias AppModel appModel =
+    { appModel
+        | navbar : Model
+    }
+
+
 type Msg
     = NoOp
 
@@ -29,7 +35,7 @@ update model msg =
     ( {}, Cmd.none, Taco_NoOp )
 
 
-view : Taco -> Model -> Html Msg
+view : Taco -> AppModel appModel -> Html Msg
 view taco model =
     nav [ class "flex justify-between bg-black-90" ]
         [ div [ class "pa3 flex items-center" ]
