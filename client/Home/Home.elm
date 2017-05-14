@@ -8,6 +8,7 @@ import Taco exposing (Taco, TacoMsg, TacoMsg(..))
 
 type alias Model =
     { greeting : String
+    , someBool : Bool
     }
 
 
@@ -25,6 +26,7 @@ type Msg
 model : Model
 model =
     { greeting = "Hello World again"
+    , someBool = False
     }
 
 
