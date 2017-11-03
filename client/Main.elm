@@ -1,4 +1,4 @@
-module Main exposing (..)
+port module Main exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -6,32 +6,28 @@ import Navigation exposing (Location)
 import Routing exposing (Route, parseLocation)
 import Taco exposing (Taco, TacoMsg, TacoMsg(..), taco)
 import Home.Home as Home
-import Navbar.Navbar as Navbar
 import About.About as About
 
 
 type alias Model =
-    { taco : Taco
-    , route : Routing.Route
+    { route : Routing.Route
+    , taco : Taco
     , home : Home.Model
     , about : About.Model
-    , navbar : Navbar.Model
     }
 
 
 initialModel : Route -> Model
 initialModel route =
-    { home = Home.model
+    { route = route
+    , home = Home.model
     , about = About.model
-    , navbar = Navbar.model
-    , route = route
     , taco = taco
     }
 
 
 type Msg
     = OnLocationChange Location
-    | NavbarMsg Navbar.Msg
     | HomeMsg Home.Msg
     | AboutMsg About.Msg
 
@@ -45,13 +41,6 @@ updateModel msg model =
                     location
             in
                 ( { model | route = parseLocation newLocation }, Cmd.none, Taco_NoOp )
-
-        NavbarMsg msg ->
-            let
-                ( navbar, cmd, tacoMsg ) =
-                    Navbar.update model.navbar msg
-            in
-                ( { model | navbar = navbar }, Cmd.map NavbarMsg cmd, tacoMsg )
 
         HomeMsg msg ->
             let
@@ -70,22 +59,15 @@ updateModel msg model =
 
 view : Model -> Html Msg
 view model =
-    let
-        activeView =
-            case model.route of
-                Routing.HomeRoute ->
-                    Html.map HomeMsg (Home.view model.taco model)
+    case model.route of
+        Routing.HomeRoute ->
+            Html.map HomeMsg (Home.view model.taco model.home)
 
-                Routing.AboutRoute ->
-                    Html.map AboutMsg (About.view model.taco model)
+        Routing.AboutRoute ->
+            Html.map AboutMsg (About.view model.taco model.about)
 
-                Routing.NotFoundRoute ->
-                    notFound
-    in
-        div []
-            [ Html.map NavbarMsg (Navbar.view model.taco model)
-            , activeView
-            ]
+        Routing.NotFoundRoute ->
+            notFound
 
 
 notFound : Html Msg
@@ -106,7 +88,11 @@ update msg model =
         ( newModel, cmds, tacoMsg ) =
             updateModel msg model
     in
-        ( { newModel | taco = Taco.update tacoMsg newModel.taco }, cmds )
+        ( { newModel
+            | taco = Taco.update tacoMsg newModel.taco
+          }
+        , Cmd.batch [ cmds, Cmd.none ]
+        )
 
 
 init : Location -> ( Model, Cmd Msg )

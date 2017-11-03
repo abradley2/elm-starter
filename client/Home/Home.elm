@@ -8,13 +8,6 @@ import Taco exposing (Taco, TacoMsg, TacoMsg(..))
 
 type alias Model =
     { greeting : String
-    , someBool : Bool
-    }
-
-
-type alias AppModel appModel =
-    { appModel
-        | home : Model
     }
 
 
@@ -26,7 +19,6 @@ type Msg
 model : Model
 model =
     { greeting = "Hello World again"
-    , someBool = False
     }
 
 
@@ -45,13 +37,13 @@ update model msg =
             ( model, Cmd.none, Taco_NoOp )
 
 
-view : Taco -> AppModel appModel -> Html Msg
-view taco appModel =
+view : Taco -> Model -> Html Msg
+view taco model =
     div [ class "center measure" ]
-        [ h3 [] [ text appModel.home.greeting ]
+        [ h3 [] [ text model.greeting ]
         , input
             [ type_ "text"
-            , value appModel.home.greeting
+            , value model.greeting
             , onInput EditMsg
             ]
             []

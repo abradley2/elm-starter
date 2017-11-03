@@ -3,12 +3,14 @@
     <head>
         <meta charset='utf-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1'>
-        <title></title>
+        <title>ELM</title>
         <link rel='stylesheet' href='https://unpkg.com/tachyons@4.6.1/css/tachyons.min.css'>
     </head>
     <body>
         <div id='app'></div>
-        <script src='/Main.js'></script>
-        <script>Elm.Main.embed( document.getElementById('app') );</script>
+        <script src='/main.bundle.js'></script>
+        <script>
+            Elm.Main.embed( document.getElementById('app') );
+        </script>
     </body>
 </html>

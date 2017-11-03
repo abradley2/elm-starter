@@ -14,19 +14,6 @@ type alias Model =
     {}
 
 
-type alias HomeModel homeModel =
-    { homeModel
-        | greeting : String
-    }
-
-
-type alias AppModel appModel homeModel =
-    { appModel
-        | about : Model
-        , home : HomeModel homeModel
-    }
-
-
 model : Model
 model =
     {}
@@ -39,9 +26,8 @@ update model msg =
             ( model, Cmd.none, Taco_NoOp )
 
 
-view : Taco -> AppModel appModel homeModel -> Html Msg
-view taco appModel =
+view : Taco -> Model -> Html Msg
+view taco model =
     div [ class "center measure" ]
         [ h3 [] [ text "About Page" ]
-        , h3 [] [ text appModel.home.greeting ]
         ]
