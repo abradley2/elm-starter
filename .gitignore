@@ -1,4 +1,4 @@
 elm-stuff/
 node_modules/
 **/*.log
-public/Main.js
+public/main.bundle.js
