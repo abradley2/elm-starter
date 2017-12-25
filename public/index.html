@@ -7,9 +7,34 @@
         <link rel='stylesheet' href='https://unpkg.com/tachyons@4.6.1/css/tachyons.min.css'>
     </head>
     <body>
+        <style type='text/css'>
+        @keyframes nodeInserted {  
+            from { opacity: 0.99; }
+            to { opacity: 1; }  
+        }
+        [data-elm-component] {
+            animation-duration: 0.001s;
+            animation-name: nodeInserted;
+        }
+        </style>
         <div id='app'></div>
         <script src='/main.bundle.js'></script>
         <script>
+            document.addEventListener("animationstart", function(e) {
+                if (event.animationName == "nodeInserted") {
+                    // fire the oninsert port
+                    const parent = e.target.parentElement
+                    const target = e.target
+                    const observer = new MutationObserver(function (ev) {
+                        if (ev[0].removedNodes) {
+                            window.console.log('removedNodes === ', removedNodes)
+                            // disconnect the observer
+                        }
+                    })
+                    
+                    observer.observe(parent, { childList: true })
+                }
+            }, false);
             Elm.Main.embed( document.getElementById('app') );
         </script>
     </body>

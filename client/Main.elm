@@ -4,103 +4,86 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Navigation exposing (Location)
 import Routing exposing (Route, parseLocation)
-import Taco exposing (Taco, TacoMsg, TacoMsg(..), taco)
-import Home.Home as Home
-import About.About as About
+import Message exposing (Message)
+import Model exposing (Model)
+import Update.HomeUpdate exposing (homeUpdate)
+import Update.AboutUpdate exposing (homeUpdate)
+import View.HomeView exposing (homeModel)
+import View.AboutView exposing (aboutView)
 
 
-type alias Model =
-    { route : Routing.Route
-    , taco : Taco
-    , home : Home.Model
-    , about : About.Model
-    }
-
-
-initialModel : Route -> Model
 initialModel route =
     { route = route
-    , home = Home.model
-    , about = About.model
-    , taco = taco
+    , home = aboutModel
+    , about = homeModel
     }
 
 
-type Msg
-    = OnLocationChange Location
-    | HomeMsg Home.Msg
-    | AboutMsg About.Msg
-
-
-updateModel : Msg -> Model -> ( Model, Cmd Msg, TacoMsg )
-updateModel msg model =
-    case msg of
+update message model =
+    case message of
         OnLocationChange location ->
             let
                 newLocation =
                     location
             in
-                ( { model | route = parseLocation newLocation }, Cmd.none, Taco_NoOp )
+                ( { model | route = parseLocation newLocation }, Cmd.none )
 
-        HomeMsg msg ->
+        _ ->
             let
-                ( home, cmd, tacoMsg ) =
-                    Home.update model.home msg
+                ( updatedModel, commands ) =
+                    ( model, [] )
+                        |> (\( model, commands ) ->
+                                let
+                                    ( homeModel, commands ) =
+                                        homeUpdate message model.homeModel
+                                in
+                                    ( { model | homeModel = homeModel }
+                                    , commands
+                                    )
+                           )
+                        |> (\( model, commands ) ->
+                                let
+                                    ( aboutModel, batch ) =
+                                        aboutUpdate message model.aboutModel
+                                in
+                                    ( { model | aboutModel = aboutModel }
+                                    , commands
+                                    )
+                           )
             in
-                ( { model | home = home }, Cmd.map HomeMsg cmd, tacoMsg )
-
-        AboutMsg msg ->
-            let
-                ( about, cmd, tacoMsg ) =
-                    About.update model.about msg
-            in
-                ( { model | about = about }, Cmd.map AboutMsg cmd, tacoMsg )
+                ( updateModel, Cmd.batch commands )
 
 
-view : Model -> Html Msg
+view : Model -> Html Message
 view model =
     case model.route of
         Routing.HomeRoute ->
-            Html.map HomeMsg (Home.view model.taco model.home)
+            Html.map Message (Home.view model.taco model.home)
 
         Routing.AboutRoute ->
-            Html.map AboutMsg (About.view model.taco model.about)
+            Html.map Message (About.view model.taco model.about)
 
         Routing.NotFoundRoute ->
             notFound
 
 
-notFound : Html Msg
+notFound : Html Message
 notFound =
     div [ class "center measure" ]
         [ h3 [] [ text "Page Not Found :(" ]
         ]
 
 
-subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.none
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    let
-        ( newModel, cmds, tacoMsg ) =
-            updateModel msg model
-    in
-        ( { newModel
-            | taco = Taco.update tacoMsg newModel.taco
-          }
-        , Cmd.batch [ cmds, Cmd.none ]
-        )
-
-
-init : Location -> ( Model, Cmd Msg )
+init : Location -> ( Model, Cmd Message )
 init location =
     ( initialModel (parseLocation location), Cmd.none )
 
 
-main : Program Never Model Msg
+main : Program Never Model Message
 main =
     Navigation.program OnLocationChange
         { init = init
