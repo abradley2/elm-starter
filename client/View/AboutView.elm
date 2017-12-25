@@ -10,5 +10,6 @@ import Message.AboutMessage exposing (AboutMessage)
 aboutView : Model -> Html AboutMessage
 aboutView model =
     div [ class "center measure" ]
-        [ h3 [] [ text "About Page" ]
+        [ a [ href "#" ] [ text "Home" ]
+        , h3 [] [ text "About Page" ]
         ]
