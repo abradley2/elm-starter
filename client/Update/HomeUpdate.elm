@@ -15,25 +15,25 @@ homeModel =
     }
 
 
-onHomeMessage : HomeMessage -> HomeModel -> ( HomeModel, List (Cmd Message) )
-onHomeMessage homeMessage homeModel =
+onHomeMessage : HomeMessage -> HomeModel -> List (Cmd Message) -> ( HomeModel, List (Cmd Message) )
+onHomeMessage homeMessage homeModel commands =
     case homeMessage of
         EditGreeting newGreeting ->
             ( { homeModel
                 | greeting = newGreeting
               }
-            , []
+            , commands
             )
 
         NoOp ->
-            ( homeModel, [] )
+            ( homeModel, commands )
 
 
-homeUpdate : Message -> HomeModel -> ( HomeModel, List (Cmd Message) )
-homeUpdate message homeModel =
+homeUpdate : Message -> HomeModel -> List (Cmd Message) -> ( HomeModel, List (Cmd Message) )
+homeUpdate message homeModel commands =
     case message of
         Home homeMessage ->
-            onHomeMessage homeMessage homeModel
+            onHomeMessage homeMessage homeModel commands
 
         _ ->
-            ( homeModel, [] )
+            ( homeModel, commands )

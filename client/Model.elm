@@ -1,19 +1,19 @@
 module Model exposing (Model, model)
 
-import Routing exposing (Route)
+import Update.RouteUpdate exposing (RouteModel, routeModel)
 import Update.HomeUpdate exposing (HomeModel, homeModel)
 import Update.AboutUpdate exposing (AboutModel, aboutModel)
 
 
 type alias Model =
-    { route : Route
+    { routeModel : RouteModel
     , homeModel : HomeModel
     , aboutModel : AboutModel
     }
 
 
 model route =
-    { route = route
+    { routeModel = route
     , homeModel = homeModel
     , aboutModel = aboutModel
     }

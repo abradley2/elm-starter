@@ -3,24 +3,24 @@ port module Main exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Navigation exposing (Location)
-import Routing exposing (Route, parseLocation)
 import Message exposing (Message, Message(..))
 import Model exposing (Model, model)
 import Update exposing (update)
+import Update.RouteUpdate exposing (parseLocation, RouteModel(..))
 import View.HomeView exposing (homeView)
 import View.AboutView exposing (aboutView)
 
 
 view : Model -> Html Message
 view model =
-    case model.route of
-        Routing.HomeRoute ->
+    case model.routeModel of
+        HomeRoute ->
             Html.map Home (homeView model)
 
-        Routing.AboutRoute ->
+        AboutRoute ->
             Html.map About (aboutView model)
 
-        Routing.NotFoundRoute ->
+        NotFoundRoute ->
             notFound
 
 
@@ -37,7 +37,11 @@ subscriptions model =
 
 init : Location -> ( Model, Cmd Message )
 init location =
-    ( model (parseLocation location), Cmd.none )
+    let
+        ( initialLocation, commands ) =
+            parseLocation location []
+    in
+        ( model initialLocation, Cmd.batch commands )
 
 
 main : Program Never Model Message
