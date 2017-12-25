@@ -2,13 +2,19 @@ port module Main exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Navigation exposing (Location)
 import Message exposing (Message, Message(..))
 import Model exposing (Model, model)
+import Navigation exposing (Location)
 import Update exposing (update)
-import Update.RouteUpdate exposing (parseLocation, RouteModel(..))
-import View.HomeView exposing (homeView)
+import Update.RouteUpdate exposing (RouteModel(..), parseLocation)
 import View.AboutView exposing (aboutView)
+import View.HomeView exposing (homeView)
+
+
+port mount : (String -> message) -> Sub message
+
+
+port unmount : (String -> message) -> Sub message
 
 
 view : Model -> Html Message
@@ -27,7 +33,7 @@ view model =
 
 
 subscriptions model =
-    Sub.none
+    mount Mount
 
 
 init : Location -> ( Model, Cmd Message )

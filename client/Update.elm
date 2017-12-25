@@ -10,7 +10,7 @@ updater getter setter reducer =
     \( message, model, commands ) ->
         let
             ( newModel, newCommands ) =
-                reducer message (getter model) commands
+                reducer (message) (getter model) commands
         in
             ( message, setter model newModel, newCommands )
 
@@ -18,7 +18,7 @@ updater getter setter reducer =
 update message model =
     let
         ( passMessage, updatedModel, commands ) =
-            ( message, model, [] )
+            ( Debug.log "message" message, model, [] )
                 |> updater
                     (\model -> model.routeModel)
                     (\model routeModel -> ({ model | routeModel = routeModel }))

@@ -6,6 +6,8 @@ import Message.AboutMessage exposing (AboutMessage)
 
 
 type Message
-    = OnLocationChange Location
+    = Mount String
+    | Unmount String
+    | OnLocationChange Location
     | Home HomeMessage
     | About AboutMessage
