@@ -21,14 +21,9 @@ view model =
             Html.map About (aboutView model)
 
         NotFoundRoute ->
-            notFound
-
-
-notFound : Html Message
-notFound =
-    div [ class "center measure" ]
-        [ h3 [] [ text "Page Not Found :(" ]
-        ]
+            div [ class "center measure" ]
+                [ h3 [] [ text "Page Not Found :(" ]
+                ]
 
 
 subscriptions model =
