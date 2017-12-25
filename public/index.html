@@ -4,7 +4,6 @@
         <meta charset='utf-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1'>
         <title>ELM</title>
-        <link rel='stylesheet' href='https://unpkg.com/tachyons@4.6.1/css/tachyons.min.css'>
     </head>
     <body>
         <style type='text/css'>
@@ -18,19 +17,25 @@
         }
         </style>
         <div id='app'></div>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.2/css/materialize.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.2/js/materialize.min.js"></script>
+
         <script src='/main.bundle.js'></script>
         <script>
+            let app
             document.addEventListener("animationstart", function(e) {
                 if (event.animationName == "nodeInserted") {
-                    // fire the oninsert port
-                    window.console.log('addedNode === ', e.target)
                     const parent = e.target.parentElement
                     const target = e.target
+                    const targetId = target.getAttribute('data-elm-lifecycle')
+                    
+                    app.ports.mount.send(targetId)
+                    
                     const observer = new MutationObserver(function (ev) {
                         if (ev[0].removedNodes && ev[0].removedNodes.length) {
                             ev[0].removedNodes.forEach(node => {
                                 if (node === target) {
-                                    window.console.log('disconnect observer!')
+                                    observer.disconnect()
                                 }
                             })
                         }
@@ -38,7 +43,7 @@
                     observer.observe(parent, { childList: true })
                 }
             }, false);
-            Elm.Main.embed( document.getElementById('app') );
+            app = Elm.Main.embed( document.getElementById('app') );
         </script>
     </body>
 </html>
