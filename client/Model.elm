@@ -1,6 +1,6 @@
 module Model exposing (Model, model)
 
-import Routing exposing (Route, parseLocation)
+import Routing exposing (Route)
 import Update.HomeUpdate exposing (HomeModel, homeModel)
 import Update.AboutUpdate exposing (AboutModel, aboutModel)
 
