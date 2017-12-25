@@ -1,6 +1,7 @@
 module Model exposing (Model, model)
 
 import Update.HomeUpdate exposing (HomeModel, homeModel)
+import Update.AboutUpdate exposing (AboutModel, aboutModel)
 
 
 type alias Model =

@@ -5,5 +5,5 @@ import Message.AboutMessage exposing (AboutMessage)
 
 
 type Message
-    = HomeMessage
-    | AboutMessage
+    = Home HomeMessage
+    | About AboutMessage

@@ -1,4 +1,4 @@
-module Update.HomeUpdate exposing (homeModel, homeUpdate)
+module Update.HomeUpdate exposing (homeModel, homeUpdate, HomeModel)
 
 import Message exposing (Message, Message(..))
 import Message.HomeMessage exposing (HomeMessage(..))
@@ -32,8 +32,8 @@ onHomeMessage homeMessage homeModel =
 homeUpdate : Message -> HomeModel -> ( HomeModel, List (Cmd Message) )
 homeUpdate message homeModel =
     case message of
-        HomeMessage ->
-            onHomeMessage message homeModel
+        Home homeMessage ->
+            onHomeMessage homeMessage homeModel
 
         _ ->
             ( homeModel, [] )

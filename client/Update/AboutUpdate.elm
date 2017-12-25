@@ -1,4 +1,4 @@
-module Update.AboutUpdate exposing (aboutModel, aboutUpdate)
+module Update.AboutUpdate exposing (aboutModel, aboutUpdate, AboutModel)
 
 import Message exposing (Message, Message(..))
 import Message.AboutMessage exposing (AboutMessage(..))
@@ -23,8 +23,8 @@ onAboutMessage aboutMessage aboutModel =
 aboutUpdate : Message -> AboutModel -> ( AboutModel, List (Cmd Message) )
 aboutUpdate message aboutModel =
     case message of
-        AboutMessage ->
-            onAboutMessage message aboutModel
+        About aboutMessage ->
+            onAboutMessage aboutMessage aboutModel
 
         _ ->
             ( aboutModel, [] )
