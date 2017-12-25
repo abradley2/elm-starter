@@ -4,19 +4,12 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Navigation exposing (Location)
 import Routing exposing (Route, parseLocation)
-import Message exposing (Message)
-import Model exposing (Model)
+import Message exposing (Message, Message(..))
+import Model exposing (Model, model)
 import Update.HomeUpdate exposing (homeUpdate)
-import Update.AboutUpdate exposing (homeUpdate)
-import View.HomeView exposing (homeModel)
+import Update.AboutUpdate exposing (aboutUpdate)
+import View.HomeView exposing (homeView)
 import View.AboutView exposing (aboutView)
-
-
-initialModel route =
-    { route = route
-    , home = aboutModel
-    , about = homeModel
-    }
 
 
 update message model =
@@ -51,17 +44,17 @@ update message model =
                                     )
                            )
             in
-                ( updateModel, Cmd.batch commands )
+                ( updatedModel, Cmd.batch commands )
 
 
 view : Model -> Html Message
 view model =
     case model.route of
         Routing.HomeRoute ->
-            Html.map Message (Home.view model.taco model.home)
+            Html.map Home (homeView model)
 
         Routing.AboutRoute ->
-            Html.map Message (About.view model.taco model.about)
+            Html.map About (aboutView model)
 
         Routing.NotFoundRoute ->
             notFound
@@ -80,7 +73,7 @@ subscriptions model =
 
 init : Location -> ( Model, Cmd Message )
 init location =
-    ( initialModel (parseLocation location), Cmd.none )
+    ( model (parseLocation location), Cmd.none )
 
 
 main : Program Never Model Message
