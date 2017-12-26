@@ -1,16 +1,17 @@
 port module Main exposing (..)
 
+import Css.Foreign exposing (p)
 import Html
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
+import Layout exposing (layout)
 import Message exposing (Message, Message(..))
 import Model exposing (Model, model)
 import Navigation exposing (Location)
 import Update exposing (update)
 import Update.RouteUpdate exposing (RouteModel(..), parseLocation)
-import Layout exposing (layout)
-import View.UnitsView exposing (unitsView)
 import View.HomeView exposing (homeView)
+import View.UnitsView exposing (unitsView)
 
 
 port mount : (String -> message) -> Sub message
@@ -37,7 +38,10 @@ view model =
 
 
 subscriptions model =
-    mount Mount
+    Sub.batch
+        [ mount Mount
+        , unmount Unmount
+        ]
 
 
 init : Location -> ( Model, Cmd Message )
