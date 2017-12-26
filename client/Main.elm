@@ -9,7 +9,7 @@ import Navigation exposing (Location)
 import Update exposing (update)
 import Update.RouteUpdate exposing (RouteModel(..), parseLocation)
 import Layout exposing (layout)
-import View.AboutView exposing (aboutView)
+import View.UnitsView exposing (unitsView)
 import View.HomeView exposing (homeView)
 
 
@@ -26,8 +26,8 @@ view model =
             HomeRoute ->
                 Html.Styled.map Home (homeView model)
 
-            AboutRoute ->
-                Html.Styled.map About (aboutView model)
+            UnitsRoute ->
+                Html.Styled.map Units (unitsView model)
 
             NotFoundRoute ->
                 div [ class "center measure" ]

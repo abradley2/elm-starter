@@ -11,21 +11,49 @@ import Message.LayoutMessage exposing (LayoutMessage, LayoutMessage(..))
 import Model exposing (Model)
 
 
+{-
+   <div class="nav-wrapper">
+         <a href="#" class="brand-logo">Logo</a>
+         <ul id="nav-mobile" class="right hide-on-med-and-down">
+           <li><a href="sass.html">Sass</a></li>
+           <li><a href="badges.html">Components</a></li>
+           <li><a href="collapsible.html">JavaScript</a></li>
+         </ul>
+       </div>
+-}
+
+
+navs : List (Html LayoutMessage)
+navs =
+    [ li []
+        [ a [ href "#units" ] [ text "Units" ]
+        ]
+    , li []
+        [ a [ href "#wargear" ] [ text "Wargear" ]
+        ]
+    ]
+
+
+navbar : Html LayoutMessage
+navbar =
+    nav []
+        [ div
+            [ class "nav-wrapper"
+            ]
+            [ toggleSidenavButton
+            , ul [ class "right hide-on-small-only" ] navs
+            ]
+        ]
+
+
 toggleSidenavButton : Html LayoutMessage
 toggleSidenavButton =
-    div
-        [ css
-            [ position absolute
-            , top (px 0)
-            , left (px 0)
-            , Css.width (px 56)
-            , Css.height (px 56)
-            , backgroundColor Css.Colors.red
-            , cursor pointer
-            ]
+    a
+        [ href "javascript:void(0);"
+        , class "left brand-logo show-on-small"
         , onClick ToggleSidenav
         ]
-        [ text "test"
+        [ text "Menu"
         ]
 
 
@@ -39,10 +67,8 @@ sideNavtransform isOpen =
 layout : Model -> Html Message -> Html Message
 layout model view =
     div
-        [ css
-            [ paddingTop (px 60) ]
-        ]
-        [ Html.Styled.map Layout toggleSidenavButton
+        []
+        [ Html.Styled.map Layout navbar
         , Html.Styled.map Layout
             (ul
                 [ id "slide-out"
@@ -53,13 +79,7 @@ layout model view =
                     , ( "transition", ".25s" )
                     ]
                 ]
-                [ li []
-                    [ a [ href "#units" ] [ text "Units" ]
-                    ]
-                , li []
-                    [ a [ href "#wargear" ] [ text "Wargear" ]
-                    ]
-                ]
+                navs
             )
         , view
         ]
