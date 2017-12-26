@@ -1,12 +1,14 @@
 port module Main exposing (..)
 
-import Html exposing (..)
-import Html.Attributes exposing (..)
+import Html
+import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (..)
 import Message exposing (Message, Message(..))
 import Model exposing (Model, model)
 import Navigation exposing (Location)
 import Update exposing (update)
 import Update.RouteUpdate exposing (RouteModel(..), parseLocation)
+import Layout exposing (layout)
 import View.AboutView exposing (aboutView)
 import View.HomeView exposing (homeView)
 
@@ -19,17 +21,19 @@ port unmount : (String -> message) -> Sub message
 
 view : Model -> Html Message
 view model =
-    case model.routeModel of
-        HomeRoute ->
-            Html.map Home (homeView model)
+    layout model
+        (case model.routeModel of
+            HomeRoute ->
+                Html.Styled.map Home (homeView model)
 
-        AboutRoute ->
-            Html.map About (aboutView model)
+            AboutRoute ->
+                Html.Styled.map About (aboutView model)
 
-        NotFoundRoute ->
-            div [ class "center measure" ]
-                [ h3 [] [ text "Page Not Found :(" ]
-                ]
+            NotFoundRoute ->
+                div [ class "center measure" ]
+                    [ h3 [] [ text "Page Not Found :(" ]
+                    ]
+        )
 
 
 subscriptions model =
@@ -49,7 +53,7 @@ main : Program Never Model Message
 main =
     Navigation.program OnLocationChange
         { init = init
-        , view = view
+        , view = view >> toUnstyled
         , update = update
         , subscriptions = subscriptions
         }

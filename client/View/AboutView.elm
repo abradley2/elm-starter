@@ -1,8 +1,9 @@
 module View.AboutView exposing (aboutView)
 
-import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (..)
+import Html
+import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (..)
+import Html.Styled.Events exposing (..)
 import Model exposing (Model)
 import Message.AboutMessage exposing (AboutMessage)
 

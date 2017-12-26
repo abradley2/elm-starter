@@ -4,6 +4,7 @@ import Message exposing (Message, Message(..))
 import Update.RouteUpdate exposing (routeUpdate)
 import Update.HomeUpdate exposing (homeUpdate)
 import Update.AboutUpdate exposing (aboutUpdate)
+import Update.LayoutUpdate exposing (layoutUpdate)
 
 
 updater getter setter reducer =
@@ -31,5 +32,9 @@ update message model =
                     (\model -> model.homeModel)
                     (\model homeModel -> ({ model | homeModel = homeModel }))
                     homeUpdate
+                |> updater
+                    (\model -> model.layoutModel)
+                    (\model layoutModel -> ({ model | layoutModel = layoutModel }))
+                    layoutUpdate
     in
         ( updatedModel, Cmd.batch commands )
