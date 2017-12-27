@@ -4,13 +4,24 @@ import Message exposing (Message, Message(..))
 import Message.UnitsMessage exposing (UnitsMessage, UnitsMessage(..))
 
 
+type alias Unit =
+    { army : String
+    , keywords : List String
+    , points : Float
+    , generalWargearIds : List String
+    , leaderWargearIds : List String
+    }
+
+
 type alias UnitsModel =
-    {}
+    { units : List Unit
+    }
 
 
 unitsModel : UnitsModel
 unitsModel =
-    {}
+    { units = []
+    }
 
 
 onUnitsMessage : UnitsMessage -> UnitsModel -> List (Cmd Message) -> ( UnitsModel, List (Cmd Message) )

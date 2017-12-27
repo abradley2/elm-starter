@@ -3,6 +3,7 @@ module Layout exposing (layout)
 import Css exposing (..)
 import Css.Colors
 import Html
+import Html.Events exposing (onWithOptions)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
@@ -12,20 +13,29 @@ import Model exposing (Model)
 
 
 {-
-   <div class="nav-wrapper">
-         <a href="#" class="brand-logo">Logo</a>
-         <ul id="nav-mobile" class="right hide-on-med-and-down">
-           <li><a href="sass.html">Sass</a></li>
-           <li><a href="badges.html">Components</a></li>
-           <li><a href="collapsible.html">JavaScript</a></li>
-         </ul>
-       </div>
+   <select class="browser-default">
+      <option value="" disabled selected>Choose your option</option>
+      <option value="1">Option 1</option>
+      <option value="2">Option 2</option>
+      <option value="3">Option 3</option>
+    </select>
 -}
 
 
 navs : List (Html LayoutMessage)
 navs =
-    [ li []
+    [ li
+        []
+        [ div
+            [ onWithOptions "click" (Json.Decode.Decoder msg)
+            ]
+            [ select [ class "browser-default" ]
+                [ option [] [ text "option 1" ]
+                , option [] [ text "option 2" ]
+                ]
+            ]
+        ]
+    , li []
         [ a [ href "#units" ] [ text "Units" ]
         ]
     , li []
