@@ -15,7 +15,7 @@
     };
 
     window.Components = { // eslint-disable-line no-undef
-        init: function (elem, componentType, app) {
+        mount: function (elem, componentType, app) {
             const id = elem.getAttribute('id');
             components[componentType].mount(elem, id, app);
         },

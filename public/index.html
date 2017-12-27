@@ -27,14 +27,17 @@
                 if (event.animationName == "nodeInserted") {
                     const parent = e.target.parentElement
                     const target = e.target
-                    const targetId = target.getAttribute('data-elm-lifecycle')
+                    const targetId = target.getAttribute('id')
+                    const componentType = target.getAttribute('data-js-component')
                     
+                    if (componentType) window.Components.mount(target, componentType, app)
                     app.ports.mount.send(targetId)
                     
                     const observer = new MutationObserver(function (ev) {
                         if (ev[0].removedNodes && ev[0].removedNodes.length) {
                             ev[0].removedNodes.forEach(node => {
                                 if (node === target) {
+                                    if (componentType) window.Components.unmount(target, componentType, app)
                                     app.ports.unmount.send(targetId)
                                     observer.disconnect()
                                 }
