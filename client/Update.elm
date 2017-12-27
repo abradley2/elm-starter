@@ -1,10 +1,10 @@
 module Update exposing (update)
 
 import Message exposing (Message, Message(..))
-import Update.RouteUpdate exposing (routeUpdate)
+import Update.AboutUpdate exposing (aboutModel, aboutUpdate)
 import Update.HomeUpdate exposing (homeUpdate)
-import Update.UnitsUpdate exposing (unitsUpdate)
 import Update.LayoutUpdate exposing (layoutUpdate)
+import Update.RouteUpdate exposing (routeUpdate)
 
 
 updater getter setter reducer =
@@ -25,9 +25,9 @@ update message model =
                     (\model routeModel -> ({ model | routeModel = routeModel }))
                     routeUpdate
                 |> updater
-                    (\model -> model.unitsModel)
-                    (\model unitsModel -> ({ model | unitsModel = unitsModel }))
-                    unitsUpdate
+                    (\model -> model.aboutModel)
+                    (\model aboutModel -> ({ model | aboutModel = aboutModel }))
+                    aboutUpdate
                 |> updater
                     (\model -> model.homeModel)
                     (\model homeModel -> ({ model | homeModel = homeModel }))
