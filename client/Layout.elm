@@ -12,34 +12,13 @@ import Message.LayoutMessage exposing (LayoutMessage, LayoutMessage(..))
 import Model exposing (Model)
 
 
-{-
-   <select class="browser-default">
-      <option value="" disabled selected>Choose your option</option>
-      <option value="1">Option 1</option>
-      <option value="2">Option 2</option>
-      <option value="3">Option 3</option>
-    </select>
--}
-
-
 navs : List (Html LayoutMessage)
 navs =
-    [ li
-        []
-        [ div
-            [ onWithOptions "click" (Json.Decode.Decoder msg)
-            ]
-            [ select [ class "browser-default" ]
-                [ option [] [ text "option 1" ]
-                , option [] [ text "option 2" ]
-                ]
-            ]
+    [ li []
+        [ a [ href "#home" ] [ text "Home" ]
         ]
     , li []
-        [ a [ href "#units" ] [ text "Units" ]
-        ]
-    , li []
-        [ a [ href "#wargear" ] [ text "Wargear" ]
+        [ a [ href "#about" ] [ text "About" ]
         ]
     ]
 
