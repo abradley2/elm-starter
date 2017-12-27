@@ -15,10 +15,10 @@ import Model exposing (Model)
 navs : List (Html LayoutMessage)
 navs =
     [ li []
-        [ a [ href "#home" ] [ text "Home" ]
+        [ a [ href "#armies" ] [ text "Armies" ]
         ]
     , li []
-        [ a [ href "#about" ] [ text "About" ]
+        [ a [ href "#units" ] [ text "Units" ]
         ]
     ]
 

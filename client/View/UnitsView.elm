@@ -11,6 +11,6 @@ import Message.UnitsMessage exposing (UnitsMessage)
 unitsView : Model -> Html UnitsMessage
 unitsView model =
     div [ class "center measure" ]
-        [ a [ href "#" ] [ text "Home" ]
+        [ a [ href "#" ] [ text "Armies" ]
         , h3 [] [ text "About Page" ]
         ]

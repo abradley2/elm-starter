@@ -1,30 +1,30 @@
-module Update.HomeUpdate exposing (homeModel, homeUpdate, HomeModel)
+module Update.ArmiesUpdate exposing (armiesModel, armiesUpdate, ArmiesModel)
 
 import Message exposing (Message, Message(..))
-import Message.HomeMessage exposing (HomeMessage(..))
+import Message.ArmiesMessage exposing (ArmiesMessage(..))
 
 
-type alias HomeModel =
+type alias ArmiesModel =
     {}
 
 
-homeModel : HomeModel
-homeModel =
+armiesModel : ArmiesModel
+armiesModel =
     {}
 
 
-onHomeMessage : HomeMessage -> HomeModel -> List (Cmd Message) -> ( HomeModel, List (Cmd Message) )
-onHomeMessage homeMessage homeModel commands =
-    case homeMessage of
+onArmiesMessage : ArmiesMessage -> ArmiesModel -> List (Cmd Message) -> ( ArmiesModel, List (Cmd Message) )
+onArmiesMessage armiesMessage armiesModel commands =
+    case armiesMessage of
         NoOp ->
-            ( homeModel, commands )
+            ( armiesModel, commands )
 
 
-homeUpdate : Message -> HomeModel -> List (Cmd Message) -> ( HomeModel, List (Cmd Message) )
-homeUpdate message homeModel commands =
+armiesUpdate : Message -> ArmiesModel -> List (Cmd Message) -> ( ArmiesModel, List (Cmd Message) )
+armiesUpdate message armiesModel commands =
     case message of
-        Home homeMessage ->
-            onHomeMessage homeMessage homeModel commands
+        Armies armiesMessage ->
+            onArmiesMessage armiesMessage armiesModel commands
 
         _ ->
-            ( homeModel, commands )
+            ( armiesModel, commands )

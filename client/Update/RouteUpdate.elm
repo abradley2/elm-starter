@@ -7,7 +7,7 @@ import UrlParser exposing (..)
 
 
 type RouteModel
-    = HomeRoute
+    = ArmiesRoute
     | UnitsRoute
     | NotFoundRoute
 
@@ -15,8 +15,8 @@ type RouteModel
 matchers : Parser (RouteModel -> a) a
 matchers =
     oneOf
-        [ map HomeRoute (UrlParser.top)
-        , map HomeRoute (UrlParser.s "home")
+        [ map ArmiesRoute (UrlParser.top)
+        , map ArmiesRoute (UrlParser.s "armies")
         , map UnitsRoute (UrlParser.s "units")
         ]
 

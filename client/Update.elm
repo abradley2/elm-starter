@@ -2,7 +2,7 @@ module Update exposing (update)
 
 import Message exposing (Message, Message(..))
 import Update.UnitsUpdate exposing (unitsModel, unitsUpdate)
-import Update.HomeUpdate exposing (homeUpdate)
+import Update.ArmiesUpdate exposing (armiesUpdate)
 import Update.LayoutUpdate exposing (layoutUpdate)
 import Update.RouteUpdate exposing (routeUpdate)
 
@@ -29,9 +29,9 @@ update message model =
                     (\model unitsModel -> ({ model | unitsModel = unitsModel }))
                     unitsUpdate
                 |> updater
-                    (\model -> model.homeModel)
-                    (\model homeModel -> ({ model | homeModel = homeModel }))
-                    homeUpdate
+                    (\model -> model.armiesModel)
+                    (\model armiesModel -> ({ model | armiesModel = armiesModel }))
+                    armiesUpdate
                 |> updater
                     (\model -> model.layoutModel)
                     (\model layoutModel -> ({ model | layoutModel = layoutModel }))

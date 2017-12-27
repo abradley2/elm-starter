@@ -10,7 +10,7 @@ import Model exposing (Model, model)
 import Navigation exposing (Location)
 import Update exposing (update)
 import Update.RouteUpdate exposing (RouteModel(..), parseLocation)
-import View.HomeView exposing (homeView)
+import View.ArmiesView exposing (armiesView)
 import View.UnitsView exposing (unitsView)
 
 
@@ -24,8 +24,8 @@ view : Model -> Html Message
 view model =
     layout model
         (case model.routeModel of
-            HomeRoute ->
-                Html.Styled.map Home (homeView model)
+            ArmiesRoute ->
+                Html.Styled.map Armies (armiesView model)
 
             UnitsRoute ->
                 Html.Styled.map Units (unitsView model)

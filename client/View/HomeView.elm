@@ -1,15 +1,15 @@
-module View.HomeView exposing (homeView)
+module View.ArmiesView exposing (armiesView)
 
 import Html
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
 import Model exposing (Model)
-import Message.HomeMessage exposing (HomeMessage, HomeMessage(..))
+import Message.ArmiesMessage exposing (ArmiesMessage, ArmiesMessage(..))
 
 
-homeView : Model -> Html HomeMessage
-homeView model =
+armiesView : Model -> Html ArmiesMessage
+armiesView model =
     div [ class "center measure" ]
         [ h3 [] [ text "test" ]
         ]

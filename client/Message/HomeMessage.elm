@@ -1,5 +1,5 @@
-module Message.HomeMessage exposing (HomeMessage, HomeMessage(..))
+module Message.ArmiesMessage exposing (ArmiesMessage, ArmiesMessage(..))
 
 
-type HomeMessage
+type ArmiesMessage
     = NoOp
