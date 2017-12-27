@@ -1,15 +1,15 @@
-module View.AboutView exposing (aboutView)
+module View.UnitsView exposing (unitsView)
 
 import Html
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
 import Model exposing (Model)
-import Message.AboutMessage exposing (AboutMessage)
+import Message.UnitsMessage exposing (UnitsMessage)
 
 
-aboutView : Model -> Html AboutMessage
-aboutView model =
+unitsView : Model -> Html UnitsMessage
+unitsView model =
     div [ class "center measure" ]
         [ a [ href "#" ] [ text "Home" ]
         , h3 [] [ text "About Page" ]

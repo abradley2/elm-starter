@@ -39,10 +39,13 @@ toggleSidenavButton : Html LayoutMessage
 toggleSidenavButton =
     a
         [ href "javascript:void(0);"
-        , class "left brand-logo show-on-small"
+        , class "left sidenav-trigger hide-on-med-and-up"
         , onClick ToggleSidenav
+        , css
+            [ cursor pointer
+            ]
         ]
-        [ text "Menu"
+        [ i [ class "material-icons" ] [ text "menu" ]
         ]
 
 

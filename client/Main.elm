@@ -11,7 +11,7 @@ import Navigation exposing (Location)
 import Update exposing (update)
 import Update.RouteUpdate exposing (RouteModel(..), parseLocation)
 import View.HomeView exposing (homeView)
-import View.AboutView exposing (aboutView)
+import View.UnitsView exposing (unitsView)
 
 
 port mount : (String -> message) -> Sub message
@@ -27,8 +27,8 @@ view model =
             HomeRoute ->
                 Html.Styled.map Home (homeView model)
 
-            AboutRoute ->
-                Html.Styled.map About (aboutView model)
+            UnitsRoute ->
+                Html.Styled.map Units (unitsView model)
 
             NotFoundRoute ->
                 div [ class "center measure" ]

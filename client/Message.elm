@@ -2,7 +2,7 @@ module Message exposing (Message, Message(..))
 
 import Navigation exposing (Location)
 import Message.HomeMessage exposing (HomeMessage)
-import Message.AboutMessage exposing (AboutMessage)
+import Message.UnitsMessage exposing (UnitsMessage)
 import Message.LayoutMessage exposing (LayoutMessage)
 
 
@@ -11,5 +11,5 @@ type Message
     | Unmount String
     | OnLocationChange Location
     | Home HomeMessage
-    | About AboutMessage
+    | Units UnitsMessage
     | Layout LayoutMessage
