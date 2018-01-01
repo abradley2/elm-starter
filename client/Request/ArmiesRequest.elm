@@ -9,13 +9,13 @@ decodeArmiesList =
     Json.Decode.list Json.Decode.string
 
 
-getArmies userId =
+getArmies userToken =
     let
         request =
             Http.request
                 { method = "GET"
                 , headers =
-                    [ ( "Authorization", "Bearer eyJhbGciOiJIUzUxM...kv6TGw7H1GX2g" )
+                    [ ( "Authorization", "Bearer " ++ userToken )
                     ]
                 , url = "localhost:5000/armies"
                 , body = Http.emptyBody
