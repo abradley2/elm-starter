@@ -4,6 +4,7 @@ import Navigation exposing (Location)
 import Message.ArmiesMessage exposing (ArmiesMessage)
 import Message.UnitsMessage exposing (UnitsMessage)
 import Message.LayoutMessage exposing (LayoutMessage)
+import Message.UserMessage exposing (UserMessage)
 
 
 type Message
@@ -13,3 +14,4 @@ type Message
     | Armies ArmiesMessage
     | Units UnitsMessage
     | Layout LayoutMessage
+    | User UserMessage

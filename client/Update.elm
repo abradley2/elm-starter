@@ -5,6 +5,7 @@ import Update.UnitsUpdate exposing (unitsModel, unitsUpdate)
 import Update.ArmiesUpdate exposing (armiesUpdate)
 import Update.LayoutUpdate exposing (layoutUpdate)
 import Update.RouteUpdate exposing (routeUpdate)
+import Update.UserUpdate exposing (userUpdate)
 
 
 updater getter setter reducer =
@@ -36,5 +37,9 @@ update message model =
                     (\model -> model.layoutModel)
                     (\model layoutModel -> ({ model | layoutModel = layoutModel }))
                     layoutUpdate
+                |> updater
+                    (\model -> model.userModel)
+                    (\model userModel -> ({ model | userModel = userModel }))
+                    userUpdate
     in
         ( updatedModel, Cmd.batch commands )

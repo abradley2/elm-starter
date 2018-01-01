@@ -2,6 +2,6 @@ const router = require('express').Router;
 
 const api = router();
 
-api.use('/message', require('./routes/message'));
+api.use('/armies', require('./routes/armies'));
 
 module.exports = api;
