@@ -50,7 +50,7 @@ init location =
         initialLocation =
             parseLocation location
     in
-        ( model initialLocation, Cmd.batch [] )
+        ( model initialLocation, Cmd.batch [ Navigation.modifyUrl location.href ] )
 
 
 main : Program Never Model Message
