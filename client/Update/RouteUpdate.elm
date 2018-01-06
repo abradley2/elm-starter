@@ -1,18 +1,17 @@
-module Update.RouteUpdate exposing (parseLocation, routeUpdate, routeModel, RouteModel, RouteModel(..))
+module Update.RouteUpdate exposing (parseLocation, routeUpdate, Route, Route(..), route)
 
-import UrlParser exposing (..)
 import Message exposing (Message(..))
 import Navigation exposing (Location)
 import UrlParser exposing (..)
 
 
-type RouteModel
+type Route
     = ArmiesRoute
     | UnitsRoute
     | NotFoundRoute
 
 
-matchers : Parser (RouteModel -> a) a
+matchers : Parser (Route -> a) a
 matchers =
     oneOf
         [ map ArmiesRoute (UrlParser.top)
@@ -21,25 +20,25 @@ matchers =
         ]
 
 
-parseLocation : Location -> List (Cmd Message) -> ( RouteModel, List (Cmd Message) )
-parseLocation location commands =
+parseLocation : Location -> Route
+parseLocation location =
     case (parseHash matchers location) of
         Just route ->
-            ( route, commands )
+            route
 
         Nothing ->
-            ( NotFoundRoute, commands )
+            NotFoundRoute
 
 
-routeModel location commands =
-    parseLocation location commands
+route location =
+    parseLocation location
 
 
-routeUpdate : Message -> RouteModel -> List (Cmd Message) -> ( RouteModel, List (Cmd Message) )
+routeUpdate : Message -> Route -> List (Cmd Message) -> ( Route, List (Cmd Message) )
 routeUpdate message routeModel commands =
     case message of
         OnLocationChange location ->
-            parseLocation location commands
+            ( parseLocation location, commands )
 
         _ ->
             ( routeModel, commands )

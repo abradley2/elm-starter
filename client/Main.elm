@@ -9,7 +9,7 @@ import Message exposing (Message, Message(..))
 import Model exposing (Model, model)
 import Navigation exposing (Location)
 import Update exposing (update)
-import Update.RouteUpdate exposing (RouteModel(..), parseLocation)
+import Update.RouteUpdate exposing (Route(..), parseLocation)
 import View.ArmiesView exposing (armiesView)
 import View.UnitsView exposing (unitsView)
 
@@ -23,7 +23,7 @@ port unmount : (String -> message) -> Sub message
 view : Model -> Html Message
 view model =
     layout model
-        (case model.routeModel of
+        (case model.route of
             ArmiesRoute ->
                 Html.Styled.map Armies (armiesView model)
 
@@ -47,10 +47,10 @@ subscriptions model =
 init : Location -> ( Model, Cmd Message )
 init location =
     let
-        ( initialLocation, commands ) =
-            parseLocation location []
+        initialLocation =
+            parseLocation location
     in
-        ( model initialLocation, Cmd.batch commands )
+        ( model initialLocation, Cmd.batch [] )
 
 
 main : Program Never Model Message

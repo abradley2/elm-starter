@@ -22,8 +22,8 @@ update message model =
         ( passMessage, updatedModel, commands ) =
             ( Debug.log "message:" message, model, [] )
                 |> updater
-                    (\model -> model.routeModel)
-                    (\model routeModel -> ({ model | routeModel = routeModel }))
+                    (\model -> model.route)
+                    (\model route -> ({ model | route = route }))
                     routeUpdate
                 |> updater
                     (\model -> model.unitsModel)

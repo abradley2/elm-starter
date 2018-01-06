@@ -1,6 +1,6 @@
 module Model exposing (Model, model)
 
-import Update.RouteUpdate exposing (RouteModel, routeModel)
+import Update.RouteUpdate exposing (Route)
 import Update.ArmiesUpdate exposing (ArmiesModel, armiesModel)
 import Update.UnitsUpdate exposing (UnitsModel, unitsModel)
 import Update.LayoutUpdate exposing (LayoutModel, layoutModel)
@@ -8,7 +8,7 @@ import Update.UserUpdate exposing (UserModel, userModel)
 
 
 type alias Model =
-    { routeModel : RouteModel
+    { route : Route
     , armiesModel : ArmiesModel
     , unitsModel : UnitsModel
     , layoutModel : LayoutModel
@@ -16,8 +16,8 @@ type alias Model =
     }
 
 
-model route =
-    { routeModel = route
+model initialLocation =
+    { route = initialLocation
     , armiesModel = armiesModel
     , unitsModel = unitsModel
     , layoutModel = layoutModel
