@@ -1,40 +1,40 @@
 module Update.QuestsUpdate exposing (questsModel, questsUpdate, QuestsModel)
 
 import Message exposing (Message, Message(..))
-import Message.QuestsMessage exposing (QuestsMessage(..))
+import Message.QuestsMessage exposing (QuestsMessage, QuestsMessage(..))
 
 
 type alias QuestsModel =
-    { armyList : List String
+    { questList : List String
     , newQuestName : String
     }
 
 
 questsModel : QuestsModel
 questsModel =
-    { armyList = []
+    { questList = []
     , newQuestName = ""
     }
 
 
 onQuestsMessage : QuestsMessage -> QuestsModel -> List (Cmd Message) -> ( QuestsModel, List (Cmd Message) )
-onQuestsMessage armiesMessage quests commands =
-    case armiesMessage of
-        EditNewArmyName newQuestName ->
+onQuestsMessage questsMessage quests commands =
+    case questsMessage of
+        EditNewQuestName newQuestName ->
             ( { quests | newQuestName = newQuestName }, commands )
 
-        AddNewArmy ->
+        AddNewQuest ->
             ( { quests
-                | armyList = questsModel.armyList ++ [ questsModel.newQuestName ]
+                | questList = quests.questList ++ [ quests.newQuestName ]
                 , newQuestName = ""
               }
             , commands
             )
 
-        GetArmiesResult (Result.Ok armyList) ->
-            ( { quests | armyList = armyList }, commands )
+        GetQuestsResult (Result.Ok questList) ->
+            ( { quests | questList = questList }, commands )
 
-        GetArmiesResult (Result.Err _) ->
+        GetQuestsResult (Result.Err _) ->
             ( quests, commands )
 
         NoOp ->
@@ -44,8 +44,8 @@ onQuestsMessage armiesMessage quests commands =
 questsUpdate : Message -> QuestsModel -> List (Cmd Message) -> ( QuestsModel, List (Cmd Message) )
 questsUpdate message quests commands =
     case message of
-        Armies armiesMessage ->
-            onQuestsMessage armiesMessage quests commands
+        Quests questsMessage ->
+            onQuestsMessage questsMessage quests commands
 
         _ ->
             ( quests, commands )

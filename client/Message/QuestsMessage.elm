@@ -5,6 +5,6 @@ import Http
 
 type QuestsMessage
     = NoOp
-    | EditNewArmyName String
-    | AddNewArmy
-    | GetArmiesResult (Result Http.Error (List String))
+    | EditNewQuestName String
+    | AddNewQuest
+    | GetQuestsResult (Result Http.Error (List String))

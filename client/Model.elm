@@ -4,7 +4,7 @@ import Update.RouteUpdate exposing (Route)
 import Update.QuestsUpdate exposing (QuestsModel, questsModel)
 import Update.SideQuestsUpdate exposing (SideQuestsModel, sideQuestsModel)
 import Update.LayoutUpdate exposing (LayoutModel, layoutModel)
-import Update.UserUpdate exposing (SessionModel, sessionModel)
+import Update.SessionUpdate exposing (SessionModel, sessionModel)
 import Update.ComponentsUpdate exposing (ComponentsModel, componentsModel)
 
 

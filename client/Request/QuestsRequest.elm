@@ -5,7 +5,7 @@ import Message.QuestsMessage exposing (QuestsMessage(..), QuestsMessage)
 import Json.Decode exposing (..)
 
 
-decodeArmiesList =
+decodeQuestsList =
     Json.Decode.list Json.Decode.string
 
 
@@ -20,9 +20,9 @@ getQuests userToken =
                     ]
                 , url = "http://localhost:5000/quests"
                 , body = Http.emptyBody
-                , expect = Http.expectJson decodeArmiesList
+                , expect = Http.expectJson decodeQuestsList
                 , timeout = Nothing
                 , withCredentials = False
                 }
     in
-        Http.send GetArmiesResult request
+        Http.send GetQuestsResult request

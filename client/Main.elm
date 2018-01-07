@@ -1,6 +1,5 @@
 port module Main exposing (..)
 
-import Css.Foreign exposing (p)
 import Html
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
@@ -10,8 +9,8 @@ import Model exposing (Model, model)
 import Navigation exposing (Location)
 import Update exposing (update)
 import Update.RouteUpdate exposing (Route(..), parseLocation)
-import View.ArmiesView exposing (armiesView)
-import View.UnitsView exposing (unitsView)
+import View.QuestsView exposing (questsView)
+import View.SideQuestsView exposing (sideQuestsView)
 
 
 port mount : (String -> message) -> Sub message
@@ -24,11 +23,11 @@ view : Model -> Html Message
 view model =
     layout model
         (case model.route of
-            ArmiesRoute ->
-                Html.Styled.map Armies (armiesView model)
+            QuestsRoute ->
+                Html.Styled.map Quests (questsView model)
 
-            UnitsRoute ->
-                Html.Styled.map Units (unitsView model)
+            SideQuestsRoute ->
+                Html.Styled.map SideQuests (sideQuestsView model)
 
             NotFoundRoute ->
                 div [ class "center measure" ]

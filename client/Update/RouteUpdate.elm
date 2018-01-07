@@ -6,17 +6,17 @@ import UrlParser exposing (..)
 
 
 type Route
-    = ArmiesRoute
-    | UnitsRoute
+    = QuestsRoute
+    | SideQuestsRoute
     | NotFoundRoute
 
 
 matchers : Parser (Route -> a) a
 matchers =
     oneOf
-        [ map ArmiesRoute (UrlParser.top)
-        , map ArmiesRoute (UrlParser.s "quests")
-        , map UnitsRoute (UrlParser.s "units")
+        [ map QuestsRoute (UrlParser.top)
+        , map QuestsRoute (UrlParser.s "quests")
+        , map SideQuestsRoute (UrlParser.s "sidequests")
         ]
 
 

@@ -1,4 +1,4 @@
-module Update.UserUpdate exposing (SessionModel, userUpdate, sessionModel)
+module Update.SessionUpdate exposing (SessionModel, sessionUpdate, sessionModel)
 
 import Message exposing (Message, Message(..))
 import Message.SessionMessage exposing (SessionMessage, SessionMessage(..))
@@ -17,8 +17,8 @@ sessionModel =
     }
 
 
-onUserMessage : SessionMessage -> SessionModel -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
-onUserMessage userMessage sessionModel commands =
+onSessionMessage : SessionMessage -> SessionModel -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
+onSessionMessage userMessage sessionModel commands =
     case userMessage of
         GetTokenResult (Result.Ok token) ->
             ( { sessionModel | token = Maybe.Just token }, commands )
@@ -28,29 +28,29 @@ onUserMessage userMessage sessionModel commands =
 
 
 onRouteChange : Route -> SessionModel -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
-onRouteChange newRoute sessionModel commands =
+onRouteChange newRoute session commands =
     case newRoute of
-        ArmiesRoute ->
+        QuestsRoute ->
             let
                 token =
-                    Maybe.withDefault "" sessionModel.token
+                    Maybe.withDefault "" session.token
             in
-                ( sessionModel
-                , commands ++ [ Cmd.map Armies (getQuests token) ]
+                ( session
+                , commands ++ [ Cmd.map Quests (getQuests token) ]
                 )
 
         _ ->
             ( sessionModel, commands )
 
 
-userUpdate : Message -> SessionModel -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
-userUpdate message sessionModel commands =
+sessionUpdate : Message -> SessionModel -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
+sessionUpdate message session commands =
     case message of
-        User userMessage ->
-            onUserMessage userMessage sessionModel commands
+        Session sessionMessage ->
+            onSessionMessage sessionMessage session commands
 
         OnLocationChange location ->
-            onRouteChange (parseLocation location) sessionModel commands
+            onRouteChange (parseLocation location) session commands
 
         _ ->
-            ( sessionModel, commands )
+            ( session, commands )

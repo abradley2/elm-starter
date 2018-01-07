@@ -13,18 +13,18 @@ sideQuestsModel =
     {}
 
 
-onUnitsMessage : SideQuestsMessage -> SideQuestsModel -> List (Cmd Message) -> ( SideQuestsModel, List (Cmd Message) )
-onUnitsMessage unitsMessage sideQuestsModel commands =
-    case unitsMessage of
+onSideQuestsMessage : SideQuestsMessage -> SideQuestsModel -> List (Cmd Message) -> ( SideQuestsModel, List (Cmd Message) )
+onSideQuestsMessage sideQuestsMessage sideQuests commands =
+    case sideQuestsMessage of
         NoOp ->
-            ( sideQuestsModel, commands )
+            ( sideQuests, commands )
 
 
 sideQuestsUpdate : Message -> SideQuestsModel -> List (Cmd Message) -> ( SideQuestsModel, List (Cmd Message) )
-sideQuestsUpdate message sideQuestsModel commands =
+sideQuestsUpdate message sideQuests commands =
     case message of
-        Units unitsMessage ->
-            onUnitsMessage unitsMessage sideQuestsModel commands
+        SideQuests sideQuestsMessage ->
+            onSideQuestsMessage sideQuestsMessage sideQuests commands
 
         _ ->
-            ( sideQuestsModel, commands )
+            ( sideQuests, commands )

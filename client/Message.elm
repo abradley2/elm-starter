@@ -11,7 +11,7 @@ type Message
     = Mount String
     | Unmount String
     | OnLocationChange Location
-    | Armies QuestsMessage
-    | Units SideQuestsMessage
+    | Quests QuestsMessage
+    | SideQuests SideQuestsMessage
     | Layout LayoutMessage
-    | User SessionMessage
+    | Session SessionMessage

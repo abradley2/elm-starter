@@ -1,4 +1,4 @@
-module View.ArmiesView exposing (armiesView)
+module View.QuestsView exposing (questsView)
 
 import Html
 import Css exposing (..)
@@ -9,14 +9,15 @@ import Model exposing (Model)
 import Message.QuestsMessage exposing (QuestsMessage, QuestsMessage(..))
 
 
-armiesView : Model -> Html QuestsMessage
-armiesView model =
+questsView : Model -> Html QuestsMessage
+questsView model =
     div
         [ css
             [ padding4 (px 16) (px 8) (px 0) (px 8) ]
         ]
         [ input
             [ value model.quests.newQuestName
+            , onInput EditNewQuestName
             , attribute "data-elm-lifecycle" "newArmyTextField"
             , attribute "data-js-component" "textField"
             , type_ "text"
@@ -26,21 +27,21 @@ armiesView model =
             [ class "btn"
             , onClick
                 (if model.quests.newQuestName /= "" then
-                    AddNewArmy
+                    AddNewQuest
                  else
                     NoOp
                 )
             ]
             [ i [ class "material-icons left" ] [ text "add" ]
-            , text "Add Army"
+            , text "Add Quest"
             ]
         , div []
             (List.map
-                (\army ->
+                (\quest ->
                     div
                         []
-                        [ text army ]
+                        [ text quest ]
                 )
-                model.quests.armyList
+                model.quests.questList
             )
         ]
