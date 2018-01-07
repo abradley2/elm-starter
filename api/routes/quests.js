@@ -2,20 +2,20 @@ const router = require('express').Router;
 const redis = require('../redis');
 
 const armiesRoute = router();
-function armiesListKey(username = 'demo') {
-    return `armies:${username}`;
+function questsListKey(username = 'demo') {
+    return `quests:${username}`;
 }
 
-function getArmies(req, res) {
+function getQuests(req, res) {
     const log = req.app.locals.log;
 
     return redis.lrange(
-        armiesListKey(),
+        questsListKey(),
         0,
         -1
     )
-        .then(armies => {
-            return res.json(armies || []);
+        .then(quests => {
+            return res.json(quests || []);
         })
         .catch(err => {
             log.error(err);
@@ -23,17 +23,17 @@ function getArmies(req, res) {
         });
 }
 
-armiesRoute.get('/', getArmies);
+armiesRoute.get('/', getQuests);
 
 armiesRoute.post('/', function (req, res) {
     const log = req.app.locals.log;
 
     return redis.rpush(
-        armiesListKey(),
+        questsListKey(),
         req.body.name
     )
         .then(() => {
-            return getArmies(req, res);
+            return getQuests(req, res);
         })
         .catch(err => {
             log.error(err);
@@ -45,12 +45,12 @@ armiesRoute.put('/:index', function (req, res) {
     const log = req.app.locals.log;
 
     return redis.lset(
-        armiesListKey(),
+        questsListKey(),
         req.params.index,
         req.body.name
     )
         .then(() => {
-            return getArmies(req, res);
+            return getQuests(req, res);
         })
         .catch(err => {
             log.error(err);
@@ -62,11 +62,11 @@ armiesRoute.delete('/:index', function (req, res) {
     const log = req.app.locals.log;
 
     return redis.ltrim(
-        armiesListKey(),
+        questsListKey(),
         req.params.index
     )
         .then(() => {
-            return getArmies(req, res);
+            return getQuests(req, res);
         })
         .catch(err => {
             log.error(err);

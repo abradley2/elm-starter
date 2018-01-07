@@ -1,8 +1,8 @@
 module Update exposing (update)
 
 import Message exposing (Message, Message(..))
-import Update.UnitsUpdate exposing (unitsModel, unitsUpdate)
-import Update.ArmiesUpdate exposing (armiesUpdate)
+import Update.SideQuestsUpdate exposing (sideQuestsModel, sideQuestsUpdate)
+import Update.QuestsUpdate exposing (questsUpdate)
 import Update.LayoutUpdate exposing (layoutUpdate)
 import Update.RouteUpdate exposing (routeUpdate)
 import Update.UserUpdate exposing (userUpdate)
@@ -29,11 +29,11 @@ update message model =
                 |> updater
                     (\model -> model.units)
                     (\model units -> ({ model | units = units }))
-                    unitsUpdate
+                    sideQuestsUpdate
                 |> updater
-                    (\model -> model.armies)
-                    (\model armies -> ({ model | armies = armies }))
-                    armiesUpdate
+                    (\model -> model.quests)
+                    (\model quests -> ({ model | quests = quests }))
+                    questsUpdate
                 |> updater
                     (\model -> model.layout)
                     (\model layout -> ({ model | layout = layout }))

@@ -1,17 +1,17 @@
 module Message exposing (Message, Message(..))
 
 import Navigation exposing (Location)
-import Message.ArmiesMessage exposing (ArmiesMessage)
-import Message.UnitsMessage exposing (UnitsMessage)
+import Message.QuestsMessage exposing (QuestsMessage)
+import Message.SideQuestsMessage exposing (SideQuestsMessage)
 import Message.LayoutMessage exposing (LayoutMessage)
-import Message.UserMessage exposing (UserMessage)
+import Message.SessionMessage exposing (SessionMessage)
 
 
 type Message
     = Mount String
     | Unmount String
     | OnLocationChange Location
-    | Armies ArmiesMessage
-    | Units UnitsMessage
+    | Armies QuestsMessage
+    | Units SideQuestsMessage
     | Layout LayoutMessage
-    | User UserMessage
+    | User SessionMessage

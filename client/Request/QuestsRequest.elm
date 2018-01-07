@@ -1,7 +1,7 @@
-module Request.ArmiesRequest exposing (getArmies)
+module Request.QuestsRequest exposing (getQuests)
 
 import Http
-import Message.ArmiesMessage exposing (ArmiesMessage(..), ArmiesMessage)
+import Message.QuestsMessage exposing (QuestsMessage(..), QuestsMessage)
 import Json.Decode exposing (..)
 
 
@@ -9,8 +9,8 @@ decodeArmiesList =
     Json.Decode.list Json.Decode.string
 
 
-getArmies : String -> Cmd ArmiesMessage
-getArmies userToken =
+getQuests : String -> Cmd QuestsMessage
+getQuests userToken =
     let
         request =
             Http.request
@@ -18,7 +18,7 @@ getArmies userToken =
                 , headers =
                     [ Http.header "Authorization" ("Bearer " ++ userToken)
                     ]
-                , url = "http://localhost:5000/armies"
+                , url = "http://localhost:5000/quests"
                 , body = Http.emptyBody
                 , expect = Http.expectJson decodeArmiesList
                 , timeout = Nothing

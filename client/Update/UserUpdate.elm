@@ -1,56 +1,56 @@
-module Update.UserUpdate exposing (UserModel, userUpdate, userModel)
+module Update.UserUpdate exposing (SessionModel, userUpdate, sessionModel)
 
 import Message exposing (Message, Message(..))
-import Message.UserMessage exposing (UserMessage, UserMessage(..))
+import Message.SessionMessage exposing (SessionMessage, SessionMessage(..))
 import Update.RouteUpdate exposing (parseLocation, Route, Route(..))
-import Request.ArmiesRequest exposing (getArmies)
+import Request.QuestsRequest exposing (getQuests)
 
 
-type alias UserModel =
+type alias SessionModel =
     { token : Maybe String
     }
 
 
-userModel : UserModel
-userModel =
+sessionModel : SessionModel
+sessionModel =
     { token = Maybe.Nothing
     }
 
 
-onUserMessage : UserMessage -> UserModel -> List (Cmd Message) -> ( UserModel, List (Cmd Message) )
-onUserMessage userMessage userModel commands =
+onUserMessage : SessionMessage -> SessionModel -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
+onUserMessage userMessage sessionModel commands =
     case userMessage of
         GetTokenResult (Result.Ok token) ->
-            ( { userModel | token = Maybe.Just token }, commands )
+            ( { sessionModel | token = Maybe.Just token }, commands )
 
         GetTokenResult (Result.Err _) ->
-            ( userModel, commands )
+            ( sessionModel, commands )
 
 
-onRouteChange : Route -> UserModel -> List (Cmd Message) -> ( UserModel, List (Cmd Message) )
-onRouteChange newRoute userModel commands =
+onRouteChange : Route -> SessionModel -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
+onRouteChange newRoute sessionModel commands =
     case newRoute of
         ArmiesRoute ->
             let
                 token =
-                    Maybe.withDefault "" userModel.token
+                    Maybe.withDefault "" sessionModel.token
             in
-                ( userModel
-                , commands ++ [ Cmd.map Armies (getArmies token) ]
+                ( sessionModel
+                , commands ++ [ Cmd.map Armies (getQuests token) ]
                 )
 
         _ ->
-            ( userModel, commands )
+            ( sessionModel, commands )
 
 
-userUpdate : Message -> UserModel -> List (Cmd Message) -> ( UserModel, List (Cmd Message) )
-userUpdate message userModel commands =
+userUpdate : Message -> SessionModel -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
+userUpdate message sessionModel commands =
     case message of
         User userMessage ->
-            onUserMessage userMessage userModel commands
+            onUserMessage userMessage sessionModel commands
 
         OnLocationChange location ->
-            onRouteChange (parseLocation location) userModel commands
+            onRouteChange (parseLocation location) sessionModel commands
 
         _ ->
-            ( userModel, commands )
+            ( sessionModel, commands )

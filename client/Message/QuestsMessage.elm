@@ -1,9 +1,9 @@
-module Message.ArmiesMessage exposing (ArmiesMessage, ArmiesMessage(..))
+module Message.QuestsMessage exposing (QuestsMessage, QuestsMessage(..))
 
 import Http
 
 
-type ArmiesMessage
+type QuestsMessage
     = NoOp
     | EditNewArmyName String
     | AddNewArmy

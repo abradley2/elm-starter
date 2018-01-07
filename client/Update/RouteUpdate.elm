@@ -15,7 +15,7 @@ matchers : Parser (Route -> a) a
 matchers =
     oneOf
         [ map ArmiesRoute (UrlParser.top)
-        , map ArmiesRoute (UrlParser.s "armies")
+        , map ArmiesRoute (UrlParser.s "quests")
         , map UnitsRoute (UrlParser.s "units")
         ]
 

@@ -15,7 +15,7 @@ import Model exposing (Model)
 navs : List (Html LayoutMessage)
 navs =
     [ li []
-        [ a [ href "#armies" ] [ text "Armies" ]
+        [ a [ href "#quests" ] [ text "Armies" ]
         ]
     , li []
         [ a [ href "#units" ] [ text "Units" ]

@@ -6,17 +6,17 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
 import Model exposing (Model)
-import Message.ArmiesMessage exposing (ArmiesMessage, ArmiesMessage(..))
+import Message.QuestsMessage exposing (QuestsMessage, QuestsMessage(..))
 
 
-armiesView : Model -> Html ArmiesMessage
+armiesView : Model -> Html QuestsMessage
 armiesView model =
     div
         [ css
             [ padding4 (px 16) (px 8) (px 0) (px 8) ]
         ]
         [ input
-            [ value model.armies.newArmyName
+            [ value model.quests.newQuestName
             , attribute "data-elm-lifecycle" "newArmyTextField"
             , attribute "data-js-component" "textField"
             , type_ "text"
@@ -25,7 +25,7 @@ armiesView model =
         , span
             [ class "btn"
             , onClick
-                (if model.armies.newArmyName /= "" then
+                (if model.quests.newQuestName /= "" then
                     AddNewArmy
                  else
                     NoOp
@@ -41,6 +41,6 @@ armiesView model =
                         []
                         [ text army ]
                 )
-                model.armies.armyList
+                model.quests.armyList
             )
         ]
