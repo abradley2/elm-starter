@@ -8,8 +8,8 @@ import Message.SessionMessage exposing (SessionMessage)
 
 
 type Message
-    = Mount String
-    | Unmount String
+    = Mount ( String, String )
+    | Unmount ( String, String )
     | OnLocationChange Location
     | Quests QuestsMessage
     | SideQuests SideQuestsMessage

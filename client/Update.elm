@@ -6,7 +6,6 @@ import Update.QuestsUpdate exposing (questsUpdate)
 import Update.LayoutUpdate exposing (layoutUpdate)
 import Update.RouteUpdate exposing (routeUpdate)
 import Update.SessionUpdate exposing (sessionUpdate)
-import Update.ComponentsUpdate exposing (componentsUpdate)
 
 
 updater getter setter reducer =
@@ -42,9 +41,5 @@ update message model =
                     (\model -> model.user)
                     (\model user -> ({ model | user = user }))
                     sessionUpdate
-                |> updater
-                    (\model -> model.components)
-                    (\model components -> ({ model | components = components }))
-                    componentsUpdate
     in
         ( updatedModel, Cmd.batch commands )

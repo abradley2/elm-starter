@@ -1,24 +1,45 @@
-module Update.ComponentsUpdate exposing (componentsUpdate, componentsModel, ComponentsModel)
+module Update.ComponentsUpdate exposing (componentsUpdate, Components, components)
 
+import Dict exposing (Dict)
 import Message exposing (Message, Message(..))
 
 
-type alias ComponentsModel =
-    {}
+type alias ComponentDictionary =
+    Dict String (Dict String (Dict String String))
 
 
-componentsModel =
-    {}
+type alias Components =
+    { textFields : ComponentDictionary
+    }
 
 
-componentsUpdate : Message -> ComponentsModel -> List (Cmd Message) -> ( ComponentsModel, List (Cmd Message) )
-componentsUpdate message components commands =
+components : Components
+components =
+    { textFields = Dict.empty
+    }
+
+
+type alias ComponentsModel baseModel =
+    { baseModel
+        | components : Components
+    }
+
+
+componentsModel initialModel =
+    let
+        formedModel =
+            { initialModel | components = components }
+    in
+        formedModel
+
+
+componentsUpdate updater message modelWithComponents commands =
     case message of
-        Mount componentId ->
-            ( components, commands )
+        Mount message ->
+            ( modelWithComponents, commands )
 
-        Unmount componentId ->
-            ( components, commands )
+        Unmount message ->
+            ( modelWithComponents, commands )
 
         _ ->
-            ( components, commands )
+            updater message modelWithComponents commands

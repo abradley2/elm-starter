@@ -13,10 +13,10 @@ import View.QuestsView exposing (questsView)
 import View.SideQuestsView exposing (sideQuestsView)
 
 
-port mount : (String -> message) -> Sub message
+port mount : (( String, String ) -> message) -> Sub message
 
 
-port unmount : (String -> message) -> Sub message
+port unmount : (( String, String ) -> message) -> Sub message
 
 
 view : Model -> Html Message
