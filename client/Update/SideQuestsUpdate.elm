@@ -16,7 +16,7 @@ sideQuestsModel =
 onSideQuestsMessage : SideQuestsMessage -> SideQuestsModel -> List (Cmd Message) -> ( SideQuestsModel, List (Cmd Message) )
 onSideQuestsMessage sideQuestsMessage sideQuests commands =
     case sideQuestsMessage of
-        NoOp ->
+        AddNewSideQuest ->
             ( sideQuests, commands )
 
 

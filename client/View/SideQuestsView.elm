@@ -5,7 +5,7 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
 import Model exposing (Model)
-import Message.SideQuestsMessage exposing (SideQuestsMessage)
+import Message.SideQuestsMessage exposing (SideQuestsMessage, SideQuestsMessage(..))
 
 
 sideQuestsView : Model -> Html SideQuestsMessage
