@@ -1,6 +1,5 @@
 module Update.QuestsUpdate exposing (questsModel, questsUpdate, QuestsModel)
 
-import Update.ComponentsUpdate exposing (components, componentsUpdate, Components)
 import Message exposing (Message, Message(..))
 import Message.QuestsMessage exposing (QuestsMessage, QuestsMessage(..))
 
@@ -8,7 +7,6 @@ import Message.QuestsMessage exposing (QuestsMessage, QuestsMessage(..))
 type alias QuestsModel =
     { questList : List String
     , newQuestName : String
-    , components : Components
     }
 
 
@@ -16,7 +14,6 @@ questsModel : QuestsModel
 questsModel =
     { questList = []
     , newQuestName = ""
-    , components = components
     }
 
 
@@ -45,13 +42,10 @@ onQuestsMessage questsMessage quests commands =
 
 
 questsUpdate : Message -> QuestsModel -> List (Cmd Message) -> ( QuestsModel, List (Cmd Message) )
-questsUpdate =
-    componentsUpdate
-        (\message quests commands ->
-            case message of
-                Quests questsMessage ->
-                    onQuestsMessage questsMessage quests commands
+questsUpdate message quests commands =
+    case message of
+        Quests questsMessage ->
+            onQuestsMessage questsMessage quests commands
 
-                _ ->
-                    ( quests, commands )
-        )
+        _ ->
+            ( quests, commands )
