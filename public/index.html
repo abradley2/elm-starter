@@ -28,8 +28,10 @@
                 if (event.animationName == "nodeInserted") {
                     const parent = e.target.parentElement
                     const target = e.target
-                    const targetId = target.getAttribute('id')
+                    const targetId = target.getAttribute('data-elm-lifecycle')
                     const componentType = target.getAttribute('data-js-component')
+                    
+                    window.console.log('component type = ', componentType)
                     
                     if (componentType) window.Components.mount(target, componentType, app)
                     app.ports.mount.send(targetId)

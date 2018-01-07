@@ -5,21 +5,24 @@ import Update.ArmiesUpdate exposing (ArmiesModel, armiesModel)
 import Update.UnitsUpdate exposing (UnitsModel, unitsModel)
 import Update.LayoutUpdate exposing (LayoutModel, layoutModel)
 import Update.UserUpdate exposing (UserModel, userModel)
+import Update.ComponentsUpdate exposing (ComponentsModel, componentsModel)
 
 
 type alias Model =
     { route : Route
-    , armiesModel : ArmiesModel
-    , unitsModel : UnitsModel
-    , layoutModel : LayoutModel
-    , userModel : UserModel
+    , armies : ArmiesModel
+    , units : UnitsModel
+    , layout : LayoutModel
+    , user : UserModel
+    , components : ComponentsModel
     }
 
 
 model initialLocation =
     { route = initialLocation
-    , armiesModel = armiesModel
-    , unitsModel = unitsModel
-    , layoutModel = layoutModel
-    , userModel = userModel
+    , armies = armiesModel
+    , units = unitsModel
+    , layout = layoutModel
+    , user = userModel
+    , components = componentsModel
     }

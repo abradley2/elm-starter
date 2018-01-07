@@ -6,6 +6,7 @@ import Update.ArmiesUpdate exposing (armiesUpdate)
 import Update.LayoutUpdate exposing (layoutUpdate)
 import Update.RouteUpdate exposing (routeUpdate)
 import Update.UserUpdate exposing (userUpdate)
+import Update.ComponentsUpdate exposing (componentsUpdate)
 
 
 updater getter setter reducer =
@@ -26,20 +27,24 @@ update message model =
                     (\model route -> ({ model | route = route }))
                     routeUpdate
                 |> updater
-                    (\model -> model.unitsModel)
-                    (\model unitsModel -> ({ model | unitsModel = unitsModel }))
+                    (\model -> model.units)
+                    (\model units -> ({ model | units = units }))
                     unitsUpdate
                 |> updater
-                    (\model -> model.armiesModel)
-                    (\model armiesModel -> ({ model | armiesModel = armiesModel }))
+                    (\model -> model.armies)
+                    (\model armies -> ({ model | armies = armies }))
                     armiesUpdate
                 |> updater
-                    (\model -> model.layoutModel)
-                    (\model layoutModel -> ({ model | layoutModel = layoutModel }))
+                    (\model -> model.layout)
+                    (\model layout -> ({ model | layout = layout }))
                     layoutUpdate
                 |> updater
-                    (\model -> model.userModel)
-                    (\model userModel -> ({ model | userModel = userModel }))
+                    (\model -> model.user)
+                    (\model user -> ({ model | user = user }))
                     userUpdate
+                |> updater
+                    (\model -> model.components)
+                    (\model components -> ({ model | components = components }))
+                    componentsUpdate
     in
         ( updatedModel, Cmd.batch commands )

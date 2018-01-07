@@ -67,7 +67,7 @@ layout model view =
                 , class "sidenav"
                 , onClick ToggleSidenav
                 , style
-                    [ ( "transform", sideNavtransform model.layoutModel.sidenavOpen )
+                    [ ( "transform", sideNavtransform model.layout.sidenavOpen )
                     , ( "transition", ".25s" )
                     ]
                 ]
