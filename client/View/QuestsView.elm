@@ -7,6 +7,7 @@ import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
 import Model exposing (Model)
 import Message.QuestsMessage exposing (QuestsMessage, QuestsMessage(..))
+import Component.TextField exposing (textField)
 
 
 questsView : Model -> Html QuestsMessage
@@ -15,14 +16,23 @@ questsView model =
         [ css
             [ padding4 (px 16) (px 8) (px 0) (px 8) ]
         ]
-        [ input
-            [ value model.quests.newQuestName
-            , onInput EditNewQuestName
-            , attribute "data-elm-lifecycle" "newArmyTextField"
-            , attribute "data-js-component" "textField"
-            , type_ "text"
-            ]
-            []
+        [ (case model.session.userId of
+            Just userId ->
+                div []
+                    [ img [ src ("https://graph.facebook.com/" ++ userId ++ "/picture?type=small") ] []
+                    ]
+
+            Nothing ->
+                div [] []
+          )
+        , (textField
+            { id = "new-quest-text-field"
+            , class = Maybe.Nothing
+            , value = model.quests.newQuestName
+            , onInput = EditNewQuestName
+            , label = "New Quest"
+            }
+          )
         , span
             [ class "btn"
             , onClick

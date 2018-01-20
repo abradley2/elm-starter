@@ -12,7 +12,7 @@ type alias Model =
     , quests : QuestsModel
     , units : SideQuestsModel
     , layout : LayoutModel
-    , user : SessionModel
+    , session : SessionModel
     }
 
 
@@ -21,5 +21,5 @@ model initialLocation =
     , quests = questsModel
     , units = sideQuestsModel
     , layout = layoutModel
-    , user = sessionModel
+    , session = sessionModel
     }

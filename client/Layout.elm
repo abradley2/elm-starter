@@ -10,27 +10,34 @@ import Html.Styled.Events exposing (..)
 import Message exposing (Message, Message(..))
 import Message.LayoutMessage exposing (LayoutMessage, LayoutMessage(..))
 import Model exposing (Model)
+import Update.SessionUpdate exposing (userIsLoggedIn)
 
 
-navs : List (Html LayoutMessage)
-navs =
+navs : Model -> List (Html LayoutMessage)
+navs model =
     [ li []
-        [ a [ href "#quests" ] [ text "Armies" ]
+        [ a [ href "#quests" ] [ text "Quests" ]
         ]
     , li []
-        [ a [ href "#units" ] [ text "Units" ]
+        [ if userIsLoggedIn model.session then
+            a [ href "#profile" ] [ text "My Adventurer" ]
+          else
+            a
+                [ href "https://www.facebook.com/v2.11/dialog/oauth?client_id=169926423737270&redirect_uri=http://localhost:8000/&state=success" ]
+                [ text "fb login" ]
         ]
     ]
 
 
-navbar : Html LayoutMessage
-navbar =
+navbar : Model -> Html LayoutMessage
+navbar model =
     nav []
         [ div
             [ class "nav-wrapper"
             ]
             [ toggleSidenavButton
-            , ul [ class "right hide-on-small-only" ] navs
+            , a [ class "brand-logo center", href "#quests" ] [ text "THY QUEST IS.." ]
+            , ul [ class "hide-on-small-only" ] (navs model)
             ]
         ]
 
@@ -60,7 +67,7 @@ layout : Model -> Html Message -> Html Message
 layout model view =
     div
         []
-        [ Html.Styled.map Layout navbar
+        [ Html.Styled.map Layout (navbar model)
         , Html.Styled.map Layout
             (ul
                 [ id "slide-out"
@@ -71,7 +78,7 @@ layout model view =
                     , ( "transition", ".25s" )
                     ]
                 ]
-                navs
+                (navs model)
             )
         , view
         ]

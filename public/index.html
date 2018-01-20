@@ -6,6 +6,26 @@
         <title>ELM</title>
     </head>
     <body>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.min.js"></script>
+        <script>
+          window.fbAsyncInit = function() {
+            FB.init({
+              appId      : '169926423737270',
+              cookie     : true,
+              xfbml      : true,
+              version    : 'v2.11'
+            });
+            FB.AppEvents.logPageView();   
+          };
+          (function(d, s, id){
+             var js, fjs = d.getElementsByTagName(s)[0];
+             if (d.getElementById(id)) {return;}
+             js = d.createElement(s); js.id = id;
+             js.src = "https://connect.facebook.net/en_US/sdk.js";
+             fjs.parentNode.insertBefore(js, fjs);
+           }(document, 'script', 'facebook-jssdk'));
+        </script>
         <div id='app'></div>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link rel="stylesheet" href="/materialize.min.css">
@@ -24,23 +44,22 @@
         </style>
         <script>
             let app
+            const axios = window.axios
             document.addEventListener("animationstart", function(e) {
-                if (event.animationName == "nodeInserted") {
+                if (e.animationName == "nodeInserted") {
                     const parent = e.target.parentElement
                     const target = e.target
                     const targetId = target.getAttribute('data-elm-lifecycle')
                     const componentType = target.getAttribute('data-js-component')
-                    
-                    window.console.log('component type = ', componentType)
-                    
-                    if (componentType) window.Components.mount(target, componentType, app)
-                    app.ports.mount.send(targetId)
+
+                    if (componentType) window._Components.mount(target, componentType, app)
+                    app.ports.mount.send([targetId, componentType])
                     
                     const observer = new MutationObserver(function (ev) {
                         if (ev[0].removedNodes && ev[0].removedNodes.length) {
                             ev[0].removedNodes.forEach(node => {
                                 if (node === target) {
-                                    if (componentType) window.Components.unmount(target, componentType, app)
+                                    if (componentType) window._Components.unmount(target, componentType, app)
                                     app.ports.unmount.send(targetId)
                                     observer.disconnect()
                                 }
@@ -51,6 +70,33 @@
                 }
             }, false);
             app = Elm.Main.embed( document.getElementById('app') );
+            
+            const qs = window.location.search.substr(1).split('&').reduce((obj, cur) => {
+                return Object.assign(obj, {
+                    [cur.split('=')[0]]: cur.split('=')[1]
+                })
+            }, {})
+            
+            const token = Cookies.get('thyQuestIs:token')
+            
+            if (token) {
+                app.ports.loadToken.send(token)
+            }
+            
+            if (qs && qs.code) {
+                axios.post('http://localhost:5000/session/login', {code: qs.code})
+                    .then((res) => {
+                        Cookies.set('thyQuestIs:token', res.data.token)
+                        app.ports.loadToken.send(res.data.token)
+                    })
+                    .catch((err) => {
+                        console.error(err)
+                    })
+                    
+                setTimeout(() => {
+                    history.replaceState(document.title, {}, '/');
+                }, 0)
+            }
         </script>
     </body>
 </html>

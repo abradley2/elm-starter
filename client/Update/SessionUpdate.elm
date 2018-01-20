@@ -1,29 +1,50 @@
-module Update.SessionUpdate exposing (SessionModel, sessionUpdate, sessionModel)
+module Update.SessionUpdate exposing (SessionModel, sessionUpdate, sessionModel, userIsLoggedIn)
 
 import Message exposing (Message, Message(..))
 import Message.SessionMessage exposing (SessionMessage, SessionMessage(..))
 import Update.RouteUpdate exposing (parseLocation, Route, Route(..))
 import Request.QuestsRequest exposing (getQuests)
+import Request.SessionRequest exposing (loadSession)
 
 
 type alias SessionModel =
     { token : Maybe String
+    , username : Maybe String
+    , userId : Maybe String
     }
 
 
 sessionModel : SessionModel
 sessionModel =
-    { token = Maybe.Nothing
+    { token = Nothing
+    , username = Nothing
+    , userId = Nothing
     }
+
+
+userIsLoggedIn : SessionModel -> Bool
+userIsLoggedIn sessionModel =
+    sessionModel.token /= Nothing
 
 
 onSessionMessage : SessionMessage -> SessionModel -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
 onSessionMessage userMessage sessionModel commands =
     case userMessage of
         GetTokenResult (Result.Ok token) ->
-            ( { sessionModel | token = Maybe.Just token }, commands )
+            ( { sessionModel | token = Just token }, commands )
 
         GetTokenResult (Result.Err _) ->
+            ( sessionModel, commands )
+
+        LoadSessionResult (Result.Ok sessionInfo) ->
+            ( { sessionModel
+                | username = Just sessionInfo.username
+                , userId = Just sessionInfo.userId
+              }
+            , commands
+            )
+
+        LoadSessionResult (Result.Err _) ->
             ( sessionModel, commands )
 
 
@@ -48,6 +69,9 @@ sessionUpdate message session commands =
     case message of
         Session sessionMessage ->
             onSessionMessage sessionMessage session commands
+
+        LoadToken token ->
+            ( { session | token = Just token }, commands ++ [ Cmd.map Session (loadSession token) ] )
 
         OnLocationChange location ->
             onRouteChange (parseLocation location) session commands

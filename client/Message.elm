@@ -10,6 +10,7 @@ import Message.SessionMessage exposing (SessionMessage)
 type Message
     = Mount ( String, String )
     | Unmount ( String, String )
+    | LoadToken String
     | OnLocationChange Location
     | Quests QuestsMessage
     | SideQuests SideQuestsMessage

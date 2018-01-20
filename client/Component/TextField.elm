@@ -7,17 +7,11 @@ import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
 
 
-{-
-   <div class="input-field col s6">
-             <input id="last_name" type="text" class="validate">
-             <label for="last_name">Last Name</label>
-           </div>
--}
-
-
 textField params =
     div
-        [ class "input-field " ++ (Maybe.withDefault "" params.class)
+        [ class ("input-field " ++ (Maybe.withDefault "" params.class))
+        , attribute "data-elm-lifecylce" params.id
+        , attribute "data-js-component" "textField"
         ]
         [ input
             [ id params.id

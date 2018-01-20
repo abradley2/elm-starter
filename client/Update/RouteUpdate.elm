@@ -16,7 +16,7 @@ matchers =
     oneOf
         [ map QuestsRoute (UrlParser.top)
         , map QuestsRoute (UrlParser.s "quests")
-        , map SideQuestsRoute (UrlParser.s "sidequests")
+        , map SideQuestsRoute (UrlParser.s "profile")
         ]
 
 

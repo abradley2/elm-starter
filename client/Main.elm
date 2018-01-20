@@ -19,6 +19,9 @@ port mount : (( String, String ) -> message) -> Sub message
 port unmount : (( String, String ) -> message) -> Sub message
 
 
+port loadToken : (String -> message) -> Sub message
+
+
 view : Model -> Html Message
 view model =
     layout model
@@ -30,9 +33,7 @@ view model =
                 Html.Styled.map SideQuests (sideQuestsView model)
 
             NotFoundRoute ->
-                div [ class "center measure" ]
-                    [ h3 [] [ text "Page Not Found :(" ]
-                    ]
+                Html.Styled.map Quests (questsView model)
         )
 
 
@@ -40,6 +41,7 @@ subscriptions model =
     Sub.batch
         [ mount Mount
         , unmount Unmount
+        , loadToken LoadToken
         ]
 
 

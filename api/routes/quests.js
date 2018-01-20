@@ -1,7 +1,7 @@
 const router = require('express').Router;
 const redis = require('../redis');
 
-const armiesRoute = router();
+const questsRouter = router();
 function questsListKey(username = 'demo') {
     return `quests:${username}`;
 }
@@ -23,9 +23,9 @@ function getQuests(req, res) {
         });
 }
 
-armiesRoute.get('/', getQuests);
+questsRouter.get('/', getQuests);
 
-armiesRoute.post('/', function (req, res) {
+questsRouter.post('/', function (req, res) {
     const log = req.app.locals.log;
 
     return redis.rpush(
@@ -41,7 +41,7 @@ armiesRoute.post('/', function (req, res) {
         });
 });
 
-armiesRoute.put('/:index', function (req, res) {
+questsRouter.put('/:index', function (req, res) {
     const log = req.app.locals.log;
 
     return redis.lset(
@@ -58,7 +58,7 @@ armiesRoute.put('/:index', function (req, res) {
         });
 });
 
-armiesRoute.delete('/:index', function (req, res) {
+questsRouter.delete('/:index', function (req, res) {
     const log = req.app.locals.log;
 
     return redis.ltrim(
@@ -74,4 +74,4 @@ armiesRoute.delete('/:index', function (req, res) {
         });
 });
 
-module.exports = armiesRoute;
+module.exports = questsRouter;

@@ -38,8 +38,8 @@ update message model =
                     (\model layout -> ({ model | layout = layout }))
                     layoutUpdate
                 |> updater
-                    (\model -> model.user)
-                    (\model user -> ({ model | user = user }))
+                    (\model -> model.session)
+                    (\model session -> ({ model | session = session }))
                     sessionUpdate
     in
         ( updatedModel, Cmd.batch commands )
