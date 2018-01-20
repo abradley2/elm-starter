@@ -23,21 +23,21 @@ sessionModel =
 
 
 userIsLoggedIn : SessionModel -> Bool
-userIsLoggedIn sessionModel =
-    sessionModel.token /= Nothing
+userIsLoggedIn session =
+    session.token /= Nothing
 
 
 onSessionMessage : SessionMessage -> SessionModel -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
-onSessionMessage userMessage sessionModel commands =
+onSessionMessage userMessage session commands =
     case userMessage of
         GetTokenResult (Result.Ok token) ->
-            ( { sessionModel | token = Just token }, commands )
+            ( { session | token = Just token }, commands )
 
         GetTokenResult (Result.Err _) ->
-            ( sessionModel, commands )
+            ( session, commands )
 
         LoadSessionResult (Result.Ok sessionInfo) ->
-            ( { sessionModel
+            ( { session
                 | username = Just sessionInfo.username
                 , userId = Just sessionInfo.userId
               }
@@ -45,7 +45,7 @@ onSessionMessage userMessage sessionModel commands =
             )
 
         LoadSessionResult (Result.Err _) ->
-            ( sessionModel, commands )
+            ( session, commands )
 
 
 onRouteChange : Route -> SessionModel -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
@@ -61,7 +61,7 @@ onRouteChange newRoute session commands =
                 )
 
         _ ->
-            ( sessionModel, commands )
+            ( session, commands )
 
 
 sessionUpdate : Message -> SessionModel -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
