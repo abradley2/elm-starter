@@ -9,6 +9,7 @@ import Model exposing (Model, model)
 import Navigation exposing (Location)
 import Update exposing (update)
 import Update.RouteUpdate exposing (Route(..), parseLocation)
+import View.MyAdventurerView exposing (myAdventurerView)
 import View.QuestsView exposing (questsView)
 import View.SideQuestsView exposing (sideQuestsView)
 
@@ -31,6 +32,9 @@ view model =
 
             SideQuestsRoute ->
                 Html.Styled.map SideQuests (sideQuestsView model)
+
+            MyAdventurerRoute ->
+                Html.Styled.map MyAdventurer (myAdventurerView model)
 
             NotFoundRoute ->
                 Html.Styled.map Quests (questsView model)

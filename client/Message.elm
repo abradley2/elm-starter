@@ -5,6 +5,7 @@ import Message.QuestsMessage exposing (QuestsMessage)
 import Message.SideQuestsMessage exposing (SideQuestsMessage)
 import Message.LayoutMessage exposing (LayoutMessage)
 import Message.SessionMessage exposing (SessionMessage)
+import Message.MyAdventurerMessage exposing (MyAdventurerMessage)
 
 
 type Message
@@ -16,3 +17,4 @@ type Message
     | SideQuests SideQuestsMessage
     | Layout LayoutMessage
     | Session SessionMessage
+    | MyAdventurer MyAdventurerMessage
