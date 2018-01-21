@@ -1,7 +1,7 @@
 const router = require('express').Router;
 const cors = require('cors');
 const bodyParser = require('body-parser');
-global.config = require('../config.json');
+global.config = require('../config.js');
 
 const api = router();
 
