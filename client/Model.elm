@@ -2,6 +2,7 @@ module Model exposing (Model, model)
 
 import Update.LayoutUpdate exposing (LayoutModel, layoutModel)
 import Update.MyAdventurerUpdate exposing (MyAdventurerModel, myAdventurerInitialModel)
+import Update.CreateQuestUpdate exposing (CreateQuestModel, createQuestInitialModel)
 import Update.QuestsUpdate exposing (QuestsModel, questsModel)
 import Update.RouteUpdate exposing (Route)
 import Update.SessionUpdate exposing (SessionModel, sessionModel)
@@ -15,6 +16,7 @@ type alias Model =
     , units : SideQuestsModel
     , layout : LayoutModel
     , session : SessionModel
+    , createQuest : CreateQuestModel
     }
 
 
@@ -25,4 +27,5 @@ model initialLocation =
     , units = sideQuestsModel
     , layout = layoutModel
     , session = sessionModel
+    , createQuest = createQuestInitialModel
     }

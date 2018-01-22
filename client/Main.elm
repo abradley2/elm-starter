@@ -12,6 +12,7 @@ import Update.RouteUpdate exposing (Route(..), parseLocation)
 import View.MyAdventurerView exposing (myAdventurerView)
 import View.QuestsView exposing (questsView)
 import View.SideQuestsView exposing (sideQuestsView)
+import View.CreateQuestView exposing (createQuestView)
 
 
 port mount : (( String, String ) -> message) -> Sub message
@@ -35,6 +36,9 @@ view model =
 
             MyAdventurerRoute ->
                 Html.Styled.map MyAdventurer (myAdventurerView model)
+
+            CreateQuestRoute ->
+                Html.Styled.map CreateQuest (createQuestView model)
 
             NotFoundRoute ->
                 Html.Styled.map Quests (questsView model)

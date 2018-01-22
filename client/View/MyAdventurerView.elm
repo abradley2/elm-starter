@@ -12,6 +12,14 @@ import Component.TextField exposing (textField)
 
 myAdventurerView : Model -> Html MyAdventurerMessage
 myAdventurerView model =
-    div []
-        [ h3 [] [ text "My Hero" ]
+    div [ class "container" ]
+        [ p [ class "flow-text" ]
+            [ (text "It appears you don't have any quests... ")
+            , br [] []
+            , a
+                [ href "#newquest"
+                ]
+                [ text "Let's create one!"
+                ]
+            ]
         ]

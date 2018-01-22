@@ -9,6 +9,7 @@ type Route
     = QuestsRoute
     | SideQuestsRoute
     | MyAdventurerRoute
+    | CreateQuestRoute
     | NotFoundRoute
 
 
@@ -19,6 +20,7 @@ matchers =
         , map QuestsRoute (UrlParser.s "quests")
         , map SideQuestsRoute (UrlParser.s "sidequests")
         , map MyAdventurerRoute (UrlParser.s "profile")
+        , map CreateQuestRoute (UrlParser.s "newquest")
         ]
 
 
