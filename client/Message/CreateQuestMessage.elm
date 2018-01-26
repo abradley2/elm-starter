@@ -3,3 +3,10 @@ module Message.CreateQuestMessage exposing (CreateQuestMessage, CreateQuestMessa
 
 type CreateQuestMessage
     = NoOp
+    | AddQuestStep
+    | EditQuestStepName String String
+    | EditQuestStepDescription String String
+    | DeleteQuestStepPrompt String
+    | DeleteQuestStepConfirm
+    | DeleteQuestStepCancel
+    | ShowFileUploadModal String

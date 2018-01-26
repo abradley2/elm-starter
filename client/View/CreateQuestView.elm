@@ -12,27 +12,41 @@ import Component.TextField exposing (textField)
 
 helperText =
     """
-A quest can be many things. A traveling to a cool new places with a set of activities
-and places to see in mind.
-
-Or it can be self improvement. The quest could be 30 continual days of working out
-and lifting weights. with the end goal of +2 to your strength and dexterity stats.
-
-Either way, be perscriptive! A quest you complete should be helpful to others who
-want guidance on how to go about something.
+Short description of what a quest is.
 """
+
+
+card questStep =
+    div [ class "col s10 m6 l5" ]
+        [ div [ class "card" ]
+            [ div [ class "card-image" ]
+                [ img [ src questStep.imageUrl ] []
+                , span [ class "card-title" ] [ text questStep.name ]
+                , a [ class "btn-floating halfway-fab waves-effect waves-light red" ]
+                    [ i [ class "material-icons" ] [ text "file_upload" ]
+                    ]
+                ]
+            , div [ class "card-content" ]
+                [ p [] [ text questStep.description ]
+                ]
+            ]
+        ]
 
 
 createQuestView : Model -> Html CreateQuestMessage
 createQuestView model =
-    div [ class "container" ]
-        [ p [ class "flow-text" ]
-            [ (text helperText)
-            , br [] []
-            , a
-                [ href "#newquest"
+    div []
+        [ div
+            [ class "container" ]
+            [ div []
+                [ p [ class "flow-text" ]
+                    [ (text helperText)
+                    ]
                 ]
-                [ text "Let's create one!"
-                ]
+            , div [ class "row" ]
+                (List.map
+                    (\questStep -> card questStep)
+                    model.createQuest.questSteps
+                )
             ]
         ]

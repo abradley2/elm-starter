@@ -7,21 +7,13 @@ import Layout exposing (layout)
 import Message exposing (Message, Message(..))
 import Model exposing (Model, model)
 import Navigation exposing (Location)
+import Ports exposing (..)
 import Update exposing (update)
 import Update.RouteUpdate exposing (Route(..), parseLocation)
 import View.MyAdventurerView exposing (myAdventurerView)
 import View.QuestsView exposing (questsView)
 import View.SideQuestsView exposing (sideQuestsView)
 import View.CreateQuestView exposing (createQuestView)
-
-
-port mount : (( String, String ) -> message) -> Sub message
-
-
-port unmount : (( String, String ) -> message) -> Sub message
-
-
-port loadToken : (String -> message) -> Sub message
 
 
 view : Model -> Html Message
@@ -50,6 +42,7 @@ subscriptions model =
         [ mount Mount
         , unmount Unmount
         , loadToken LoadToken
+        , loadQuestStepImage LoadQuestStepImage
         ]
 
 

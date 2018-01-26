@@ -5,6 +5,7 @@ import Update.SideQuestsUpdate exposing (sideQuestsModel, sideQuestsUpdate)
 import Update.QuestsUpdate exposing (questsUpdate)
 import Update.LayoutUpdate exposing (layoutUpdate)
 import Update.RouteUpdate exposing (routeUpdate)
+import Update.CreateQuestUpdate exposing (createQuestUpdate)
 import Update.SessionUpdate exposing (sessionUpdate)
 
 
@@ -41,5 +42,9 @@ update message model =
                     (\model -> model.session)
                     (\model session -> ({ model | session = session }))
                     sessionUpdate
+                |> updater
+                    (\model -> model.createQuest)
+                    (\model createQuest -> ({ model | createQuest = createQuest }))
+                    createQuestUpdate
     in
         ( updatedModel, Cmd.batch commands )

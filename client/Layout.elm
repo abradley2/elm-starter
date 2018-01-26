@@ -11,6 +11,7 @@ import Message exposing (Message, Message(..))
 import Message.LayoutMessage exposing (LayoutMessage, LayoutMessage(..))
 import Model exposing (Model)
 import Update.SessionUpdate exposing (userIsLoggedIn)
+import Component.TextField exposing (textField)
 
 
 navs : Model -> List (Html LayoutMessage)
@@ -36,7 +37,7 @@ navbar model =
             [ class "nav-wrapper"
             ]
             [ toggleSidenavButton
-            , a [ class "brand-logo center", href "#quests" ] [ text "THY QUEST IS..." ]
+            , a [ class "brand-logo center", href "#quests" ] [ text "QUESTLY" ]
             , ul [ class "hide-on-small-only" ] (navs model)
             ]
         ]
