@@ -12,8 +12,8 @@ import Message.CreateQuestMessage exposing (CreateQuestMessage)
 type Message
     = Mount ( String, String )
     | Unmount ( String, String )
-    | LoadQuestStepImage String String
-    | LoadQuestStepId Int String
+    | LoadQuestStepImage ( String, String )
+    | LoadQuestStepId ( Int, String )
     | LoadToken String
     | OnLocationChange Location
     | Quests QuestsMessage

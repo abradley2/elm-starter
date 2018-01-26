@@ -9,7 +9,7 @@ import Html.Attributes exposing (name)
 import Message exposing (Message, Message(..))
 import Message.CreateQuestMessage exposing (CreateQuestMessage, CreateQuestMessage(..))
 import Update.RouteUpdate exposing (parseLocation, Route(..))
-import Ports exposing (..)
+import Ports exposing (requestQuestStepId)
 
 
 type alias QuestStep =
@@ -59,7 +59,7 @@ onCreateQuestMessage createQuestMessage createQuest commands =
                              }
                            ]
               }
-            , commands ++ [ requestStepId ]
+            , commands ++ [ requestQuestStepId "newquest" ]
             )
 
         NoOp ->
