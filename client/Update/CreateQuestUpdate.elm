@@ -9,7 +9,7 @@ import Html.Attributes exposing (name)
 import Message exposing (Message, Message(..))
 import Message.CreateQuestMessage exposing (CreateQuestMessage, CreateQuestMessage(..))
 import Update.RouteUpdate exposing (parseLocation, Route(..))
-import Ports exposing (requestQuestStepId)
+import Ports exposing (requestQuestStepId, requestQuestId)
 
 
 type alias QuestStep =
@@ -21,12 +21,20 @@ type alias QuestStep =
 
 
 type alias CreateQuestModel =
-    { questSteps : List QuestStep
+    { id : String
+    , questName : String
+    , questDescription : String
+    , questImageUrl : String
+    , questSteps : List QuestStep
     }
 
 
 createQuestInitialModel =
-    { questSteps = []
+    { id = ""
+    , questName = ""
+    , questDescription = ""
+    , questImageUrl = "/placeholder.png"
+    , questSteps = []
     }
 
 
@@ -41,7 +49,7 @@ onMountCreateQuestView createQuest commands =
               }
             ]
       }
-    , commands
+    , commands ++ [ requestQuestId "gimme!" ]
     )
 
 
@@ -74,6 +82,9 @@ createQuestUpdate message createQuest commands =
     case message of
         CreateQuest createQuestMessage ->
             onCreateQuestMessage createQuestMessage createQuest commands
+
+        LoadQuestId cuid ->
+            ( { createQuest | id = cuid }, commands )
 
         OnLocationChange location ->
             let

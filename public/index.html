@@ -84,6 +84,10 @@
                 app.ports.loadToken.send(token)
             }
             
+            app.ports.requestQuestId.subscribe(function (message) {
+                app.ports.loadQuestId.send(window.cuid())
+            })
+            
             if (qs && qs.code) {
                 axios.post('http://localhost:5000/session/login', {code: qs.code})
                     .then((res) => {

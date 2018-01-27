@@ -13,6 +13,7 @@ type Message
     = Mount ( String, String )
     | Unmount ( String, String )
     | LoadQuestStepImage ( String, String )
+    | LoadQuestId String
     | LoadQuestStepId ( Int, String )
     | LoadToken String
     | OnLocationChange Location

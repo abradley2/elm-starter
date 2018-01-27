@@ -44,6 +44,13 @@ createQuestView model =
                     ]
                 ]
             , div [ class "row" ]
+                [ card
+                    { name = model.createQuest.questName
+                    , description = model.createQuest.questDescription
+                    , imageUrl = model.createQuest.questImageUrl
+                    }
+                ]
+            , div [ class "row" ]
                 (List.map
                     (\questStep -> card questStep)
                     model.createQuest.questSteps

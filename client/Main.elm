@@ -42,6 +42,7 @@ subscriptions model =
         [ mount Mount
         , unmount Unmount
         , loadToken LoadToken
+        , loadQuestId LoadQuestId
         , loadQuestStepImage LoadQuestStepImage
         ]
 

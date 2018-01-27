@@ -1,12 +1,4 @@
-port module Ports
-    exposing
-        ( mount
-        , unmount
-        , loadQuestStepImage
-        , loadQuestStepId
-        , loadToken
-        , requestQuestStepId
-        )
+port module Ports exposing (..)
 
 
 port mount : (( String, String ) -> message) -> Sub message
@@ -24,4 +16,10 @@ port loadQuestStepId : (( Int, String ) -> message) -> Sub message
 port loadToken : (String -> message) -> Sub message
 
 
+port loadQuestId : (String -> message) -> Sub message
+
+
 port requestQuestStepId : String -> Cmd message
+
+
+port requestQuestId : String -> Cmd message
