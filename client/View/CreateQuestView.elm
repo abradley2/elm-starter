@@ -12,6 +12,7 @@ import Component.TextField exposing (textField)
 import Component.TextArea exposing (textArea)
 import Component.Modal exposing (modal)
 import Component.FileInput exposing (fileInput)
+import Component.RaisedButton exposing (raisedButton)
 
 
 helperText =
@@ -75,6 +76,19 @@ createQuestView model =
                                 , value = Maybe.withDefault "" model.createQuest.imageUploadPath
                                 }
                               )
+                            ]
+                        , div [ class "row" ]
+                            [ span [ class "waves-effect waves-teal btn-flat" ] [ text "cancel" ]
+                            , case model.createQuest.imageUploadPath of
+                                Just validpath ->
+                                    raisedButton
+                                        { label = "Upload"
+                                        , icon = Nothing
+                                        , onClick = ConfirmFileUpload "image-upload"
+                                        }
+
+                                Nothing ->
+                                    div [] []
                             ]
                         ]
                 , footer = div [] []

@@ -93,6 +93,14 @@
                 app.ports.loadQuestStepId.send(prevStepId, window.cuid())
             })
             
+            app.ports.uploadFile.subscribe(function (inputId) {
+                const fileInput = document.getElementById(inputId)
+                
+                if (!fileInput) return
+                
+                window.console.log(fileInput.files)
+            })
+            
             if (qs && qs.code) {
                 axios.post('http://localhost:5000/session/login', {code: qs.code})
                     .then((res) => {
