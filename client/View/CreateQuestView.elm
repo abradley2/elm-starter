@@ -16,12 +16,20 @@ Short description of what a quest is.
 """
 
 
-card questStep =
+card questStep onEditName =
     div [ class "col s10 m6 l5" ]
         [ div [ class "card" ]
             [ div [ class "card-image" ]
                 [ img [ src questStep.imageUrl ] []
-                , span [ class "card-title" ] [ text questStep.name ]
+                , div [ class "card-title" ]
+                    [ textField
+                        { id = questStep.id
+                        , value = questStep.name
+                        , onInput = onEditName
+                        , label = "Quest Name"
+                        , class = Nothing
+                        }
+                    ]
                 , a [ class "btn-floating halfway-fab waves-effect waves-light red" ]
                     [ i [ class "material-icons" ] [ text "file_upload" ]
                     ]
@@ -44,15 +52,23 @@ createQuestView model =
                     ]
                 ]
             , div [ class "row" ]
-                [ card
-                    { name = model.createQuest.questName
+                [ (card
+                    { id = model.createQuest.id
+                    , name = model.createQuest.questName
                     , description = model.createQuest.questDescription
                     , imageUrl = model.createQuest.questImageUrl
                     }
+                    EditQuestName
+                  )
                 ]
             , div [ class "row" ]
                 (List.map
-                    (\questStep -> card questStep)
+                    (\questStep ->
+                        (card
+                            questStep
+                            (EditQuestStepName questStep.id)
+                        )
+                    )
                     model.createQuest.questSteps
                 )
             ]

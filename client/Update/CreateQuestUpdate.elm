@@ -42,7 +42,7 @@ onMountCreateQuestView : CreateQuestModel -> List (Cmd Message) -> ( CreateQuest
 onMountCreateQuestView createQuest commands =
     ( { createQuest
         | questSteps =
-            [ { id = Debug.log "placeholder" "placeholder"
+            [ { id = "placeholder"
               , name = "Quest Name"
               , description = "A short description of the quest"
               , imageUrl = "/placeholder.png"
@@ -56,6 +56,13 @@ onMountCreateQuestView createQuest commands =
 onCreateQuestMessage : CreateQuestMessage -> CreateQuestModel -> List (Cmd Message) -> ( CreateQuestModel, List (Cmd Message) )
 onCreateQuestMessage createQuestMessage createQuest commands =
     case createQuestMessage of
+        EditQuestName questName ->
+            ( { createQuest
+                | questName = questName
+              }
+            , commands
+            )
+
         AddQuestStep ->
             ( { createQuest
                 | questSteps =

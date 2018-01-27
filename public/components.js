@@ -4,11 +4,10 @@
 
     const components = {
         textField: {
-            mount: function (elem, id) {
-                console.log('mount = ', id);
+            mount: function () {
+                M.updateTextFields();
             },
-            unmount: function (elem, id) {
-                console.log('unmount = ', id);
+            unmount: function () {
             }
         },
         sidenav: {

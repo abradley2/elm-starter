@@ -4,7 +4,7 @@ module Message.CreateQuestMessage exposing (CreateQuestMessage, CreateQuestMessa
 type CreateQuestMessage
     = NoOp
     | AddQuestStep
-    | EditQuestName
+    | EditQuestName String
     | EditQuestDescription
     | EditQuestStepName String String
     | EditQuestStepDescription String String

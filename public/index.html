@@ -38,7 +38,7 @@
             from { opacity: 0.99; }
             to { opacity: 1; }  
         }
-        [data-elm-lifecycle] {
+        .data-elm-lifecycle {
             animation-duration: 0.001s;
             animation-name: nodeInserted;
         }
@@ -50,7 +50,7 @@
                 if (e.animationName == "nodeInserted") {
                     const parent = e.target.parentElement
                     const target = e.target
-                    const targetId = target.getAttribute('data-elm-lifecycle')
+                    const targetId = target.id
                     const componentType = target.getAttribute('data-js-component')
 
                     if (componentType) window._Components.mount(target, componentType, app)
