@@ -21,7 +21,10 @@ Short description of what a quest is.
 
 
 card questStep onEditName onEditDescription onClickImageUpload =
-    div [ class "col s10 m6 l5" ]
+    div
+        [ css
+            [ maxWidth (px 320) ]
+        ]
         [ div [ class "card" ]
             [ div [ class "card-image" ]
                 [ img [ src questStep.imageUrl ] []
@@ -60,7 +63,7 @@ createQuestView model =
         [ div []
             [ modal
                 { open = model.createQuest.imageUploadModalOpen
-                , id = model.createQuest.imageUploadModalFor
+                , id = Maybe.withDefault "" model.createQuest.imageUploadModalFor
                 , content =
                     div []
                         [ p [ class "float-text" ] [ text "Upload a picture that describes this adventure" ]
@@ -69,7 +72,7 @@ createQuestView model =
                                 { id = "image-upload"
                                 , label = "Image (max size 2mb)"
                                 , onChange = OnFileChosen
-                                , value = model.createQuest.imageUploadPath
+                                , value = Maybe.withDefault "" model.createQuest.imageUploadPath
                                 }
                               )
                             ]
@@ -99,16 +102,23 @@ createQuestView model =
                   )
                 ]
             , div [ class "row" ]
-                (List.map
-                    (\questStep ->
-                        (card
-                            questStep
-                            (EditQuestStepName questStep.id)
-                            (EditQuestStepDescription questStep.id)
-                            (ShowFileUploadModal)
+                [ div
+                    [ css
+                        [ displayFlex
+                        , flexWrap Css.wrap
+                        ]
+                    ]
+                    (List.map
+                        (\questStep ->
+                            (card
+                                questStep
+                                (EditQuestStepName questStep.id)
+                                (EditQuestStepDescription questStep.id)
+                                (ShowFileUploadModal)
+                            )
                         )
+                        (Array.toList model.createQuest.questSteps)
                     )
-                    (Array.toList model.createQuest.questSteps)
-                )
+                ]
             ]
         ]

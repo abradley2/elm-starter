@@ -9,17 +9,13 @@ import Json.Decode
 
 
 fileInput params =
-    div [ class "file-field input-field" ]
-        [ div [ class "btn" ]
-            [ span []
-                [ text params.label ]
-            , input
-                [ type_ "file"
-                , id ("fileinput-" ++ params.id)
-                , on "change" (Json.Decode.map params.onChange (Json.Decode.at [ "target", "files", "0", "name" ] Json.Decode.string))
-                ]
-                []
+    div [ class "input-field" ]
+        [ input
+            [ type_ "file"
+            , id ("fileinput-" ++ params.id)
+            , on "change" (Json.Decode.map params.onChange (Json.Decode.at [ "target", "files", "0", "name" ] Json.Decode.string))
             ]
+            []
         , div
             [ class "file-path validate"
             , type_ "text"

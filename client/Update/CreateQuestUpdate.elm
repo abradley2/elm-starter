@@ -28,8 +28,8 @@ type alias CreateQuestModel =
     , questImageUrl : String
     , questSteps : Array.Array QuestStep
     , imageUploadModalOpen : Bool
-    , imageUploadModalFor : String
-    , imageUploadPath : String
+    , imageUploadModalFor : Maybe String
+    , imageUploadPath : Maybe String
     }
 
 
@@ -40,8 +40,8 @@ createQuestInitialModel =
     , questImageUrl = "/placeholder.png"
     , questSteps = Array.empty
     , imageUploadModalOpen = False
-    , imageUploadModalFor = ""
-    , imageUploadPath = ""
+    , imageUploadModalFor = Nothing
+    , imageUploadPath = Nothing
     }
 
 
@@ -88,7 +88,7 @@ onCreateQuestMessage createQuestMessage createQuest commands =
     case createQuestMessage of
         OnFileChosen filePath ->
             ( { createQuest
-                | imageUploadPath = filePath
+                | imageUploadPath = Just filePath
               }
             , commands
             )
@@ -96,8 +96,8 @@ onCreateQuestMessage createQuestMessage createQuest commands =
         ShowFileUploadModal id ->
             ( { createQuest
                 | imageUploadModalOpen = True
-                , imageUploadPath = ""
-                , imageUploadModalFor = id
+                , imageUploadPath = Nothing
+                , imageUploadModalFor = Just id
               }
             , commands
             )
@@ -105,7 +105,7 @@ onCreateQuestMessage createQuestMessage createQuest commands =
         HideFileUploadModal ->
             ( { createQuest
                 | imageUploadModalOpen = False
-                , imageUploadPath = ""
+                , imageUploadPath = Nothing
               }
             , commands
             )

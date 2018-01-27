@@ -14,3 +14,4 @@ type CreateQuestMessage
     | ShowFileUploadModal String
     | HideFileUploadModal
     | OnFileChosen String
+    | ConfirmFileUpload String
