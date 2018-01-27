@@ -53,6 +53,37 @@ onMountCreateQuestView createQuest commands =
     )
 
 
+getQuestStepById : String -> List QuestStep -> Maybe QuestStep
+getQuestStepById id questSteps =
+    questSteps
+        |> List.filter (\questStep -> questStep.id == id)
+        |> List.head
+
+
+questStepEditor : String -> (QuestStep -> QuestStep) -> CreateQuestModel -> CreateQuestModel
+questStepEditor stepId setterFunc createQuest =
+    let
+        maybeStep =
+            getQuestStepById stepId createQuest.questSteps
+    in
+        case maybeStep of
+            Just targetQuestStep ->
+                { createQuest
+                    | questSteps =
+                        List.map
+                            (\questStep ->
+                                if questStep.id == targetQuestStep.id then
+                                    setterFunc targetQuestStep
+                                else
+                                    questStep
+                            )
+                            createQuest.questSteps
+                }
+
+            Nothing ->
+                createQuest
+
+
 onCreateQuestMessage : CreateQuestMessage -> CreateQuestModel -> List (Cmd Message) -> ( CreateQuestModel, List (Cmd Message) )
 onCreateQuestMessage createQuestMessage createQuest commands =
     case createQuestMessage of
@@ -60,6 +91,29 @@ onCreateQuestMessage createQuestMessage createQuest commands =
             ( { createQuest
                 | questName = questName
               }
+            , commands
+            )
+
+        EditQuestDescription questDescription ->
+            ( { createQuest
+                | questDescription = questDescription
+              }
+            , commands
+            )
+
+        EditQuestStepName questStepId name ->
+            ( questStepEditor
+                questStepId
+                (\questStep -> { questStep | name = name })
+                createQuest
+            , commands
+            )
+
+        EditQuestStepDescription questStepId description ->
+            ( questStepEditor
+                questStepId
+                (\questStep -> { questStep | description = description })
+                createQuest
             , commands
             )
 

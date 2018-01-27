@@ -8,6 +8,7 @@ import Html.Styled.Events exposing (..)
 import Model exposing (Model)
 import Message.CreateQuestMessage exposing (CreateQuestMessage, CreateQuestMessage(..))
 import Component.TextField exposing (textField)
+import Component.TextArea exposing (textArea)
 
 
 helperText =
@@ -16,14 +17,14 @@ Short description of what a quest is.
 """
 
 
-card questStep onEditName =
+card questStep onEditName onEditDescription =
     div [ class "col s10 m6 l5" ]
         [ div [ class "card" ]
             [ div [ class "card-image" ]
                 [ img [ src questStep.imageUrl ] []
                 , div [ class "card-title" ]
                     [ textField
-                        { id = questStep.id
+                        { id = "name-textfield" ++ questStep.id
                         , value = questStep.name
                         , onInput = onEditName
                         , label = "Quest Name"
@@ -35,7 +36,13 @@ card questStep onEditName =
                     ]
                 ]
             , div [ class "card-content" ]
-                [ p [] [ text questStep.description ]
+                [ textArea
+                    { id = "description-textarea" ++ questStep.id
+                    , value = questStep.description
+                    , label = "Quest Description"
+                    , class = Nothing
+                    , onInput = onEditDescription
+                    }
                 ]
             ]
         ]
@@ -58,7 +65,8 @@ createQuestView model =
                     , description = model.createQuest.questDescription
                     , imageUrl = model.createQuest.questImageUrl
                     }
-                    EditQuestName
+                    (EditQuestName)
+                    (EditQuestDescription)
                   )
                 ]
             , div [ class "row" ]
@@ -67,6 +75,7 @@ createQuestView model =
                         (card
                             questStep
                             (EditQuestStepName questStep.id)
+                            (EditQuestStepDescription questStep.id)
                         )
                     )
                     model.createQuest.questSteps

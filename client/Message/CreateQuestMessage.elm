@@ -5,7 +5,7 @@ type CreateQuestMessage
     = NoOp
     | AddQuestStep
     | EditQuestName String
-    | EditQuestDescription
+    | EditQuestDescription String
     | EditQuestStepName String String
     | EditQuestStepDescription String String
     | DeleteQuestStepPrompt String
