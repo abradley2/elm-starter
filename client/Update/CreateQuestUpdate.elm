@@ -27,6 +27,9 @@ type alias CreateQuestModel =
     , questDescription : String
     , questImageUrl : String
     , questSteps : Array.Array QuestStep
+    , imageUploadModalOpen : Bool
+    , imageUploadModalFor : String
+    , imageUploadPath : String
     }
 
 
@@ -36,21 +39,15 @@ createQuestInitialModel =
     , questDescription = ""
     , questImageUrl = "/placeholder.png"
     , questSteps = Array.empty
+    , imageUploadModalOpen = False
+    , imageUploadModalFor = ""
+    , imageUploadPath = ""
     }
 
 
 onMountCreateQuestView : CreateQuestModel -> List (Cmd Message) -> ( CreateQuestModel, List (Cmd Message) )
 onMountCreateQuestView createQuest commands =
-    ( { createQuest
-        | questSteps =
-            Array.fromList
-                [ { id = "placeholder"
-                  , name = "Quest Name"
-                  , description = "A short description of the quest"
-                  , imageUrl = "/placeholder.png"
-                  }
-                ]
-      }
+    ( createQuestInitialModel
     , commands ++ [ requestQuestId "gimme!" ]
     )
 
@@ -89,6 +86,30 @@ questStepEditor stepId setterFunc createQuest =
 onCreateQuestMessage : CreateQuestMessage -> CreateQuestModel -> List (Cmd Message) -> ( CreateQuestModel, List (Cmd Message) )
 onCreateQuestMessage createQuestMessage createQuest commands =
     case createQuestMessage of
+        OnFileChosen filePath ->
+            ( { createQuest
+                | imageUploadPath = filePath
+              }
+            , commands
+            )
+
+        ShowFileUploadModal id ->
+            ( { createQuest
+                | imageUploadModalOpen = True
+                , imageUploadPath = ""
+                , imageUploadModalFor = id
+              }
+            , commands
+            )
+
+        HideFileUploadModal ->
+            ( { createQuest
+                | imageUploadModalOpen = False
+                , imageUploadPath = ""
+              }
+            , commands
+            )
+
         EditQuestName questName ->
             ( { createQuest
                 | questName = questName

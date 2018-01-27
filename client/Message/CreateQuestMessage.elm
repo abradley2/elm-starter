@@ -12,3 +12,5 @@ type CreateQuestMessage
     | DeleteQuestStepConfirm
     | DeleteQuestStepCancel
     | ShowFileUploadModal String
+    | HideFileUploadModal
+    | OnFileChosen String

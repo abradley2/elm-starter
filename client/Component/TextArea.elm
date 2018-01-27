@@ -10,18 +10,18 @@ import Html.Styled.Events exposing (..)
 textArea params =
     div
         [ class ("input-field data-elm-lifecycle " ++ (Maybe.withDefault "" params.class))
-        , id ("textfield-" ++ params.id)
+        , id ("textarea-component-" ++ params.id)
         , attribute "data-js-component" "textField"
         ]
         [ textarea
-            [ id params.id
+            [ id ("textarea-" ++ params.id)
             , class "materialize-textarea"
             , value params.value
             , onInput params.onInput
             ]
             []
         , label
-            [ for params.id
+            [ for ("textarea-" ++ params.id)
             ]
             [ text params.label ]
         ]

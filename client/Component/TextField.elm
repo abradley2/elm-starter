@@ -10,18 +10,18 @@ import Html.Styled.Events exposing (..)
 textField params =
     div
         [ class ("input-field data-elm-lifecycle " ++ (Maybe.withDefault "" params.class))
-        , id ("textfield-" ++ params.id)
+        , id ("textfield-component-" ++ params.id)
         , attribute "data-js-component" "textField"
         ]
         [ input
-            [ id params.id
+            [ id ("textfield-" ++ params.id)
             , value params.value
             , onInput params.onInput
             , type_ "text"
             ]
             []
         , label
-            [ for params.id
+            [ for ("textfield-" ++ params.id)
             ]
             [ text params.label ]
         ]

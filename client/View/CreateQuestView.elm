@@ -10,6 +10,8 @@ import Model exposing (Model)
 import Message.CreateQuestMessage exposing (CreateQuestMessage, CreateQuestMessage(..))
 import Component.TextField exposing (textField)
 import Component.TextArea exposing (textArea)
+import Component.Modal exposing (modal)
+import Component.FileInput exposing (fileInput)
 
 
 helperText =
@@ -18,7 +20,7 @@ Short description of what a quest is.
 """
 
 
-card questStep onEditName onEditDescription =
+card questStep onEditName onEditDescription onClickImageUpload =
     div [ class "col s10 m6 l5" ]
         [ div [ class "card" ]
             [ div [ class "card-image" ]
@@ -32,7 +34,10 @@ card questStep onEditName onEditDescription =
                         , class = Nothing
                         }
                     ]
-                , a [ class "btn-floating halfway-fab waves-effect waves-light red" ]
+                , a
+                    [ class "btn-floating halfway-fab waves-effect waves-light red"
+                    , onClick (onClickImageUpload questStep.id)
+                    ]
                     [ i [ class "material-icons" ] [ text "file_upload" ]
                     ]
                 ]
@@ -52,7 +57,29 @@ card questStep onEditName onEditDescription =
 createQuestView : Model -> Html CreateQuestMessage
 createQuestView model =
     div []
-        [ div
+        [ div []
+            [ modal
+                { open = model.createQuest.imageUploadModalOpen
+                , id = model.createQuest.imageUploadModalFor
+                , content =
+                    div []
+                        [ p [ class "float-text" ] [ text "Upload a picture that describes this adventure" ]
+                        , div [ class "row" ]
+                            [ (fileInput
+                                { id = "image-upload"
+                                , label = "Image (max size 2mb)"
+                                , onChange = OnFileChosen
+                                , value = model.createQuest.imageUploadPath
+                                }
+                              )
+                            ]
+                        ]
+                , footer = div [] []
+                , noop = NoOp
+                , onRequestClose = HideFileUploadModal
+                }
+            ]
+        , div
             [ class "container" ]
             [ div []
                 [ p [ class "flow-text" ]
@@ -68,6 +95,7 @@ createQuestView model =
                     }
                     (EditQuestName)
                     (EditQuestDescription)
+                    (ShowFileUploadModal)
                   )
                 ]
             , div [ class "row" ]
@@ -77,6 +105,7 @@ createQuestView model =
                             questStep
                             (EditQuestStepName questStep.id)
                             (EditQuestStepDescription questStep.id)
+                            (ShowFileUploadModal)
                         )
                     )
                     (Array.toList model.createQuest.questSteps)

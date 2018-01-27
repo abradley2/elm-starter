@@ -21,7 +21,7 @@ updater getter setter reducer =
 update message model =
     let
         ( passMessage, updatedModel, commands ) =
-            ( Debug.log "message:" message, model, [] )
+            ( Debug.log "message" message, model, [] )
                 |> updater
                     (\model -> model.route)
                     (\model route -> ({ model | route = route }))
