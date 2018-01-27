@@ -13,6 +13,7 @@ import Component.TextArea exposing (textArea)
 import Component.Modal exposing (modal)
 import Component.FileInput exposing (fileInput)
 import Component.RaisedButton exposing (raisedButton)
+import Component.FlatButton exposing (flatButton)
 
 
 helperText =
@@ -78,7 +79,10 @@ createQuestView model =
                               )
                             ]
                         , div [ class "row" ]
-                            [ span [ class "waves-effect waves-teal btn-flat" ] [ text "cancel" ]
+                            [ flatButton
+                                { label = "Cancel"
+                                , onClick = HideFileUploadModal
+                                }
                             , case model.createQuest.imageUploadPath of
                                 Just validpath ->
                                     raisedButton

@@ -43,6 +43,7 @@
     "co": "^4.6.0",
     "cors": "^2.8.4",
     "express": "^4.15.2",
+    "express-fileupload": "^0.4.0",
     "ioredis": "^3.2.2",
     "jsonwebtoken": "^8.1.0",
     "pino": "^4.0.3",
