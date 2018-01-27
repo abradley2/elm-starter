@@ -14,7 +14,7 @@ type Message
     | Unmount ( String, String )
     | LoadQuestStepImage ( String, String )
     | LoadQuestId String
-    | LoadQuestStepId ( Int, String )
+    | LoadQuestStepId ( String, String )
     | LoadToken String
     | OnLocationChange Location
     | Quests QuestsMessage

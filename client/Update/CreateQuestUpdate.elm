@@ -10,6 +10,7 @@ import Message exposing (Message, Message(..))
 import Message.CreateQuestMessage exposing (CreateQuestMessage, CreateQuestMessage(..))
 import Update.RouteUpdate exposing (parseLocation, Route(..))
 import Ports exposing (requestQuestStepId, requestQuestId)
+import Array
 
 
 type alias QuestStep =
@@ -25,7 +26,7 @@ type alias CreateQuestModel =
     , questName : String
     , questDescription : String
     , questImageUrl : String
-    , questSteps : List QuestStep
+    , questSteps : Array.Array QuestStep
     }
 
 
@@ -34,7 +35,7 @@ createQuestInitialModel =
     , questName = ""
     , questDescription = ""
     , questImageUrl = "/placeholder.png"
-    , questSteps = []
+    , questSteps = Array.empty
     }
 
 
@@ -42,42 +43,43 @@ onMountCreateQuestView : CreateQuestModel -> List (Cmd Message) -> ( CreateQuest
 onMountCreateQuestView createQuest commands =
     ( { createQuest
         | questSteps =
-            [ { id = "placeholder"
-              , name = "Quest Name"
-              , description = "A short description of the quest"
-              , imageUrl = "/placeholder.png"
-              }
-            ]
+            Array.fromList
+                [ { id = "placeholder"
+                  , name = "Quest Name"
+                  , description = "A short description of the quest"
+                  , imageUrl = "/placeholder.png"
+                  }
+                ]
       }
     , commands ++ [ requestQuestId "gimme!" ]
     )
 
 
-getQuestStepById : String -> List QuestStep -> Maybe QuestStep
 getQuestStepById id questSteps =
     questSteps
-        |> List.filter (\questStep -> questStep.id == id)
-        |> List.head
+        |> Array.indexedMap (\idx questStep -> ( idx, questStep ))
+        |> Array.foldr
+            (\( idx, questStep ) found ->
+                if questStep.id == id then
+                    idx
+                else
+                    found
+            )
+            -1
+        |> (\idx -> ( idx, Array.get idx questSteps ))
 
 
 questStepEditor : String -> (QuestStep -> QuestStep) -> CreateQuestModel -> CreateQuestModel
 questStepEditor stepId setterFunc createQuest =
     let
-        maybeStep =
+        ( idx, maybeStep ) =
             getQuestStepById stepId createQuest.questSteps
     in
         case maybeStep of
             Just targetQuestStep ->
                 { createQuest
                     | questSteps =
-                        List.map
-                            (\questStep ->
-                                if questStep.id == targetQuestStep.id then
-                                    setterFunc targetQuestStep
-                                else
-                                    questStep
-                            )
-                            createQuest.questSteps
+                        Array.set idx (setterFunc targetQuestStep) createQuest.questSteps
                 }
 
             Nothing ->
@@ -120,13 +122,15 @@ onCreateQuestMessage createQuestMessage createQuest commands =
         AddQuestStep ->
             ( { createQuest
                 | questSteps =
-                    createQuest.questSteps
-                        ++ [ { id = "newquest"
-                             , name = "Quest Name"
-                             , description = "A short description of the quest"
-                             , imageUrl = "/placeholder.png"
-                             }
-                           ]
+                    Array.append createQuest.questSteps
+                        (Array.fromList
+                            [ { id = "newquest"
+                              , name = ""
+                              , description = ""
+                              , imageUrl = "/placeholder.png"
+                              }
+                            ]
+                        )
               }
             , commands ++ [ requestQuestStepId "newquest" ]
             )
@@ -146,6 +150,14 @@ createQuestUpdate message createQuest commands =
 
         LoadQuestId cuid ->
             ( { createQuest | id = cuid }, commands )
+
+        LoadQuestStepId ( prevId, cuid ) ->
+            ( questStepEditor
+                prevId
+                (\questStep -> { questStep | id = cuid })
+                createQuest
+            , commands
+            )
 
         OnLocationChange location ->
             let

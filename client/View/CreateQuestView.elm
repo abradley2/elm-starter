@@ -1,6 +1,7 @@
 module View.CreateQuestView exposing (createQuestView)
 
 import Html
+import Array
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
@@ -78,7 +79,7 @@ createQuestView model =
                             (EditQuestStepDescription questStep.id)
                         )
                     )
-                    model.createQuest.questSteps
+                    (Array.toList model.createQuest.questSteps)
                 )
             ]
         ]

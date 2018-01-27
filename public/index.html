@@ -88,6 +88,10 @@
                 app.ports.loadQuestId.send(window.cuid())
             })
             
+            app.ports.requestQuestStepId.subscribe(function (prevStepId) {
+                app.ports.loadQuestStepId.send(prevStepId, window.cuid())
+            })
+            
             if (qs && qs.code) {
                 axios.post('http://localhost:5000/session/login', {code: qs.code})
                     .then((res) => {

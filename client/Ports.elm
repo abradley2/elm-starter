@@ -10,7 +10,7 @@ port unmount : (( String, String ) -> message) -> Sub message
 port loadQuestStepImage : (( String, String ) -> message) -> Sub message
 
 
-port loadQuestStepId : (( Int, String ) -> message) -> Sub message
+port loadQuestStepId : (( String, String ) -> message) -> Sub message
 
 
 port loadToken : (String -> message) -> Sub message
