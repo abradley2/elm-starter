@@ -65,7 +65,7 @@ questsRouter.post('/', (req, res) => co(function * () {
     name: req.body.name,
     description: req.body.description,
     imageUrl: req.body.imageUrl,
-    upvotes: 1
+    upvotes: []
   }
 
   yield redis.multi()
@@ -73,7 +73,7 @@ questsRouter.post('/', (req, res) => co(function * () {
     .lpush(getRecentQuestsKey(), `${userId}:${guid}`)
     .exec()
 
-  res.json(quest)
+  res.json(Object.assign({}, quest, {}, {upvotes: quest.upvotes.length}))
 }).catch(err => {
   const log = req.app.local.log
 

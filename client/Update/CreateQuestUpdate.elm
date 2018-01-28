@@ -51,7 +51,7 @@ createQuestInitialModel =
     , imageUploadPath = Nothing
     , questImageUploadPending = False
     , questImageUploadError = False
-    , submitPending = True
+    , submitPending = False
     , submitError = False
     , token = Nothing
     }

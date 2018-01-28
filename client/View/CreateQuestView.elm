@@ -137,12 +137,19 @@ createQuestView model =
                                         else
                                             "fill in details"
                                     , onClick =
-                                        if validQuest model then
+                                        if
+                                            List.all
+                                                (\v -> v == True)
+                                                [ validQuest model, model.createQuest.submitPending == False ]
+                                        then
                                             SubmitCreateQuest
                                         else
                                             NoOp
                                     , icon = Nothing
-                                    , disabled = (validQuest model) == False
+                                    , disabled =
+                                        List.any
+                                            (\v -> v == True)
+                                            [ validQuest model == False, model.createQuest.submitPending ]
                                     }
                                 , div [ css [ paddingTop (px 8) ] ]
                                     [ span
