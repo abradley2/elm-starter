@@ -1,3 +1,3 @@
 exports.getAcccessTokenKey = function (sessionId) {
-    return 'es:accesstoken' + sessionId;
-};
+  return 'es:accesstoken' + sessionId
+}

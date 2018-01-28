@@ -28,8 +28,8 @@
       "node",
       "browser"
     ],
-    "semi": false,
-    "space": 4
+    "semicolon": false,
+    "space": 2
   },
   "devDependencies": {
     "concurrently": "^3.5.0",
