@@ -14,12 +14,16 @@ const questsRouter = router()
 
 const graphApi = 'https://graph.facebook.com/v2.11/'
 
+const formatQuest = quest => Object.assign({}, quest, {
+  upvotes: quest.upvotes.length
+})
+
 questsRouter.get('/:userId', (req, res) => co(function * () {
   const userId = req.params.userId
 
   const userQuests = yield redis.lrange(getQuestsListKey(userId), 0, -1)
 
-  return res.json(userQuests)
+  return res.json(userQuests.map(formatQuest))
 }).catch(err => {
   const log = req.app.locals.log
 
@@ -53,7 +57,7 @@ questsRouter.get('/', (req, res) => co(function * () {
       return recentGuid === quest.guid
     })
 
-  res.json(quests)
+  res.json(quests.map(formatQuest))
 }).catch(err => {
   const log = req.app.locals.log
 
@@ -86,7 +90,7 @@ questsRouter.post('/', (req, res) => co(function * () {
     .lpush(getRecentQuestsKey(), `${userId}:${guid}`)
     .exec()
 
-  res.json(Object.assign({}, quest, {}, {upvotes: quest.upvotes.length}))
+  res.json(formatQuest(quest))
 }).catch(err => {
   const log = req.app.local.log
 
