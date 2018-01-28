@@ -7,6 +7,7 @@ import Update.LayoutUpdate exposing (layoutUpdate)
 import Update.RouteUpdate exposing (routeUpdate)
 import Update.CreateQuestUpdate exposing (createQuestUpdate)
 import Update.SessionUpdate exposing (sessionUpdate)
+import Update.MyAdventurerUpdate exposing (myAdventurerUpdate)
 
 
 updater getter setter reducer =
@@ -18,17 +19,29 @@ updater getter setter reducer =
             ( message, setter model newModel, newCommands )
 
 
+updaterWithToken token getter setter reducer =
+    let
+        getterWithToken =
+            (\model -> ( token, getter model ))
+    in
+        updater getterWithToken setter reducer
+
+
 update message model =
     let
         ( passMessage, updatedModel, commands ) =
             ( Debug.log "message" message, model, [] )
                 |> updater
+                    (\model -> model.session)
+                    (\model session -> ({ model | session = session }))
+                    sessionUpdate
+                |> updater
                     (\model -> model.route)
                     (\model route -> ({ model | route = route }))
                     routeUpdate
                 |> updater
-                    (\model -> model.units)
-                    (\model units -> ({ model | units = units }))
+                    (\model -> model.sideQuests)
+                    (\model sideQuests -> ({ model | sideQuests = sideQuests }))
                     sideQuestsUpdate
                 |> updater
                     (\model -> model.quests)
@@ -39,12 +52,12 @@ update message model =
                     (\model layout -> ({ model | layout = layout }))
                     layoutUpdate
                 |> updater
-                    (\model -> model.session)
-                    (\model session -> ({ model | session = session }))
-                    sessionUpdate
-                |> updater
                     (\model -> model.createQuest)
                     (\model createQuest -> ({ model | createQuest = createQuest }))
                     createQuestUpdate
+                |> updater
+                    (\model -> model.myAdventurer)
+                    (\model myAdventurer -> ({ model | myAdventurer = myAdventurer }))
+                    myAdventurerUpdate
     in
         ( updatedModel, Cmd.batch commands )

@@ -13,7 +13,7 @@ type alias Model =
     { route : Route
     , quests : QuestsModel
     , myAdventurer : MyAdventurerModel
-    , units : SideQuestsModel
+    , sideQuests : SideQuestsModel
     , layout : LayoutModel
     , session : SessionModel
     , createQuest : CreateQuestModel
@@ -24,7 +24,7 @@ model initialLocation =
     { route = initialLocation
     , quests = questsModel
     , myAdventurer = myAdventurerInitialModel
-    , units = sideQuestsModel
+    , sideQuests = sideQuestsModel
     , layout = layoutModel
     , session = sessionModel
     , createQuest = createQuestInitialModel
