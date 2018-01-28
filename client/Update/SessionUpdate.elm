@@ -34,7 +34,13 @@ onSessionMessage userMessage session commands =
             ( { session | token = Just token }, commands )
 
         GetTokenResult (Result.Err _) ->
-            ( session, commands )
+            ( { session
+                | token = Nothing
+                , username = Nothing
+                , userId = Nothing
+              }
+            , commands
+            )
 
         LoadSessionResult (Result.Ok sessionInfo) ->
             ( { session

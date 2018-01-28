@@ -15,6 +15,7 @@ decodeQuest =
         (Json.Decode.at [ "imageUrl" ] Json.Decode.string)
 
 
+encodeQuest : Quest -> Json.Encode.Value
 encodeQuest quest =
     Json.Encode.object
         [ ( "id", Json.Encode.string quest.id )
@@ -34,7 +35,7 @@ createQuestRequest userToken quest =
                     [ Http.header "Authorization" ("Bearer " ++ userToken)
                     ]
                 , url = "http://localhost:5000/quests"
-                , body = Http.jsonBody (encodeQuest quest)
+                , body = Http.jsonBody <| (encodeQuest quest)
                 , expect = Http.expectJson decodeQuest
                 , timeout = Nothing
                 , withCredentials = False
