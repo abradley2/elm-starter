@@ -30,6 +30,8 @@ type alias CreateQuestModel =
     , imageUploadModalOpen : Bool
     , imageUploadModalFor : Maybe String
     , imageUploadPath : Maybe String
+    , questImageUploadPending : Bool
+    , questImageUploadError : Bool
     }
 
 
@@ -42,6 +44,8 @@ createQuestInitialModel =
     , imageUploadModalOpen = False
     , imageUploadModalFor = Nothing
     , imageUploadPath = Nothing
+    , questImageUploadPending = False
+    , questImageUploadError = False
     }
 
 
@@ -111,7 +115,9 @@ onCreateQuestMessage createQuestMessage createQuest commands =
             )
 
         ConfirmFileUpload id ->
-            ( createQuest
+            ( { createQuest
+                | questImageUploadPending = True
+              }
             , commands ++ [ uploadQuestImage ("fileinput-" ++ id) ]
             )
 
@@ -171,6 +177,23 @@ onCreateQuestMessage createQuestMessage createQuest commands =
 createQuestUpdate : Message -> CreateQuestModel -> List (Cmd Message) -> ( CreateQuestModel, List (Cmd Message) )
 createQuestUpdate message createQuest commands =
     case message of
+        UploadQuestImageFinished ( success, questImageUrl ) ->
+            if success then
+                ( { createQuest
+                    | questImageUploadPending = False
+                    , questImageUploadError = True
+                    , questImageUrl = questImageUrl
+                  }
+                , commands
+                )
+            else
+                ( { createQuest
+                    | questImageUploadPending = False
+                    , questImageUploadError = True
+                  }
+                , commands
+                )
+
         CreateQuest createQuestMessage ->
             onCreateQuestMessage createQuestMessage createQuest commands
 

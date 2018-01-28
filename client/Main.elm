@@ -43,7 +43,7 @@ subscriptions model =
         , unmount Unmount
         , loadToken LoadToken
         , loadQuestId LoadQuestId
-        , loadQuestStepImage LoadQuestStepImage
+        , uploadQuestImageFinished UploadQuestImageFinished
         ]
 
 

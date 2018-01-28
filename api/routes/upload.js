@@ -8,24 +8,15 @@ const shortId = require('shortid');
 const uploadRouter = router();
 
 uploadRouter.post('/', (req, res) => co(function * () {
-    global.console.log(req.files);
-
-    const token = res.locals.token;
-
-    const tokenData = yield jwt.verify(token, global.config.appSecret);
-
-    const {userId} = tokenData;
-
     const file = req.files.file;
-
     if (!file) {
         res.status(400).send('no file found');
     }
 
+    const {userId} = yield jwt.verify(res.locals.token, global.config.appSecret);
+
     const fileExt = file.name.split('.').pop();
-
     const fileName = shortId.generate() + '.' + fileExt;
-
     const userDir = path.join(global.config.uploadDir, '/' + userId);
 
     const dirFound = yield new Promise(resolve => {
@@ -47,15 +38,13 @@ uploadRouter.post('/', (req, res) => co(function * () {
 
     yield file.mv(path.join(global.config.uploadDir, '/' + userId, '/' + fileName));
 
-    res.json({success: true, fileName});
+    res.json({success: true, file: '/uploads/' + userId + '/' + fileName});
 }).catch(err => {
     const log = req.app.locals.log;
 
-    global.console.error(err);
-
     log.error(err, 'upload error');
 
-    res.json({
+    res.status(400).json({
         success: false
     });
 }));

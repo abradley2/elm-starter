@@ -12,7 +12,7 @@ import Message.CreateQuestMessage exposing (CreateQuestMessage)
 type Message
     = Mount ( String, String )
     | Unmount ( String, String )
-    | LoadQuestStepImage ( String, String )
+    | UploadQuestImageFinished ( Bool, String )
     | LoadQuestId String
     | LoadQuestStepId ( String, String )
     | LoadToken String

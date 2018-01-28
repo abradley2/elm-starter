@@ -112,10 +112,10 @@
                     }
                 })
                     .then(function (res) {
-                        window.console.log(res)
+                        app.ports.uploadQuestImageFinished.send([true, res.data.file])
                     })
                     .catch(function (err) {
-                        window.console.error(err)
+                        app.ports.uploadQuestImageFinished.send([false, "error"])
                     });
             })
             
