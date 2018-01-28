@@ -93,12 +93,30 @@
                 app.ports.loadQuestStepId.send(prevStepId, window.cuid())
             })
             
-            app.ports.uploadFile.subscribe(function (inputId) {
+            app.ports.uploadQuestImage.subscribe(function (inputId) {
                 const fileInput = document.getElementById(inputId)
                 
                 if (!fileInput) return
                 
                 window.console.log(fileInput.files)
+                
+                const data = new FormData();
+                data.append('file', fileInput.files[0]);
+
+                axios({
+                    method: 'POST',
+                    url: 'http://localhost:5000/upload',
+                    data: data,
+                    headers: {
+                        'Authorization': 'bearer ' + Cookies.get('thyQuestIs:token')
+                    }
+                })
+                    .then(function (res) {
+                        window.console.log(res)
+                    })
+                    .catch(function (err) {
+                        window.console.error(err)
+                    });
             })
             
             if (qs && qs.code) {

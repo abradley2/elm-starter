@@ -25,4 +25,4 @@ port requestQuestStepId : String -> Cmd message
 port requestQuestId : String -> Cmd message
 
 
-port uploadFile : String -> Cmd message
+port uploadQuestImage : String -> Cmd message

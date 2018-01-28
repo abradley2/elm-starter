@@ -28,6 +28,7 @@
       "node",
       "browser"
     ],
+    "semi": false,
     "space": 4
   },
   "devDependencies": {
@@ -48,6 +49,7 @@
     "jsonwebtoken": "^8.1.0",
     "pino": "^4.0.3",
     "pino-colada": "^1.0.3",
+    "shortid": "^2.2.8",
     "uuid": "^3.2.1"
   }
 }

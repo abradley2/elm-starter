@@ -39,8 +39,8 @@ sessionRouter.post('/login', (req, res) => co(function * () {
 
     res.json({token: sessionToken});
 }).catch(err => {
-    req.app.locals.log.error(err);
-    return res.json({
+    req.app.locals.log.error(err, 'session error');
+    return res.status(400).json({
         success: false
     });
 }));
@@ -61,9 +61,8 @@ sessionRouter.get('/load', (req, res) => co(function * () {
         userId
     });
 }).catch(err => {
-    global.console.log(err.response.data);
     req.app.locals.log.error(err);
-    return res.json({
+    return res.status(400).json({
         success: false
     });
 }));

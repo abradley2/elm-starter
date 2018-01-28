@@ -9,7 +9,7 @@ import Html.Attributes exposing (name)
 import Message exposing (Message, Message(..))
 import Message.CreateQuestMessage exposing (CreateQuestMessage, CreateQuestMessage(..))
 import Update.RouteUpdate exposing (parseLocation, Route(..))
-import Ports exposing (requestQuestStepId, requestQuestId, uploadFile)
+import Ports exposing (requestQuestStepId, requestQuestId, uploadQuestImage)
 import Array
 
 
@@ -112,7 +112,7 @@ onCreateQuestMessage createQuestMessage createQuest commands =
 
         ConfirmFileUpload id ->
             ( createQuest
-            , commands ++ [ uploadFile ("fileinput-" ++ id) ]
+            , commands ++ [ uploadQuestImage ("fileinput-" ++ id) ]
             )
 
         EditQuestName questName ->
