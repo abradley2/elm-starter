@@ -1,5 +1,8 @@
 module Message.CreateQuestMessage exposing (CreateQuestMessage, CreateQuestMessage(..))
 
+import Http
+import Types exposing (Quest)
+
 
 type CreateQuestMessage
     = NoOp
@@ -16,3 +19,4 @@ type CreateQuestMessage
     | OnFileChosen String
     | ConfirmFileUpload String
     | SubmitCreateQuest
+    | SubmitCreateQuestResult (Result Http.Error Quest)

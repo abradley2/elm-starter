@@ -8,6 +8,7 @@ module Update.CreateQuestUpdate
 import Html.Attributes exposing (name)
 import Message exposing (Message, Message(..))
 import Message.CreateQuestMessage exposing (CreateQuestMessage, CreateQuestMessage(..))
+import Request.CreateQuestRequest exposing (createQuestRequest)
 import Update.RouteUpdate exposing (parseLocation, Route(..))
 import Ports exposing (requestQuestStepId, requestQuestId, uploadQuestImage)
 import Array
@@ -32,6 +33,9 @@ type alias CreateQuestModel =
     , imageUploadPath : Maybe String
     , questImageUploadPending : Bool
     , questImageUploadError : Bool
+    , submitPending : Bool
+    , submitError : Bool
+    , token : String
     }
 
 
@@ -46,6 +50,9 @@ createQuestInitialModel =
     , imageUploadPath = Nothing
     , questImageUploadPending = False
     , questImageUploadError = False
+    , submitPending = True
+    , submitError = False
+    , token = ""
     }
 
 
@@ -90,6 +97,35 @@ questStepEditor stepId setterFunc createQuest =
 onCreateQuestMessage : CreateQuestMessage -> CreateQuestModel -> List (Cmd Message) -> ( CreateQuestModel, List (Cmd Message) )
 onCreateQuestMessage createQuestMessage createQuest commands =
     case createQuestMessage of
+        SubmitCreateQuest ->
+            ( { createQuest
+                | submitPending = True
+                , submitError = False
+              }
+            , (commands
+                ++ [ Cmd.map CreateQuest
+                        (createQuestRequest
+                            createQuest.token
+                            { id = createQuest.id
+                            , name = createQuest.questName
+                            , description = createQuest.questDescription
+                            , imageUrl = createQuest.questImageUrl
+                            }
+                        )
+                   ]
+              )
+            )
+
+        SubmitCreateQuestResult (Result.Ok quest) ->
+            ( createQuest, commands )
+
+        SubmitCreateQuestResult (Result.Err _) ->
+            ( { createQuest
+                | submitError = True
+              }
+            , commands
+            )
+
         OnFileChosen filePath ->
             ( { createQuest
                 | imageUploadPath = Just filePath
@@ -221,6 +257,9 @@ createQuestUpdate message createQuest commands =
 
                     _ ->
                         ( createQuest, commands )
+
+        LoadToken token ->
+            ( { createQuest | token = token }, commands )
 
         _ ->
             ( createQuest, commands )

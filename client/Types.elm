@@ -12,3 +12,11 @@ type alias QuestInfo =
     , shortDescription : String
     , picture : String
     }
+
+
+type alias Quest =
+    { name : String
+    , description : String
+    , imageUrl : String
+    , id : String
+    }

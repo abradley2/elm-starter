@@ -133,7 +133,7 @@ createQuestView model =
                                 , raisedButton
                                     { label =
                                         if validQuest model then
-                                            "submit"
+                                            "embark"
                                         else
                                             "fill in details"
                                     , onClick =
