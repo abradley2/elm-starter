@@ -5,6 +5,7 @@ module Update.CreateQuestUpdate
         , CreateQuestModel
         )
 
+import Navigation
 import Html.Attributes exposing (name)
 import Message exposing (Message, Message(..))
 import Message.CreateQuestMessage exposing (CreateQuestMessage, CreateQuestMessage(..))
@@ -35,7 +36,7 @@ type alias CreateQuestModel =
     , questImageUploadError : Bool
     , submitPending : Bool
     , submitError : Bool
-    , token : String
+    , token : Maybe String
     }
 
 
@@ -52,13 +53,13 @@ createQuestInitialModel =
     , questImageUploadError = False
     , submitPending = True
     , submitError = False
-    , token = ""
+    , token = Nothing
     }
 
 
 onMountCreateQuestView : CreateQuestModel -> List (Cmd Message) -> ( CreateQuestModel, List (Cmd Message) )
 onMountCreateQuestView createQuest commands =
-    ( createQuestInitialModel
+    ( ({ createQuestInitialModel | token = createQuest.token })
     , commands ++ [ requestQuestId "gimme!" ]
     )
 
@@ -105,7 +106,7 @@ onCreateQuestMessage createQuestMessage createQuest commands =
             , (commands
                 ++ [ Cmd.map CreateQuest
                         (createQuestRequest
-                            createQuest.token
+                            (Maybe.withDefault "" createQuest.token)
                             { id = createQuest.id
                             , name = createQuest.questName
                             , description = createQuest.questDescription
@@ -117,7 +118,11 @@ onCreateQuestMessage createQuestMessage createQuest commands =
             )
 
         SubmitCreateQuestResult (Result.Ok quest) ->
-            ( createQuest, commands )
+            ( createQuest
+            , (commands
+                ++ [ Navigation.modifyUrl "/#profile" ]
+              )
+            )
 
         SubmitCreateQuestResult (Result.Err _) ->
             ( { createQuest
@@ -259,7 +264,7 @@ createQuestUpdate message createQuest commands =
                         ( createQuest, commands )
 
         LoadToken token ->
-            ( { createQuest | token = token }, commands )
+            ( { createQuest | token = Just token }, commands )
 
         _ ->
             ( createQuest, commands )

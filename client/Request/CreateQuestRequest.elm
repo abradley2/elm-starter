@@ -32,7 +32,7 @@ createQuestRequest userToken quest =
             Http.request
                 { method = "POST"
                 , headers =
-                    [ Http.header "Authorization" ("Bearer " ++ userToken)
+                    [ Http.header "Authorization" ("Bearer " ++ (Debug.log "sending user token = " userToken))
                     ]
                 , url = "http://localhost:5000/quests"
                 , body = Http.jsonBody <| (encodeQuest quest)

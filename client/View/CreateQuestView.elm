@@ -144,6 +144,18 @@ createQuestView model =
                                     , icon = Nothing
                                     , disabled = (validQuest model) == False
                                     }
+                                , div [ css [ paddingTop (px 8) ] ]
+                                    [ span
+                                        [ css [ color Theme.errorTextColor ]
+                                        ]
+                                        [ text
+                                            (if model.createQuest.submitError then
+                                                "Oops! was an error creating this quest"
+                                             else
+                                                ""
+                                            )
+                                        ]
+                                    ]
                                 ]
                             ]
                         ]

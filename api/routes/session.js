@@ -48,9 +48,7 @@ sessionRouter.post('/login', (req, res) => co(function * () {
 sessionRouter.get('/load', (req, res) => co(function * () {
   const token = res.locals.token
 
-  const tokenData = yield jwt.verify(token, global.config.appSecret)
-
-  const {userId, sessionId} = tokenData
+  const {userId, sessionId} = yield jwt.verify(token, global.config.appSecret)
 
   const accessTokenResponse = yield redis.get(getAcccessTokenKey(sessionId))
 
