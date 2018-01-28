@@ -51,7 +51,13 @@ onSessionMessage userMessage session commands =
             )
 
         LoadSessionResult (Result.Err _) ->
-            ( session, commands )
+            ( { session
+                | token = Nothing
+                , username = Nothing
+                , userId = Nothing
+              }
+            , commands
+            )
 
 
 onRouteChange : Route -> SessionModel -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )

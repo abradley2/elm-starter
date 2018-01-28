@@ -2,13 +2,17 @@ const uuid = require('uuid')
 const router = require('express').Router
 const jwt = require('jsonwebtoken')
 const co = require('co')
+const request = require('axios')
 const redis = require('../redis')
 const {
   getQuestsListKey,
-  getRecentQuestsKey
+  getRecentQuestsKey,
+  getAcccessTokenKey
 } = require('./util/redis-keys')
 
 const questsRouter = router()
+
+const graphApi = 'https://graph.facebook.com/v2.11/'
 
 questsRouter.get('/', (req, res) => co(function * () {
   const recentQuests = yield redis.lrange(
@@ -17,19 +21,19 @@ questsRouter.get('/', (req, res) => co(function * () {
     req.params.count || 10
   )
 
-  global.console.log('recent quests === ', recentQuests)
-
   const pipeline = recentQuests.reduce((pipe, questKey) => {
     const userId = questKey.split(':')[0]
 
-    return pipeline.lindex(getQuestsListKey(userId), 0)
+    return pipe.lindex(getQuestsListKey(userId), 0)
   }, redis.multi())
 
   const results = yield pipeline.exec()
-  global.console.log('pipeline results === ', results)
 
   const quests = results
-    .map(questJSON => JSON.parse(questJSON))
+    .filter(([err, questJSON]) => {
+      return !err && questJSON
+    })
+    .map(([, questJSON]) => JSON.parse(questJSON))
     .filter((quest, idx) => {
       const recentGuid = recentQuests[idx].split(':')[1]
 
@@ -41,17 +45,22 @@ questsRouter.get('/', (req, res) => co(function * () {
   const log = req.app.locals.log
 
   log.error(err, 'error getting recent quests')
-  global.console.error(err)
 
   res.status(400).json({success: false})
 }))
 
 questsRouter.post('/', (req, res) => co(function * () {
-  const {userId} = yield jwt.verify(res.locals.token, global.config.appSecret)
+  const {userId, sessionId} = yield jwt.verify(res.locals.token, global.config.appSecret)
+
+  const accessTokenResponse = yield redis.get(getAcccessTokenKey(sessionId))
+
+  const nameResponse = yield request.get(graphApi + '/me?fields=first_name&access_token=' + accessTokenResponse)
 
   const guid = uuid.v4()
   const quest = {
     guid,
+    userId,
+    username: nameResponse.data.first_name,
     id: req.body.id,
     name: req.body.name,
     description: req.body.description,
