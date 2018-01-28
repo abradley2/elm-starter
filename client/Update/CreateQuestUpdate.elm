@@ -117,6 +117,7 @@ onCreateQuestMessage createQuestMessage createQuest commands =
         ConfirmFileUpload id ->
             ( { createQuest
                 | questImageUploadPending = True
+                , questImageUploadError = False
               }
             , commands ++ [ uploadQuestImage ("fileinput-" ++ id) ]
             )
@@ -183,6 +184,7 @@ createQuestUpdate message createQuest commands =
                     | questImageUploadPending = False
                     , questImageUploadError = True
                     , questImageUrl = questImageUrl
+                    , imageUploadModalOpen = False
                   }
                 , commands
                 )

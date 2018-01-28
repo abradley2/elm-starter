@@ -9,7 +9,13 @@ import Html.Styled.Events exposing (..)
 
 raisedButton params =
     span
-        [ class "btn"
+        [ class
+            ("btn "
+                ++ if params.disabled then
+                    "disabled"
+                   else
+                    ""
+            )
         , onClick params.onClick
         ]
         [ case params.icon of

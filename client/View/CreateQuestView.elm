@@ -19,54 +19,14 @@ import Component.FlatButton exposing (flatButton)
 
 helperText =
     """
-THY QUEST (if you choose too acept it) IS
+THY QUEST (if you choose to accept it) IS
 """
 
 
-card questStep onEditName onEditDescription onClickImageUpload =
-    div
-        [ css
-            [ maxWidth (px 320) ]
-        ]
-        [ div [ class "card" ]
-            [ div [ class "card-image" ]
-                [ img [ src questStep.imageUrl ] []
-                , div
-                    [ class "card-title"
-                    , style [ ( "padding", "8px 8px 24px 8px" ) ]
-                    , css
-                        [ backgroundColor (rgba 255 255 255 0.7)
-                        , Css.left (px 0)
-                        , Css.right (px 0)
-                        , Css.bottom (px 0)
-                        ]
-                    ]
-                    [ h5 [ css [ color Theme.baseTextColor, margin (px 0) ] ] [ text questStep.name ]
-                    ]
-                , a
-                    [ class "btn-floating halfway-fab waves-effect waves-light red"
-                    , onClick (onClickImageUpload questStep.id)
-                    ]
-                    [ i [ class "material-icons" ] [ text "add_a_photo" ]
-                    ]
-                ]
-            , div [ class "card-content" ]
-                [ textField
-                    { id = "name-textfield" ++ questStep.id
-                    , value = questStep.name
-                    , onInput = onEditName
-                    , label = "Quest Name"
-                    , class = Nothing
-                    }
-                , textArea
-                    { id = "description-textarea" ++ questStep.id
-                    , value = questStep.description
-                    , label = "Quest Description"
-                    , class = Nothing
-                    , onInput = onEditDescription
-                    }
-                ]
-            ]
+validQuest : Model -> Bool
+validQuest model =
+    List.all (\val -> val == True)
+        [ (model.createQuest.questName /= "")
         ]
 
 
@@ -97,13 +57,22 @@ createQuestView model =
                             , case model.createQuest.imageUploadPath of
                                 Just validpath ->
                                     raisedButton
-                                        { label = "Upload"
+                                        { disabled = model.createQuest.questImageUploadPending
+                                        , label = "Upload"
                                         , icon = Just "file_upload"
                                         , onClick = ConfirmFileUpload "image-upload"
                                         }
 
                                 Nothing ->
                                     div [] []
+                            ]
+                        , div [ css [ color Theme.errorTextColor ] ]
+                            [ text
+                                (if model.createQuest.questImageUploadError then
+                                    "There was an error uploading your image. Please ensure images are less than 2mb"
+                                 else
+                                    ""
+                                )
                             ]
                         ]
                 , footer = div [] []
@@ -120,36 +89,65 @@ createQuestView model =
                 ]
             , div [ class "row" ]
                 [ div [ css [ margin auto, maxWidth (px 320) ] ]
-                    [ (card
-                        { id = model.createQuest.id
-                        , name = model.createQuest.questName
-                        , description = model.createQuest.questDescription
-                        , imageUrl = model.createQuest.questImageUrl
-                        }
-                        (EditQuestName)
-                        (EditQuestDescription)
-                        (ShowFileUploadModal)
-                      )
-                    ]
-                ]
-            , div [ class "row" ]
-                [ div
-                    [ css
-                        [ displayFlex
-                        , flexWrap Css.wrap
+                    [ div
+                        [ css
+                            [ maxWidth (px 320) ]
+                        ]
+                        [ div [ class "card" ]
+                            [ div [ class "card-image" ]
+                                [ img [ src model.createQuest.questImageUrl ] []
+                                , div
+                                    [ class "card-title"
+                                    , style [ ( "padding", "8px 8px 24px 8px" ) ]
+                                    , css
+                                        [ backgroundColor (rgba 255 255 255 0.7)
+                                        , Css.left (px 0)
+                                        , Css.right (px 0)
+                                        , Css.bottom (px 0)
+                                        ]
+                                    ]
+                                    [ h5 [ css [ color Theme.baseTextColor, margin (px 0) ] ] [ text model.createQuest.questName ]
+                                    ]
+                                , a
+                                    [ class "btn-floating halfway-fab waves-effect waves-light red"
+                                    , onClick (ShowFileUploadModal model.createQuest.id)
+                                    ]
+                                    [ i [ class "material-icons" ] [ text "add_a_photo" ]
+                                    ]
+                                ]
+                            , div [ class "card-content" ]
+                                [ textField
+                                    { id = "name-textfield" ++ model.createQuest.id
+                                    , value = model.createQuest.questName
+                                    , onInput = EditQuestName
+                                    , label = "Quest Name"
+                                    , class = Nothing
+                                    }
+                                , textArea
+                                    { id = "description-textarea" ++ model.createQuest.id
+                                    , value = model.createQuest.questDescription
+                                    , label = "Quest Description"
+                                    , class = Nothing
+                                    , onInput = EditQuestDescription
+                                    }
+                                , raisedButton
+                                    { label =
+                                        if validQuest model then
+                                            "submit"
+                                        else
+                                            "fill in details"
+                                    , onClick =
+                                        if validQuest model then
+                                            SubmitCreateQuest
+                                        else
+                                            NoOp
+                                    , icon = Nothing
+                                    , disabled = (validQuest model) == False
+                                    }
+                                ]
+                            ]
                         ]
                     ]
-                    (List.map
-                        (\questStep ->
-                            (card
-                                questStep
-                                (EditQuestStepName questStep.id)
-                                (EditQuestStepDescription questStep.id)
-                                (ShowFileUploadModal)
-                            )
-                        )
-                        (Array.toList model.createQuest.questSteps)
-                    )
                 ]
             ]
         ]
