@@ -14,6 +14,19 @@ const questsRouter = router()
 
 const graphApi = 'https://graph.facebook.com/v2.11/'
 
+questsRouter.get('/:userId', (req, res) => co(function * () {
+  const userId = req.params.userId
+
+  const userQuests = yield redis.lrange(getQuestsListKey(userId), 0, -1)
+
+  return res.json(userQuests)
+}).catch(err => {
+  const log = req.app.locals.log
+
+  log.error(err)
+  res.status(400).json({success: false})
+}))
+
 questsRouter.get('/', (req, res) => co(function * () {
   const recentQuests = yield redis.lrange(
     getRecentQuestsKey(),
