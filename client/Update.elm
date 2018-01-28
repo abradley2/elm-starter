@@ -19,14 +19,6 @@ updater getter setter reducer =
             ( message, setter model newModel, newCommands )
 
 
-updaterWithToken token getter setter reducer =
-    let
-        getterWithToken =
-            (\model -> ( token, getter model ))
-    in
-        updater getterWithToken setter reducer
-
-
 update message model =
     let
         ( passMessage, updatedModel, commands ) =
@@ -56,7 +48,7 @@ update message model =
                     (\model createQuest -> ({ model | createQuest = createQuest }))
                     createQuestUpdate
                 |> updater
-                    (\model -> model.myAdventurer)
+                    (\model -> ( model.session, model.myAdventurer ))
                     (\model myAdventurer -> ({ model | myAdventurer = myAdventurer }))
                     myAdventurerUpdate
     in

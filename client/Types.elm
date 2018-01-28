@@ -1,6 +1,13 @@
 module Types exposing (..)
 
 
+type alias SessionModel =
+    { token : Maybe String
+    , username : Maybe String
+    , userId : Maybe String
+    }
+
+
 type alias SessionInfo =
     { username : String
     , userId : String

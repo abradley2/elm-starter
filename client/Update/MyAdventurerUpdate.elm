@@ -7,6 +7,7 @@ module Update.MyAdventurerUpdate
 
 import Message exposing (Message, Message(..))
 import Message.MyAdventurerMessage exposing (MyAdventurerMessage, MyAdventurerMessage(..))
+import Types exposing (SessionModel)
 
 
 type alias MyAdventurerModel =
@@ -24,8 +25,8 @@ onMyAdventurerMessage myAdventurerMessage myAdventurer commands =
             ( myAdventurer, commands )
 
 
-myAdventurerUpdate : Message -> MyAdventurerModel -> List (Cmd Message) -> ( MyAdventurerModel, List (Cmd Message) )
-myAdventurerUpdate message myAdventurer commands =
+myAdventurerUpdate : Message -> ( SessionModel, MyAdventurerModel ) -> List (Cmd Message) -> ( MyAdventurerModel, List (Cmd Message) )
+myAdventurerUpdate message ( token, myAdventurer ) commands =
     case message of
         MyAdventurer myAdventurerMessage ->
             onMyAdventurerMessage myAdventurerMessage myAdventurer commands

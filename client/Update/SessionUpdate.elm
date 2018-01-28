@@ -1,21 +1,15 @@
-module Update.SessionUpdate exposing (SessionModel, sessionUpdate, sessionModel, userIsLoggedIn)
+module Update.SessionUpdate exposing (sessionUpdate, sessionInitialModel, userIsLoggedIn)
 
 import Message exposing (Message, Message(..))
 import Message.SessionMessage exposing (SessionMessage, SessionMessage(..))
 import Update.RouteUpdate exposing (parseLocation, Route, Route(..))
 import Request.QuestsRequest exposing (getQuests)
 import Request.SessionRequest exposing (loadSession)
+import Types exposing (SessionModel)
 
 
-type alias SessionModel =
-    { token : Maybe String
-    , username : Maybe String
-    , userId : Maybe String
-    }
-
-
-sessionModel : SessionModel
-sessionModel =
+sessionInitialModel : SessionModel
+sessionInitialModel =
     { token = Nothing
     , username = Nothing
     , userId = Nothing
