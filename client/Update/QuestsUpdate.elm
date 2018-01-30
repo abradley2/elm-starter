@@ -4,19 +4,17 @@ import Message exposing (Message, Message(..))
 import Message.QuestsMessage exposing (QuestsMessage, QuestsMessage(..))
 import Update.RouteUpdate exposing (parseLocation, Route, Route(..))
 import Request.QuestsRequest exposing (getQuests)
-import Types exposing (SessionModel)
+import Types exposing (SessionModel, RecentPostedQuest)
 
 
 type alias QuestsModel =
-    { questList : List String
-    , newQuestName : String
+    { questList : List RecentPostedQuest
     }
 
 
 questsModel : QuestsModel
 questsModel =
     { questList = []
-    , newQuestName = ""
     }
 
 
@@ -39,17 +37,6 @@ onRouteChange newRoute ( session, quests ) commands =
 onQuestsMessage : QuestsMessage -> QuestsModel -> List (Cmd Message) -> ( QuestsModel, List (Cmd Message) )
 onQuestsMessage questsMessage quests commands =
     case questsMessage of
-        EditNewQuestName newQuestName ->
-            ( { quests | newQuestName = newQuestName }, commands )
-
-        AddNewQuest ->
-            ( { quests
-                | questList = quests.questList ++ [ quests.newQuestName ]
-                , newQuestName = ""
-              }
-            , commands
-            )
-
         GetQuestsResult (Result.Ok questList) ->
             ( { quests | questList = questList }, commands )
 

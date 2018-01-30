@@ -25,33 +25,4 @@ questsView model =
             Nothing ->
                 div [] []
           )
-        , (textField
-            { id = "new-quest-text-field"
-            , class = Maybe.Nothing
-            , value = model.quests.newQuestName
-            , onInput = EditNewQuestName
-            , label = "New Quest"
-            }
-          )
-        , span
-            [ class "btn"
-            , onClick
-                (if model.quests.newQuestName /= "" then
-                    AddNewQuest
-                 else
-                    NoOp
-                )
-            ]
-            [ i [ class "material-icons left" ] [ text "add" ]
-            , text "Add Quest"
-            ]
-        , div []
-            (List.map
-                (\quest ->
-                    div
-                        []
-                        [ text quest ]
-                )
-                model.quests.questList
-            )
         ]

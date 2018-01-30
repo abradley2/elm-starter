@@ -21,9 +21,9 @@ const formatQuest = quest => Object.assign({}, quest, {
 questsRouter.get('/:userId', (req, res) => co(function * () {
   const userId = req.params.userId
 
-  const userQuests = yield redis.lrange(getQuestsListKey(userId), 0, -1)
+  const userQuests = yield redis.lrange(getQuestsListKey(userId), 0, 100)
 
-  return res.json(userQuests.map(formatQuest))
+  return res.json(userQuests.map(q => JSON.parse(q)).map(formatQuest))
 }).catch(err => {
   const log = req.app.locals.log
 

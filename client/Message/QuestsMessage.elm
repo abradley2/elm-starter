@@ -1,10 +1,9 @@
 module Message.QuestsMessage exposing (QuestsMessage, QuestsMessage(..))
 
+import Types exposing (RecentPostedQuest)
 import Http
 
 
 type QuestsMessage
     = NoOp
-    | EditNewQuestName String
-    | AddNewQuest
-    | GetQuestsResult (Result Http.Error (List String))
+    | GetQuestsResult (Result Http.Error (List RecentPostedQuest))
