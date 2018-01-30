@@ -2,8 +2,6 @@ module Update.SessionUpdate exposing (sessionUpdate, sessionInitialModel, userIs
 
 import Message exposing (Message, Message(..))
 import Message.SessionMessage exposing (SessionMessage, SessionMessage(..))
-import Update.RouteUpdate exposing (parseLocation, Route, Route(..))
-import Request.QuestsRequest exposing (getQuests)
 import Request.SessionRequest exposing (loadSession)
 import Types exposing (SessionModel)
 
@@ -54,22 +52,6 @@ onSessionMessage userMessage session commands =
             )
 
 
-onRouteChange : Route -> SessionModel -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
-onRouteChange newRoute session commands =
-    case newRoute of
-        QuestsRoute ->
-            let
-                token =
-                    Maybe.withDefault "" session.token
-            in
-                ( session
-                , commands ++ [ Cmd.map Quests (getQuests token) ]
-                )
-
-        _ ->
-            ( session, commands )
-
-
 sessionUpdate : Message -> SessionModel -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
 sessionUpdate message session commands =
     case message of
@@ -78,9 +60,6 @@ sessionUpdate message session commands =
 
         LoadToken token ->
             ( { session | token = Just token }, commands ++ [ Cmd.map Session (loadSession token) ] )
-
-        OnLocationChange location ->
-            onRouteChange (parseLocation location) session commands
 
         _ ->
             ( session, commands )

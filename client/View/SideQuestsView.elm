@@ -11,6 +11,6 @@ import Message.SideQuestsMessage exposing (SideQuestsMessage, SideQuestsMessage(
 sideQuestsView : Model -> Html SideQuestsMessage
 sideQuestsView model =
     div [ class "center measure" ]
-        [ a [ href "#" ] [ text "Armies" ]
-        , h3 [] [ text "About Page" ]
+        [ a [ href "#" ] [ text "Side Quests" ]
+        , h3 [] [ text "Side Quest page Page" ]
         ]

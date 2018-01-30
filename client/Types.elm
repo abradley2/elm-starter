@@ -27,3 +27,15 @@ type alias Quest =
     , imageUrl : String
     , id : String
     }
+
+
+type alias RecentPostedQuest =
+    { name : String
+    , description : String
+    , imageUrl : String
+    , id : String
+    , guid : String
+    , username : String
+    , userId : String
+    , upvotes : Int
+    }

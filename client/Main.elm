@@ -37,6 +37,10 @@ view model =
         )
 
 
+
+{- TODO: use Cmd.map for the bottom 3 -}
+
+
 subscriptions model =
     Sub.batch
         [ mount Mount
