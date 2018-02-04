@@ -40,7 +40,13 @@ myAdventurerView : Model -> Html MyAdventurerMessage
 myAdventurerView model =
     div [ class "container" ]
         [ topCopy model
-        , div []
+        , div
+            [ css
+                [ displayFlex
+                , flexWrap Css.wrap
+                , alignItems Css.center
+                ]
+            ]
             (List.map
                 (questCard)
                 model.myAdventurer.quests
