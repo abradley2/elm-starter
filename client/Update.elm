@@ -24,11 +24,11 @@ update message model =
         ( passMessage, updatedModel, commands ) =
             ( Debug.log "message" message, model, [] )
                 |> updater
-                    (\model -> model.route)
-                    (\model route -> ({ model | route = route }))
+                    (\model -> model.routeData)
+                    (\model routeData -> ({ model | routeData = routeData }))
                     routeUpdate
                 |> updater
-                    (\model -> ( model.route, model.session ))
+                    (\model -> ( model.routeData, model.session ))
                     (\model session -> ({ model | session = session }))
                     sessionUpdate
                 |> updater

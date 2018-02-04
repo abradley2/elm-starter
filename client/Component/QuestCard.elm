@@ -5,9 +5,11 @@ import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
+import Types exposing (RecentPostedQuest)
 
 
+questCard : RecentPostedQuest -> Html a
 questCard params =
-    span
+    div
         []
         [ text "I am a quest cards" ]

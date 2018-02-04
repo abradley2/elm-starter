@@ -18,23 +18,27 @@ import View.CreateQuestView exposing (createQuestView)
 
 view : Model -> Html Message
 view model =
-    layout model
-        (case model.route of
-            QuestsRoute ->
-                Html.Styled.map Quests (questsView model)
+    let
+        ( route, location ) =
+            model.routeData
+    in
+        layout model
+            (case route of
+                QuestsRoute ->
+                    Html.Styled.map Quests (questsView model)
 
-            SideQuestsRoute ->
-                Html.Styled.map SideQuests (sideQuestsView model)
+                SideQuestsRoute ->
+                    Html.Styled.map SideQuests (sideQuestsView model)
 
-            MyAdventurerRoute ->
-                Html.Styled.map MyAdventurer (myAdventurerView model)
+                MyAdventurerRoute ->
+                    Html.Styled.map MyAdventurer (myAdventurerView model)
 
-            CreateQuestRoute ->
-                Html.Styled.map CreateQuest (createQuestView model)
+                CreateQuestRoute ->
+                    Html.Styled.map CreateQuest (createQuestView model)
 
-            NotFoundRoute ->
-                Html.Styled.map Quests (questsView model)
-        )
+                NotFoundRoute ->
+                    Html.Styled.map Quests (questsView model)
+            )
 
 
 

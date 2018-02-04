@@ -6,12 +6,12 @@ import Update.CreateQuestUpdate exposing (CreateQuestModel, createQuestInitialMo
 import Update.QuestsUpdate exposing (QuestsModel, questsModel)
 import Update.SideQuestsUpdate exposing (SideQuestsModel, sideQuestsModel)
 import Update.SessionUpdate exposing (sessionInitialModel)
-import Update.RouteUpdate exposing (Route)
+import Update.RouteUpdate exposing (RouteData)
 import Types exposing (SessionModel)
 
 
 type alias Model =
-    { route : Route
+    { routeData : RouteData
     , quests : QuestsModel
     , myAdventurer : MyAdventurerModel
     , sideQuests : SideQuestsModel
@@ -22,7 +22,7 @@ type alias Model =
 
 
 model initialLocation =
-    { route = initialLocation
+    { routeData = initialLocation
     , quests = questsModel
     , myAdventurer = myAdventurerInitialModel
     , sideQuests = sideQuestsModel

@@ -2,7 +2,7 @@ module Update.QuestsUpdate exposing (questsModel, questsUpdate, QuestsModel)
 
 import Message exposing (Message, Message(..))
 import Message.QuestsMessage exposing (QuestsMessage, QuestsMessage(..))
-import Update.RouteUpdate exposing (parseLocation, Route, Route(..))
+import Update.RouteUpdate exposing (parseLocation, RouteData, Route, Route(..))
 import Request.QuestsRequest exposing (getQuests)
 import Types exposing (SessionModel, RecentPostedQuest)
 
@@ -18,20 +18,24 @@ questsModel =
     }
 
 
-onRouteChange : Route -> ( SessionModel, QuestsModel ) -> List (Cmd Message) -> ( QuestsModel, List (Cmd Message) )
-onRouteChange newRoute ( session, quests ) commands =
-    case newRoute of
-        QuestsRoute ->
-            let
-                token =
-                    Maybe.withDefault "" session.token
-            in
-                ( quests
-                , commands ++ [ Cmd.map Quests (getQuests token) ]
-                )
+onRouteChange : RouteData -> ( SessionModel, QuestsModel ) -> List (Cmd Message) -> ( QuestsModel, List (Cmd Message) )
+onRouteChange routeData ( session, quests ) commands =
+    let
+        ( route, location ) =
+            routeData
+    in
+        case route of
+            QuestsRoute ->
+                let
+                    token =
+                        Maybe.withDefault "" session.token
+                in
+                    ( quests
+                    , commands ++ [ Cmd.map Quests (getQuests token) ]
+                    )
 
-        _ ->
-            ( quests, commands )
+            _ ->
+                ( quests, commands )
 
 
 onQuestsMessage : QuestsMessage -> QuestsModel -> List (Cmd Message) -> ( QuestsModel, List (Cmd Message) )

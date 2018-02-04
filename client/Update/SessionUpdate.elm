@@ -1,9 +1,10 @@
 module Update.SessionUpdate exposing (sessionUpdate, sessionInitialModel, userIsLoggedIn)
 
+import Navigation
 import Message exposing (Message, Message(..))
 import Message.SessionMessage exposing (SessionMessage, SessionMessage(..))
 import Request.SessionRequest exposing (loadSession)
-import Update.RouteUpdate exposing (Route, Route(..))
+import Update.RouteUpdate exposing (RouteData, Route, Route(..))
 import Types exposing (SessionModel)
 
 
@@ -20,8 +21,8 @@ userIsLoggedIn session =
     session.token /= Nothing
 
 
-onSessionMessage : SessionMessage -> SessionModel -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
-onSessionMessage userMessage session commands =
+onSessionMessage : SessionMessage -> ( RouteData, SessionModel ) -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
+onSessionMessage userMessage ( routeData, session ) commands =
     case userMessage of
         GetTokenResult (Result.Ok token) ->
             ( { session | token = Just token }, commands )
@@ -40,7 +41,15 @@ onSessionMessage userMessage session commands =
                 | username = Just sessionInfo.username
                 , userId = Just sessionInfo.userId
               }
-            , commands
+            , let
+                ( route, location ) =
+                    routeData
+              in
+                (commands
+                    {- Refresh the page when we load a session -} ++
+                        [ Navigation.modifyUrl location.hash
+                        ]
+                )
             )
 
         LoadSessionResult (Result.Err _) ->
@@ -53,11 +62,11 @@ onSessionMessage userMessage session commands =
             )
 
 
-sessionUpdate : Message -> ( Route, SessionModel ) -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
-sessionUpdate message ( route, session ) commands =
+sessionUpdate : Message -> ( RouteData, SessionModel ) -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
+sessionUpdate message ( routeData, session ) commands =
     case message of
         Session sessionMessage ->
-            onSessionMessage sessionMessage session commands
+            onSessionMessage sessionMessage ( routeData, session ) commands
 
         LoadToken token ->
             ( { session | token = Just token }, commands ++ [ Cmd.map Session (loadSession token) ] )

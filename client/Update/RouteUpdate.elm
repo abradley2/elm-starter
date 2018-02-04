@@ -1,4 +1,4 @@
-module Update.RouteUpdate exposing (parseLocation, routeUpdate, Route, Route(..), route)
+module Update.RouteUpdate exposing (parseLocation, routeUpdate, Route, Route(..), routeData, RouteData)
 
 import Message exposing (Message(..))
 import Navigation exposing (Location)
@@ -13,7 +13,7 @@ type Route
     | NotFoundRoute
 
 
-type alias RouteDate =
+type alias RouteData =
     ( Route, Location )
 
 
@@ -28,25 +28,25 @@ matchers =
         ]
 
 
-parseLocation : Location -> Route
+parseLocation : Location -> RouteData
 parseLocation location =
     case (parseHash matchers location) of
         Just route ->
-            route
+            ( route, location )
 
         Nothing ->
-            NotFoundRoute
+            ( NotFoundRoute, location )
 
 
-route location =
+routeData location =
     parseLocation location
 
 
-routeUpdate : Message -> Route -> List (Cmd Message) -> ( Route, List (Cmd Message) )
-routeUpdate message routeModel commands =
+routeUpdate : Message -> RouteData -> List (Cmd Message) -> ( RouteData, List (Cmd Message) )
+routeUpdate message routeData commands =
     case message of
         OnLocationChange location ->
             ( parseLocation location, commands )
 
         _ ->
-            ( routeModel, commands )
+            ( routeData, commands )

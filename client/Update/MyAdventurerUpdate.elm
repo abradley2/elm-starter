@@ -7,7 +7,7 @@ module Update.MyAdventurerUpdate
 
 import Message exposing (Message, Message(..))
 import Message.MyAdventurerMessage exposing (MyAdventurerMessage, MyAdventurerMessage(..))
-import Update.RouteUpdate exposing (parseLocation, Route, Route(..))
+import Update.RouteUpdate exposing (parseLocation, RouteData, Route, Route(..))
 import Request.QuestsRequest exposing (getQuestsByUser)
 import Types exposing (SessionModel, RecentPostedQuest)
 
@@ -27,23 +27,27 @@ fetchQuests token userId =
         (getQuestsByUser token userId)
 
 
-onRouteChange : Route -> ( SessionModel, MyAdventurerModel ) -> List (Cmd Message) -> ( MyAdventurerModel, List (Cmd Message) )
-onRouteChange route ( session, myAdventurer ) commands =
-    case route of
-        MyAdventurerRoute ->
-            case session.userId of
-                Just userId ->
-                    ( myAdventurer
-                    , commands
-                        ++ [ fetchQuests (Maybe.withDefault "" session.token) userId
-                           ]
-                    )
+onRouteChange : RouteData -> ( SessionModel, MyAdventurerModel ) -> List (Cmd Message) -> ( MyAdventurerModel, List (Cmd Message) )
+onRouteChange routeData ( session, myAdventurer ) commands =
+    let
+        ( route, location ) =
+            routeData
+    in
+        case route of
+            MyAdventurerRoute ->
+                case session.userId of
+                    Just userId ->
+                        ( myAdventurer
+                        , commands
+                            ++ [ fetchQuests (Maybe.withDefault "" session.token) userId
+                               ]
+                        )
 
-                Nothing ->
-                    ( myAdventurer, commands )
+                    Nothing ->
+                        ( myAdventurer, commands )
 
-        _ ->
-            ( myAdventurer, commands )
+            _ ->
+                ( myAdventurer, commands )
 
 
 onMyAdventurerMessage : MyAdventurerMessage -> MyAdventurerModel -> List (Cmd Message) -> ( MyAdventurerModel, List (Cmd Message) )

@@ -253,7 +253,7 @@ createQuestUpdate message createQuest commands =
 
         OnLocationChange location ->
             let
-                route =
+                ( route, locationData ) =
                     parseLocation location
             in
                 case route of
