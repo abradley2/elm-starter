@@ -9,3 +9,27 @@ baseTextColor =
 
 errorTextColor =
     hex "#e53935"
+
+
+primaryColor =
+    hex "#ee6e73"
+
+
+primaryActiveColor =
+    hex "#CC444B"
+
+
+primaryInactiveColor =
+    hex "#FC9A9F"
+
+
+accentColor =
+    hex "#66C65C"
+
+
+accentActiveColor =
+    hex "#44AA39"
+
+
+accentInactiveColor =
+    hex "#8FDD87"

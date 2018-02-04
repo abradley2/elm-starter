@@ -22,19 +22,25 @@ myAdventurerInitialModel =
     }
 
 
+fetchQuests token userId =
+    Cmd.map MyAdventurer
+        (getQuestsByUser token userId)
+
+
 onRouteChange : Route -> ( SessionModel, MyAdventurerModel ) -> List (Cmd Message) -> ( MyAdventurerModel, List (Cmd Message) )
 onRouteChange route ( session, myAdventurer ) commands =
     case route of
         MyAdventurerRoute ->
-            ( myAdventurer
-            , commands
-                ++ [ Cmd.map MyAdventurer
-                        (getQuestsByUser
-                            (Maybe.withDefault "" session.token)
-                            (Maybe.withDefault "" session.userId)
-                        )
-                   ]
-            )
+            case session.userId of
+                Just userId ->
+                    ( myAdventurer
+                    , commands
+                        ++ [ fetchQuests (Maybe.withDefault "" session.token) userId
+                           ]
+                    )
+
+                Nothing ->
+                    ( myAdventurer, commands )
 
         _ ->
             ( myAdventurer, commands )

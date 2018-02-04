@@ -24,13 +24,13 @@ update message model =
         ( passMessage, updatedModel, commands ) =
             ( Debug.log "message" message, model, [] )
                 |> updater
-                    (\model -> model.session)
-                    (\model session -> ({ model | session = session }))
-                    sessionUpdate
-                |> updater
                     (\model -> model.route)
                     (\model route -> ({ model | route = route }))
                     routeUpdate
+                |> updater
+                    (\model -> ( model.route, model.session ))
+                    (\model session -> ({ model | session = session }))
+                    sessionUpdate
                 |> updater
                     (\model -> model.sideQuests)
                     (\model sideQuests -> ({ model | sideQuests = sideQuests }))

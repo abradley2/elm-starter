@@ -13,6 +13,10 @@ type Route
     | NotFoundRoute
 
 
+type alias RouteDate =
+    ( Route, Location )
+
+
 matchers : Parser (Route -> a) a
 matchers =
     oneOf

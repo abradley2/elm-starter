@@ -3,6 +3,7 @@ module Update.SessionUpdate exposing (sessionUpdate, sessionInitialModel, userIs
 import Message exposing (Message, Message(..))
 import Message.SessionMessage exposing (SessionMessage, SessionMessage(..))
 import Request.SessionRequest exposing (loadSession)
+import Update.RouteUpdate exposing (Route, Route(..))
 import Types exposing (SessionModel)
 
 
@@ -52,8 +53,8 @@ onSessionMessage userMessage session commands =
             )
 
 
-sessionUpdate : Message -> SessionModel -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
-sessionUpdate message session commands =
+sessionUpdate : Message -> ( Route, SessionModel ) -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
+sessionUpdate message ( route, session ) commands =
     case message of
         Session sessionMessage ->
             onSessionMessage sessionMessage session commands
