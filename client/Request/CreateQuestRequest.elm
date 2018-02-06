@@ -25,8 +25,8 @@ encodeQuest quest =
         ]
 
 
-createQuestRequest : String -> Quest -> Cmd CreateQuestMessage
-createQuestRequest userToken quest =
+createQuestRequest : String -> String -> Quest -> Cmd CreateQuestMessage
+createQuestRequest apiEndpoint userToken quest =
     let
         request =
             Http.request
@@ -34,7 +34,7 @@ createQuestRequest userToken quest =
                 , headers =
                     [ Http.header "Authorization" ("Bearer " ++ (Debug.log "sending user token = " userToken))
                     ]
-                , url = "http://localhost:5000/quests"
+                , url = apiEndpoint ++ "quests"
                 , body = Http.jsonBody <| (encodeQuest quest)
                 , expect = Http.expectJson decodeQuest
                 , timeout = Nothing

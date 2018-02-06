@@ -12,6 +12,7 @@ import Message.CreateQuestMessage exposing (CreateQuestMessage, CreateQuestMessa
 import Request.CreateQuestRequest exposing (createQuestRequest)
 import Update.RouteUpdate exposing (parseLocation, Route(..))
 import Ports exposing (requestQuestStepId, requestQuestId, uploadQuestImage)
+import Types exposing (SessionModel)
 import Array
 
 
@@ -95,8 +96,8 @@ questStepEditor stepId setterFunc createQuest =
                 createQuest
 
 
-onCreateQuestMessage : CreateQuestMessage -> CreateQuestModel -> List (Cmd Message) -> ( CreateQuestModel, List (Cmd Message) )
-onCreateQuestMessage createQuestMessage createQuest commands =
+onCreateQuestMessage : CreateQuestMessage -> ( SessionModel, CreateQuestModel ) -> List (Cmd Message) -> ( CreateQuestModel, List (Cmd Message) )
+onCreateQuestMessage createQuestMessage ( session, createQuest ) commands =
     case createQuestMessage of
         SubmitCreateQuest ->
             ( { createQuest
@@ -106,7 +107,8 @@ onCreateQuestMessage createQuestMessage createQuest commands =
             , (commands
                 ++ [ Cmd.map CreateQuest
                         (createQuestRequest
-                            (Maybe.withDefault "" createQuest.token)
+                            session.flags.apiEndpoint
+                            (Maybe.withDefault "" session.token)
                             { id = createQuest.id
                             , name = createQuest.questName
                             , description = createQuest.questDescription
@@ -216,8 +218,8 @@ onCreateQuestMessage createQuestMessage createQuest commands =
             ( createQuest, commands )
 
 
-createQuestUpdate : Message -> CreateQuestModel -> List (Cmd Message) -> ( CreateQuestModel, List (Cmd Message) )
-createQuestUpdate message createQuest commands =
+createQuestUpdate : Message -> ( SessionModel, CreateQuestModel ) -> List (Cmd Message) -> ( CreateQuestModel, List (Cmd Message) )
+createQuestUpdate message ( session, createQuest ) commands =
     case message of
         UploadQuestImageFinished ( success, questImageUrl ) ->
             if success then
@@ -238,7 +240,7 @@ createQuestUpdate message createQuest commands =
                 )
 
         CreateQuest createQuestMessage ->
-            onCreateQuestMessage createQuestMessage createQuest commands
+            onCreateQuestMessage createQuestMessage ( session, createQuest ) commands
 
         LoadQuestId cuid ->
             ( { createQuest | id = cuid }, commands )
@@ -262,9 +264,6 @@ createQuestUpdate message createQuest commands =
 
                     _ ->
                         ( createQuest, commands )
-
-        LoadToken token ->
-            ( { createQuest | token = Just token }, commands )
 
         _ ->
             ( createQuest, commands )

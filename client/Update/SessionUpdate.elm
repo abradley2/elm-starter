@@ -70,7 +70,7 @@ sessionUpdate message ( routeData, session ) commands =
             onSessionMessage sessionMessage ( routeData, session ) commands
 
         LoadToken token ->
-            ( { session | token = Just token }, commands ++ [ Cmd.map Session (loadSession token) ] )
+            ( { session | token = Just token }, commands ++ [ Cmd.map Session (loadSession session.flags.apiEndpoint token) ] )
 
         _ ->
             ( session, commands )

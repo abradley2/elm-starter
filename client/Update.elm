@@ -44,7 +44,7 @@ update message model =
                     (\model layout -> ({ model | layout = layout }))
                     layoutUpdate
                 |> updater
-                    (\model -> model.createQuest)
+                    (\model -> ( model.session, model.createQuest ))
                     (\model createQuest -> ({ model | createQuest = createQuest }))
                     createQuestUpdate
                 |> updater

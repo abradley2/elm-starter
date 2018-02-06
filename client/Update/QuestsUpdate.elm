@@ -31,7 +31,7 @@ onRouteChange routeData ( session, quests ) commands =
                         Maybe.withDefault "" session.token
                 in
                     ( quests
-                    , commands ++ [ Cmd.map Quests (getQuests token) ]
+                    , commands ++ [ Cmd.map Quests (getQuests session.flags.apiEndpoint token) ]
                     )
 
             _ ->

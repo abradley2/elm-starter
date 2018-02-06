@@ -12,8 +12,8 @@ decodeSessionInfo =
         (at [ "userId" ] string)
 
 
-loadSession : String -> Cmd SessionMessage
-loadSession userToken =
+loadSession : String -> String -> Cmd SessionMessage
+loadSession apiEndpoint userToken =
     let
         request =
             Http.request
@@ -21,7 +21,7 @@ loadSession userToken =
                 , headers =
                     [ Http.header "Authorization" ("Bearer " ++ userToken)
                     ]
-                , url = "http://localhost:5000/session/load"
+                , url = (apiEndpoint ++ "session/load")
                 , body = Http.emptyBody
                 , expect = Http.expectJson decodeSessionInfo
                 , timeout = Nothing

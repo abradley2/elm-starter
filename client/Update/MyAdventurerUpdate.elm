@@ -22,9 +22,9 @@ myAdventurerInitialModel =
     }
 
 
-fetchQuests token userId =
+fetchQuests apiEndpoint token userId =
     Cmd.map MyAdventurer
-        (getQuestsByUser token userId)
+        (getQuestsByUser apiEndpoint token userId)
 
 
 onRouteChange : RouteData -> ( SessionModel, MyAdventurerModel ) -> List (Cmd Message) -> ( MyAdventurerModel, List (Cmd Message) )
@@ -39,7 +39,7 @@ onRouteChange routeData ( session, myAdventurer ) commands =
                     Just userId ->
                         ( myAdventurer
                         , commands
-                            ++ [ fetchQuests (Maybe.withDefault "" session.token) userId
+                            ++ [ fetchQuests session.flags.apiEndpoint (Maybe.withDefault "" session.token) userId
                                ]
                         )
 

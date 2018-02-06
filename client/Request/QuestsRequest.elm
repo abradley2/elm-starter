@@ -23,8 +23,8 @@ decodeQuestsList =
     Json.Decode.list decodeQuest
 
 
-getQuests : String -> Cmd QuestsMessage
-getQuests userToken =
+getQuests : String -> String -> Cmd QuestsMessage
+getQuests apiEndpoint userToken =
     let
         request =
             Http.request
@@ -32,7 +32,7 @@ getQuests userToken =
                 , headers =
                     [ Http.header "Authorization" ("Bearer " ++ userToken)
                     ]
-                , url = "http://localhost:5000/quests"
+                , url = apiEndpoint ++ "quests"
                 , body = Http.emptyBody
                 , expect = Http.expectJson decodeQuestsList
                 , timeout = Nothing
@@ -42,8 +42,8 @@ getQuests userToken =
         Http.send GetQuestsResult request
 
 
-getQuestsByUser : String -> String -> Cmd MyAdventurerMessage
-getQuestsByUser userToken userId =
+getQuestsByUser : String -> String -> String -> Cmd MyAdventurerMessage
+getQuestsByUser apiEndpoint userToken userId =
     let
         request =
             Http.request
@@ -51,7 +51,7 @@ getQuestsByUser userToken userId =
                 , headers =
                     [ Http.header "Authorization" ("Bearer " ++ userToken)
                     ]
-                , url = ("http://localhost:5000/quests/" ++ userId)
+                , url = (apiEndpoint ++ "quests/" ++ userId)
                 , body = Http.emptyBody
                 , expect = Http.expectJson decodeQuestsList
                 , timeout = Nothing
