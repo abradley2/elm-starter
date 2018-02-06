@@ -48,7 +48,7 @@ myAdventurerView model =
                 ]
             ]
             (List.map
-                (questCard)
+                (\quest -> questCard quest { showUserImage = False })
                 model.myAdventurer.quests
             )
         ]

@@ -9,8 +9,7 @@ import Html.Styled.Events exposing (..)
 import Types exposing (RecentPostedQuest)
 
 
-questCard : RecentPostedQuest -> Html a
-questCard quest =
+questCard quest params =
     div
         [ css
             [ maxWidth (px 320)
@@ -19,8 +18,8 @@ questCard quest =
         ]
         [ div [ class "card" ]
             [ div [ class "card-image" ]
-                [ img [ src quest.imageUrl ] []
-                , div
+                ([ img [ src quest.imageUrl ] []
+                 , div
                     [ class "card-title"
                     , style [ ( "padding", "8px 8px 24px 8px" ) ]
                     , css
@@ -32,7 +31,22 @@ questCard quest =
                     ]
                     [ h5 [ css [ color Theme.baseTextColor, margin (px 0) ] ] [ text quest.name ]
                     ]
-                ]
+                 ]
+                    ++ (if params.showUserImage then
+                            [ div
+                                [ css
+                                    [ position Css.absolute
+                                    , top (px 0)
+                                    , left (px 0)
+                                    ]
+                                ]
+                                [ img [ src ("https://graph.facebook.com/" ++ quest.userId ++ "/picture?type=small") ] []
+                                ]
+                            ]
+                        else
+                            []
+                       )
+                )
             , div [ class "card-content" ]
                 [ text quest.description ]
             ]
