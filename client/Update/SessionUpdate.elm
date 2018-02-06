@@ -5,12 +5,13 @@ import Message exposing (Message, Message(..))
 import Message.SessionMessage exposing (SessionMessage, SessionMessage(..))
 import Request.SessionRequest exposing (loadSession)
 import Update.RouteUpdate exposing (RouteData, Route, Route(..))
-import Types exposing (SessionModel)
+import Types exposing (SessionModel, Flags)
 
 
-sessionInitialModel : SessionModel
-sessionInitialModel =
-    { token = Nothing
+sessionInitialModel : Flags -> SessionModel
+sessionInitialModel flags =
+    { flags = flags
+    , token = Nothing
     , username = Nothing
     , userId = Nothing
     }

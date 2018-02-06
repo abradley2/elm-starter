@@ -1,8 +1,14 @@
 module Types exposing (..)
 
 
+type alias Flags =
+    { apiEndpoint : String
+    }
+
+
 type alias SessionModel =
-    { token : Maybe String
+    { flags : Flags
+    , token : Maybe String
     , username : Maybe String
     , userId : Maybe String
     }

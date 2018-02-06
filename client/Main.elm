@@ -8,6 +8,7 @@ import Message exposing (Message, Message(..))
 import Model exposing (Model, model)
 import Navigation exposing (Location)
 import Ports exposing (..)
+import Types exposing (Flags)
 import Update exposing (update)
 import Update.RouteUpdate exposing (Route(..), parseLocation)
 import View.MyAdventurerView exposing (myAdventurerView)
@@ -55,18 +56,18 @@ subscriptions model =
         ]
 
 
-init : Location -> ( Model, Cmd Message )
-init location =
+init : Flags -> Location -> ( Model, Cmd Message )
+init flags location =
     let
         initialLocation =
             parseLocation location
     in
-        ( model initialLocation, Cmd.batch [ Navigation.modifyUrl location.href ] )
+        ( model flags initialLocation, Cmd.batch [ Navigation.modifyUrl location.href ] )
 
 
-main : Program Never Model Message
+main : Program Flags Model Message
 main =
-    Navigation.program OnLocationChange
+    Navigation.programWithFlags OnLocationChange
         { init = init
         , view = view >> toUnstyled
         , update = update

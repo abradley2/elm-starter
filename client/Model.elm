@@ -21,12 +21,12 @@ type alias Model =
     }
 
 
-model initialLocation =
+model flags initialLocation =
     { routeData = initialLocation
     , quests = questsModel
     , myAdventurer = myAdventurerInitialModel
     , sideQuests = sideQuestsModel
     , layout = layoutModel
-    , session = sessionInitialModel
+    , session = sessionInitialModel flags
     , createQuest = createQuestInitialModel
     }
