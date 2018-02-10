@@ -77,7 +77,7 @@ app.ports.uploadQuestImage.subscribe(inputId => {
 
   axios({
     method: 'POST',
-    url: 'http://localhost:5000/upload',
+    url: apiEndpoint + 'upload',
     data,
     headers: {
       Authorization: 'bearer ' + cookies.get('thyQuestIs:token')
@@ -92,7 +92,7 @@ app.ports.uploadQuestImage.subscribe(inputId => {
 })
 
 if (qs && qs.code) {
-  axios.post('http://localhost:5000/session/login', {code: qs.code})
+  axios.post(apiEndpoint + 'session/login', {code: qs.code})
     .then(res => {
       cookies.set('thyQuestIs:token', res.data.token)
       app.ports.loadToken.send(res.data.token)
