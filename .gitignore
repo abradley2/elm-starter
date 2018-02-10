@@ -1,7 +1,5 @@
 elm-stuff/
 node_modules/
 **/*.log
-public/main.bundle.js
 config.js
 public/uploads/
-bundle.js

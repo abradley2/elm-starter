@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const fileUpload = require('express-fileupload')
 
 global.config = require('../local-config.js')
+
 global.config.uploadDir = path.join(__dirname, '../public/uploads')
 
 const api = router()
