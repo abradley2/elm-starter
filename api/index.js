@@ -3,7 +3,7 @@ const router = require('express').Router
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const fileUpload = require('express-fileupload')
-global.config = require('../config.js')
+global.config = require('../local-config.js')
 
 global.config.uploadDir = path.join(__dirname, '../public/uploads')
 const api = router()

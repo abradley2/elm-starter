@@ -1,5 +1,3 @@
-global.console.log('starting server!')
-global.console.log('port = ', process.env.PORT)
 const path = require('path')
 const http = require('http')
 const log = require('pino')()
