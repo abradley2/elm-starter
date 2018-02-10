@@ -1,1 +1,1 @@
-web: npm run start:prod
+web: npm run prod:client && node server.js
