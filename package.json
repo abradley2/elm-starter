@@ -10,7 +10,7 @@
     "dev:server": "NODE_ENV=development PORT=5000 nodemon --watch ./api ./server.js | pino-colada",
     "start:dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
     "prod:client": "npm run browserify:prod && elm-make ./client/Main.elm --yes --output ./public/main.bundle.js",
-    "prod:server": "NODE_ENV=production PORT=$PORT node ./server.js",
+    "prod:server": "NODE_ENV=production node ./server.js",
     "start:prod": "npm run prod:client && npm run prod:server",
     "browserify:dev": "NODE_ENV=development browserify ./js -t envify -o ./public/bundle.js",
     "browserify:prod": "NODE_ENV=production browserify ./js -t envify -o ./public/bundle.js"
