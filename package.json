@@ -36,6 +36,7 @@
   "devDependencies": {
     "browserify": "^15.2.0",
     "concurrently": "^3.5.0",
+    "elm": "^0.18.0",
     "elm-live": "^2.7.5",
     "envify": "^4.1.0",
     "nodemon": "^1.11.0",
