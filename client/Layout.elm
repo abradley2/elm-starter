@@ -23,9 +23,13 @@ navs model =
         [ if userIsLoggedIn model.session then
             a [ href "#profile" ] [ text "My Adventurer" ]
           else
-            a
-                [ href "https://www.facebook.com/v2.11/dialog/oauth?client_id=169926423737270&redirect_uri=http://localhost:8000/&state=success" ]
-                [ text "fb login" ]
+            let
+                ( route, location ) =
+                    model.routeData
+            in
+                a
+                    [ href ("https://www.facebook.com/v2.11/dialog/oauth?client_id=169926423737270&redirect_uri=" ++ location.href ++ "&state=success") ]
+                    [ text "fb login" ]
         ]
     ]
 
