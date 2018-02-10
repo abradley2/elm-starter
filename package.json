@@ -33,8 +33,7 @@
     "semicolon": false,
     "space": 2
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "dependencies": {
     "browserify": "^15.2.0",
     "concurrently": "^3.5.0",
