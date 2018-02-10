@@ -3,7 +3,8 @@ if (process.env.APP_SECRET) {
     appSecret: process.env.APP_SECRET,
     fbClientSecret: process.env.FB_CLIENT_SECRET,
     fbAppId: process.env.FB_APP_ID,
-    fbRedirectUri: process.env.FB_REDIRECT_URI
+    fbRedirectUri: process.env.FB_REDIRECT_URI,
+    redisUrl: process.env.REDIS_URL
   }
 } else {
   module.exports = require('./config')
