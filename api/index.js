@@ -1,3 +1,5 @@
+global.console.log('starting app!')
+global.console.log('binding to port: ', process.env.PORT)
 const path = require('path')
 const router = require('express').Router
 const cors = require('cors')
