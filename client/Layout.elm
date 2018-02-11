@@ -41,7 +41,7 @@ navbar model =
             [ class "nav-wrapper"
             ]
             [ toggleSidenavButton
-            , a [ class "brand-logo center", href "#quests" ] [ text "QUESTLY" ]
+            , a [ class "brand-logo center", href "#quests" ] [ text "QUEST" ]
             , ul [ class "hide-on-small-only" ] (navs model)
             ]
         ]

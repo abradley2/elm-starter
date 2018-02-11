@@ -22164,7 +22164,7 @@ var _user$project$Layout$navbar = function (model) {
 							},
 							{
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Html_Styled$text('QUESTLY'),
+								_0: _rtfeldman$elm_css$Html_Styled$text('QUEST'),
 								_1: {ctor: '[]'}
 							}),
 						_1: {
