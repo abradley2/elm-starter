@@ -35,7 +35,7 @@ parseLocation location =
             ( route, location )
 
         Nothing ->
-            ( NotFoundRoute, location )
+            ( QuestsRoute, location )
 
 
 routeData location =

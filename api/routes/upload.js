@@ -7,7 +7,30 @@ const shortId = require('shortid')
 
 const uploadRouter = router()
 
+const uploadDirReady = co(function * () {
+  const dirFound = yield new Promise(resolve => {
+    fs.access(global.config.uploadDir, err => {
+      resolve(!err)
+    })
+  })
+
+  if (dirFound) {
+    return
+  }
+
+  yield new Promise((resolve, reject) => {
+    fs.mkdir(global.config.uploadDir, err => {
+      if (err) {
+        reject(err)
+      }
+      resolve()
+    })
+  })
+})
+
 uploadRouter.post('/', (req, res) => co(function * () {
+  yield uploadDirReady
+  
   const file = req.files.file
   if (!file) {
     res.status(400).send('no file found')
@@ -40,9 +63,7 @@ uploadRouter.post('/', (req, res) => co(function * () {
 
   res.json({success: true, file: '/uploads/' + userId + '/' + fileName})
 }).catch(err => {
-  const log = req.app.locals.log
-
-  log.error(err, 'upload error')
+  global.logger.error(err.message, 'upload error')
 
   res.status(400).json({
     success: false

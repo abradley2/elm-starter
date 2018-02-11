@@ -25,9 +25,7 @@ questsRouter.get('/:userId', (req, res) => co(function * () {
 
   return res.json(userQuests.map(q => JSON.parse(q)).map(formatQuest))
 }).catch(err => {
-  const log = req.app.locals.log
-
-  log.error(err)
+  global.logger.error(err)
   res.status(400).json({success: false})
 }))
 
@@ -59,9 +57,7 @@ questsRouter.get('/', (req, res) => co(function * () {
 
   res.json(quests.map(formatQuest))
 }).catch(err => {
-  const log = req.app.locals.log
-
-  log.error(err, 'error getting recent quests')
+  global.logger.error(err, 'error getting recent quests')
 
   res.status(400).json({success: false})
 }))
@@ -92,9 +88,7 @@ questsRouter.post('/', (req, res) => co(function * () {
 
   res.json(formatQuest(quest))
 }).catch(err => {
-  const log = req.app.local.log
-
-  log.error(err, 'error creating quest')
+  global.logger.error(err, 'error creating quest')
 
   res.status(400).json({success: false})
 }))

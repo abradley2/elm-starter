@@ -28,7 +28,7 @@ navs model =
                     model.routeData
             in
                 a
-                    [ href ("https://www.facebook.com/v2.11/dialog/oauth?client_id=169926423737270&redirect_uri=" ++ location.href ++ "&state=success") ]
+                    [ href ("https://www.facebook.com/v2.11/dialog/oauth?client_id=169926423737270&redirect_uri=" ++ location.origin ++ "&state=success") ]
                     [ text "fb login" ]
         ]
     ]

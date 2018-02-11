@@ -13,6 +13,8 @@ app.use(api)
 
 app.locals.log = log
 
+global.logger = log
+
 const server = http.createServer(function (req, res) {
   app(req, res)
 })
