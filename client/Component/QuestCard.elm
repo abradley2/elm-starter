@@ -18,7 +18,10 @@ questCard quest params =
         ]
         [ div [ class "card" ]
             [ div [ class "card-image" ]
-                ([ img [ src quest.imageUrl ] []
+                ([ img
+                    [ src quest.imageUrl
+                    ]
+                    []
                  , div
                     [ class "card-title"
                     , style [ ( "padding", "8px 8px 24px 8px" ) ]
@@ -38,6 +41,8 @@ questCard quest params =
                                     [ position Css.absolute
                                     , top (px 0)
                                     , left (px 0)
+                                    , Css.height (px 50)
+                                    , Css.width (px 50)
                                     ]
                                 ]
                                 [ img [ src ("https://graph.facebook.com/" ++ quest.userId ++ "/picture?type=small") ] []
@@ -49,5 +54,7 @@ questCard quest params =
                 )
             , div [ class "card-content" ]
                 [ text quest.description ]
+            , div [ class "card-action" ]
+                []
             ]
         ]
