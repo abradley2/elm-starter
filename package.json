@@ -9,7 +9,7 @@
     "dev:client": "npm run browserify:dev && elm-live ./client/Main.elm --debug --dir=./public --output ./public/main.bundle.js",
     "dev:server": "NODE_ENV=development PORT=5000 nodemon --watch ./api ./server.js | pino-colada",
     "start:dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
-    "prod:client": "npm run browserify:prod && elm-make ./client/Main.elm --yes --output ./public/main.bundle.js && uglifyjs2 ./public/main.bundle.js -o ./public/main.bundle.js",
+    "build:client": "npm run browserify:prod && elm-make ./client/Main.elm --yes --output ./public/main.bundle.js && uglifyjs2 ./public/main.bundle.js -o ./public/main.bundle.js",
     "browserify:dev": "NODE_ENV=development browserify ./js -t envify -o ./public/bundle.js",
     "browserify:prod": "NODE_ENV=production browserify ./js -t envify -g uglifyify -o ./public/bundle.js"
   },

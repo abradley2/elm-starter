@@ -19,6 +19,6 @@ const server = http.createServer(function (req, res) {
   app(req, res)
 })
 
-server.listen(process.env.PORT, function () {
-  log.info({name: 'server/start'}, `Server listening on port ${process.env.PORT}`)
+server.listen(process.env.PORT || 5000, function () {
+  log.info({name: 'server/start'}, `Server listening on port ${process.env.PORT || 5000}`)
 })
