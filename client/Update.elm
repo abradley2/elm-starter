@@ -32,7 +32,7 @@ update message model =
                     (\model session -> ({ model | session = session }))
                     sessionUpdate
                 |> updater
-                    (\model -> model.sideQuests)
+                    (\model -> ( model.session, model.sideQuests ))
                     (\model sideQuests -> ({ model | sideQuests = sideQuests }))
                     sideQuestsUpdate
                 |> updater

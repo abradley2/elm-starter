@@ -28,7 +28,7 @@ view model =
                 QuestsRoute ->
                     Html.Styled.map Quests (questsView model)
 
-                SideQuestsRoute ->
+                SideQuestsRoute questId ->
                     Html.Styled.map SideQuests (sideQuestsView model)
 
                 MyAdventurerRoute ->

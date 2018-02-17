@@ -45,3 +45,10 @@ type alias RecentPostedQuest =
     , userId : String
     , upvotes : Int
     }
+
+
+type alias SideQuest =
+    { name : String
+    , id : String
+    , guid : String
+    }

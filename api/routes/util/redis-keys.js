@@ -9,3 +9,9 @@ exports.getQuestsListKey = function (userId) {
 exports.getRecentQuestsKey = function () {
   return 'es:quests:recent'
 }
+
+Object.keys(module.exports).forEach(method => {
+  module.exports[method] = (getKey => (...args) => {
+    return `${global.config.redisKeysVersion}:${getKey(...args)}`
+  })(module.exports[method])
+})

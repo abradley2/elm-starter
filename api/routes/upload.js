@@ -30,7 +30,7 @@ const uploadDirReady = co(function * () {
 
 uploadRouter.post('/', (req, res) => co(function * () {
   yield uploadDirReady
-  
+
   const file = req.files.file
   if (!file) {
     res.status(400).send('no file found')

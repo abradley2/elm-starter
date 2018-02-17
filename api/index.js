@@ -27,6 +27,7 @@ api.use((req, res, next) => {
 })
 api.use('/session', require('./routes/session'))
 api.use('/quests', require('./routes/quests'))
+api.use('/sidequests', require('./routes/sidequests'))
 api.use('/upload', require('./routes/upload'))
 
 module.exports = api

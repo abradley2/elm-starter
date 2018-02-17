@@ -1,10 +1,11 @@
-module Request.QuestsRequest exposing (getQuests, getQuestsByUser)
+module Request.QuestsRequest exposing (getQuests, getQuestsByUser, getSideQuests)
 
 import Http
+import Message.SideQuestsMessage exposing (SideQuestsMessage, SideQuestsMessage(..))
 import Message.QuestsMessage exposing (QuestsMessage(..), QuestsMessage)
 import Message.MyAdventurerMessage exposing (MyAdventurerMessage(..), MyAdventurerMessage)
 import Json.Decode exposing (..)
-import Types exposing (RecentPostedQuest)
+import Types exposing (RecentPostedQuest, SideQuest)
 
 
 decodeQuest =
@@ -21,6 +22,17 @@ decodeQuest =
 
 decodeQuestsList =
     Json.Decode.list decodeQuest
+
+
+decodeSideQuest =
+    Json.Decode.map3 SideQuest
+        (field "name" string)
+        (field "id" string)
+        (field "guid" string)
+
+
+decodeSideQuestsList =
+    Json.Decode.list decodeSideQuest
 
 
 getQuests : String -> String -> Cmd QuestsMessage
@@ -40,6 +52,25 @@ getQuests apiEndpoint userToken =
                 }
     in
         Http.send GetQuestsResult request
+
+
+getSideQuests : String -> String -> String -> String -> Cmd SideQuestsMessage
+getSideQuests apiEndpoint userToken userId questId =
+    let
+        request =
+            Http.request
+                { method = "GET"
+                , headers =
+                    [ Http.header "Authorization" ("Bearer " ++ userToken)
+                    ]
+                , url = (apiEndpoint ++ "sidequests/" ++ userId ++ "?questId=" ++ questId)
+                , body = Http.emptyBody
+                , expect = Http.expectJson decodeSideQuestsList
+                , timeout = Nothing
+                , withCredentials = False
+                }
+    in
+        Http.send GetSideQuestsResult request
 
 
 getQuestsByUser : String -> String -> String -> Cmd MyAdventurerMessage

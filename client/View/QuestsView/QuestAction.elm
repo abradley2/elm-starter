@@ -12,13 +12,15 @@ type alias Params a =
     { a
         | text : String
         , icon : String
+        , href : String
     }
 
 
 questAction : Params b -> Html a
 questAction params =
-    span
-        [ css
+    a
+        [ href params.href
+        , css
             [ paddingTop (px 8)
             , cursor Css.pointer
             , displayFlex
@@ -33,7 +35,7 @@ questAction params =
                 , Css.height (px 48)
                 , backgroundColor Theme.accentColor
                 , fontSize (px 16)
-                , minWidth (px 110)
+                , minWidth (px 125)
                 ]
             ]
             [ text params.text ]

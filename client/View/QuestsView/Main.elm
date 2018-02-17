@@ -34,13 +34,15 @@ questsView model =
                         , actionSection =
                             div []
                                 [ (questAction
-                                    { icon = "folder"
-                                    , text = "Guidance"
+                                    { icon = "list"
+                                    , text = "Details"
+                                    , href = "#details/" ++ quest.userId ++ ":" ++ quest.id
                                     }
                                   )
                                 , (questAction
-                                    { icon = "cloud"
-                                    , text = "Other"
+                                    { icon = "map-signs"
+                                    , text = "Side Quests"
+                                    , href = "#sidequests/" ++ quest.userId ++ ":" ++ quest.id
                                     }
                                   )
                                 ]

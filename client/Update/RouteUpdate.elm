@@ -7,7 +7,7 @@ import UrlParser exposing (..)
 
 type Route
     = QuestsRoute
-    | SideQuestsRoute
+    | SideQuestsRoute String
     | MyAdventurerRoute
     | CreateQuestRoute
     | NotFoundRoute
@@ -22,7 +22,7 @@ matchers =
     oneOf
         [ map QuestsRoute (UrlParser.top)
         , map QuestsRoute (UrlParser.s "quests")
-        , map SideQuestsRoute (UrlParser.s "sidequests")
+        , map SideQuestsRoute (UrlParser.s "sidequests" </> UrlParser.string)
         , map MyAdventurerRoute (UrlParser.s "profile")
         , map CreateQuestRoute (UrlParser.s "newquest")
         ]
