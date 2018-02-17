@@ -1,4 +1,4 @@
-module Component.QuestCard exposing (questCard)
+module Component.QuestCard exposing (..)
 
 import Html
 import Theme
@@ -9,7 +9,7 @@ import Html.Styled.Events exposing (..)
 import Types exposing (RecentPostedQuest)
 
 
-questCard quest params =
+questCardBase quest params =
     div
         [ css
             [ maxWidth (px 320)
@@ -54,7 +54,31 @@ questCard quest params =
                 )
             , div [ class "card-content" ]
                 [ text quest.description ]
-            , div [ class "card-action" ]
-                []
+            , (case params.actionSection of
+                Just actionSection ->
+                    div
+                        [ css
+                            [ padding (px 0)
+                            ]
+                        ]
+                        [ actionSection ]
+
+                Nothing ->
+                    div [] []
+              )
             ]
         ]
+
+
+questCardWithActionSection quest params =
+    questCardBase quest
+        { showUserImage = params.showUserImage
+        , actionSection = Just params.actionSection
+        }
+
+
+questCard quest params =
+    questCardBase quest
+        { showUserImage = params.showUserImage
+        , actionSection = Nothing
+        }

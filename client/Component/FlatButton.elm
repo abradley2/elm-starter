@@ -1,4 +1,4 @@
-module Component.FlatButton exposing (flatButton)
+module Component.FlatButton exposing (..)
 
 import Html
 import Css exposing (..)

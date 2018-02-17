@@ -3,6 +3,10 @@ module Theme exposing (..)
 import Css exposing (..)
 
 
+white =
+    hex "#FFF"
+
+
 baseTextColor =
     rgba 0 0 0 0.87
 
@@ -24,7 +28,7 @@ primaryInactiveColor =
 
 
 accentColor =
-    hex "#66C65C"
+    hex "#26a69a"
 
 
 accentActiveColor =

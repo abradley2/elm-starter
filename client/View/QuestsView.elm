@@ -7,8 +7,11 @@ import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
 import Model exposing (Model)
 import Message.QuestsMessage exposing (QuestsMessage, QuestsMessage(..))
+import Theme
+import View.QuestsView.QuestAction exposing (questAction)
 import Component.TextField exposing (textField)
-import Component.QuestCard exposing (questCard)
+import Component.QuestCard exposing (questCardWithActionSection)
+import Component.RaisedButton exposing (raisedButton)
 
 
 questsView : Model -> Html QuestsMessage
@@ -25,7 +28,24 @@ questsView model =
                 ]
             ]
             (List.map
-                (\quest -> questCard quest { showUserImage = True })
+                (\quest ->
+                    questCardWithActionSection quest
+                        { showUserImage = True
+                        , actionSection =
+                            div []
+                                [ (questAction
+                                    { icon = "folder"
+                                    , text = "Guidance"
+                                    }
+                                  )
+                                , (questAction
+                                    { icon = "cloud"
+                                    , text = "Other"
+                                    }
+                                  )
+                                ]
+                        }
+                )
                 model.quests.questList
             )
         ]
