@@ -1,4 +1,4 @@
-module View.SideQuestsView exposing (sideQuestsView)
+module View.SideQuestsView.Main exposing (sideQuestsView)
 
 import Html
 import Html.Styled exposing (..)

@@ -1,4 +1,4 @@
-module View.MyAdventurerView exposing (myAdventurerView)
+module View.MyAdventurerView.Main exposing (myAdventurerView)
 
 import Html
 import Css exposing (..)

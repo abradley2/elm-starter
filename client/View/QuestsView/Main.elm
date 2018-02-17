@@ -1,4 +1,4 @@
-module View.QuestsView exposing (questsView)
+module View.QuestsView.Main exposing (questsView)
 
 import Html
 import Css exposing (..)

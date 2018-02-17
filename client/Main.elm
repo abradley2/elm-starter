@@ -11,10 +11,10 @@ import Ports exposing (..)
 import Types exposing (Flags)
 import Update exposing (update)
 import Update.RouteUpdate exposing (Route(..), parseLocation)
-import View.MyAdventurerView exposing (myAdventurerView)
-import View.QuestsView exposing (questsView)
-import View.SideQuestsView exposing (sideQuestsView)
-import View.CreateQuestView exposing (createQuestView)
+import View.MyAdventurerView.Main exposing (myAdventurerView)
+import View.QuestsView.Main exposing (questsView)
+import View.SideQuestsView.Main exposing (sideQuestsView)
+import View.CreateQuestView.Main exposing (createQuestView)
 
 
 view : Model -> Html Message

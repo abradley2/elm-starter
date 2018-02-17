@@ -1,4 +1,4 @@
-module View.CreateQuestView exposing (createQuestView)
+module View.CreateQuestView.Main exposing (createQuestView)
 
 import Html
 import Array

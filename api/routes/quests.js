@@ -55,7 +55,9 @@ questsRouter.get('/', (req, res) => co(function * () {
       return recentGuid === quest.guid
     })
 
-  res.json(quests.map(formatQuest))
+  const dev = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].reduce(acc => acc.concat(quests), [])
+
+  res.json(dev.map(formatQuest))
 }).catch(err => {
   global.logger.error(err, 'error getting recent quests')
 
