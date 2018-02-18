@@ -3,23 +3,25 @@ module Update.SideQuestsUpdate exposing (SideQuestsModel, sideQuestsUpdate, side
 import Message exposing (Message, Message(..))
 import Message.SideQuestsMessage exposing (SideQuestsMessage, SideQuestsMessage(..))
 import UrlParser exposing (..)
-import Types exposing (SessionModel, SideQuest)
+import Types exposing (SessionModel, SideQuest, GetSideQuestsResponse, RecentPostedQuest)
 import Request.QuestsRequest exposing (getSideQuests)
 import Array
 
 
 type alias SideQuestsModel =
     { questId : String
+    , questInfo : Maybe RecentPostedQuest
     , loading : Bool
-    , sideQuestList : List SideQuest
+    , sideQuestList : Maybe (List SideQuest)
     }
 
 
 sideQuestsModel : SideQuestsModel
 sideQuestsModel =
     { questId = ""
+    , questInfo = Nothing
     , loading = False
-    , sideQuestList = []
+    , sideQuestList = Nothing
     }
 
 
@@ -36,13 +38,17 @@ onSideQuestsMessage sideQuestsMessage sideQuests commands =
             , commands
             )
 
-        GetSideQuestsResult (Result.Ok sideQuestList) ->
+        GetSideQuestsResult (Result.Ok response) ->
             ( { sideQuests
-                | sideQuestList = sideQuestList
+                | sideQuestList = Just response.sideQuests
+                , questInfo = Just response.quest
                 , loading = False
               }
             , commands
             )
+
+        NoOp ->
+            ( sideQuests, commands )
 
 
 sideQuestsUpdate : Message -> ( SessionModel, SideQuestsModel ) -> List (Cmd Message) -> ( SideQuestsModel, List (Cmd Message) )
@@ -61,6 +67,8 @@ sideQuestsUpdate message ( session, sideQuests ) commands =
                         ( { sideQuests
                             | questId = Maybe.withDefault "" (Array.get 1 params)
                             , loading = True
+                            , questInfo = Nothing
+                            , sideQuestList = Nothing
                           }
                         , commands
                             ++ [ Cmd.map SideQuests

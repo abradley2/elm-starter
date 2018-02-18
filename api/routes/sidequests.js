@@ -21,7 +21,10 @@ sideQuestsRouter.get('/:userId', (req, res) => co(function * () {
         found
     , null)
 
-  res.json(quest.sideQuests)
+  res.json({
+    quest: Object.assign({}, quest, {upvotes: quest.upvotes.length}),
+    sideQuests: quest.sideQuests
+  })
 }).catch(err => {
   global.console.error(err)
   global.logger.error(err, 'error getting sidequests')

@@ -5,7 +5,7 @@ import Message.SideQuestsMessage exposing (SideQuestsMessage, SideQuestsMessage(
 import Message.QuestsMessage exposing (QuestsMessage(..), QuestsMessage)
 import Message.MyAdventurerMessage exposing (MyAdventurerMessage(..), MyAdventurerMessage)
 import Json.Decode exposing (..)
-import Types exposing (RecentPostedQuest, SideQuest)
+import Types exposing (RecentPostedQuest, SideQuest, GetSideQuestsResponse)
 
 
 decodeQuest =
@@ -33,6 +33,12 @@ decodeSideQuest =
 
 decodeSideQuestsList =
     Json.Decode.list decodeSideQuest
+
+
+decodeGetSideQuestsResponse =
+    Json.Decode.map2 GetSideQuestsResponse
+        (field "quest" decodeQuest)
+        (field "sideQuests" decodeSideQuestsList)
 
 
 getQuests : String -> String -> Cmd QuestsMessage
@@ -65,7 +71,7 @@ getSideQuests apiEndpoint userToken userId questId =
                     ]
                 , url = (apiEndpoint ++ "sidequests/" ++ userId ++ "?questId=" ++ questId)
                 , body = Http.emptyBody
-                , expect = Http.expectJson decodeSideQuestsList
+                , expect = Http.expectJson decodeGetSideQuestsResponse
                 , timeout = Nothing
                 , withCredentials = False
                 }

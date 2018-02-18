@@ -52,3 +52,9 @@ type alias SideQuest =
     , id : String
     , guid : String
     }
+
+
+type alias GetSideQuestsResponse =
+    { quest : RecentPostedQuest
+    , sideQuests : List SideQuest
+    }
