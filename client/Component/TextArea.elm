@@ -18,6 +18,7 @@ textArea params =
             , class "materialize-textarea"
             , value params.value
             , onInput params.onInput
+            , style [ ( "min-height", "80px" ) ]
             ]
             []
         , label

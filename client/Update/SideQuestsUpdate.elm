@@ -9,28 +9,29 @@ import Array
 
 
 type alias SideQuestsModel =
-    { questId : String
-    , questInfo : Maybe RecentPostedQuest
+    { questInfo : Maybe RecentPostedQuest
     , loading : Bool
     , sideQuestList : Maybe (List SideQuest)
+    , questFormOpen : Bool
+    , sideQuestName : String
+    , sideQuestDescription : String
     }
 
 
 sideQuestsModel : SideQuestsModel
 sideQuestsModel =
-    { questId = ""
+    { questFormOpen = False
     , questInfo = Nothing
     , loading = False
     , sideQuestList = Nothing
+    , sideQuestName = ""
+    , sideQuestDescription = ""
     }
 
 
 onSideQuestsMessage : SideQuestsMessage -> SideQuestsModel -> List (Cmd Message) -> ( SideQuestsModel, List (Cmd Message) )
 onSideQuestsMessage sideQuestsMessage sideQuests commands =
     case sideQuestsMessage of
-        AddNewSideQuest ->
-            ( sideQuests, commands )
-
         GetSideQuestsResult (Result.Err _) ->
             ( { sideQuests
                 | loading = False
@@ -46,6 +47,31 @@ onSideQuestsMessage sideQuestsMessage sideQuests commands =
               }
             , commands
             )
+
+        ShowSideQuestForm ->
+            ( { sideQuests
+                | questFormOpen = True
+                , sideQuestName = ""
+                , sideQuestDescription = ""
+              }
+            , commands
+            )
+
+        HideSideQuestForm ->
+            ( { sideQuests | questFormOpen = False }, commands )
+
+        SubmitSideQuestForm ->
+            ( { sideQuests
+                | questFormOpen = False
+              }
+            , commands
+            )
+
+        EditSideQuestName newName ->
+            ( { sideQuests | sideQuestName = newName }, commands )
+
+        EditSideQuestDescription newDescription ->
+            ( { sideQuests | sideQuestDescription = newDescription }, commands )
 
         NoOp ->
             ( sideQuests, commands )
@@ -64,9 +90,8 @@ sideQuestsUpdate message ( session, sideQuests ) commands =
                         params =
                             Array.fromList (String.split ":" queryPath)
                     in
-                        ( { sideQuests
-                            | questId = Maybe.withDefault "" (Array.get 1 params)
-                            , loading = True
+                        ( { sideQuestsModel
+                            | loading = True
                             , questInfo = Nothing
                             , sideQuestList = Nothing
                           }

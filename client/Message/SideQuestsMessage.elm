@@ -5,6 +5,10 @@ import Http
 
 
 type SideQuestsMessage
-    = AddNewSideQuest
-    | GetSideQuestsResult (Result Http.Error GetSideQuestsResponse)
+    = GetSideQuestsResult (Result Http.Error GetSideQuestsResponse)
+    | ShowSideQuestForm
+    | HideSideQuestForm
+    | SubmitSideQuestForm
+    | EditSideQuestName String
+    | EditSideQuestDescription String
     | NoOp

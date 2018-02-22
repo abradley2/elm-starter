@@ -12,14 +12,17 @@ import Types exposing (RecentPostedQuest)
 questCardBase quest params =
     div
         [ css
-            [ maxWidth (px 320)
-            , margin (px 16)
+            [ margin (px 16)
             ]
         ]
         [ div [ class "card" ]
             [ div [ class "card-image" ]
                 ([ img
                     [ src quest.imageUrl
+                    , css
+                        [ maxWidth (px 320)
+                        , maxHeight (px 320)
+                        ]
                     ]
                     []
                  , div

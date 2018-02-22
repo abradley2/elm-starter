@@ -1,12 +1,15 @@
 module View.SideQuestsView.Main exposing (sideQuestsView)
 
 import Html
+import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
 import Message.SideQuestsMessage exposing (SideQuestsMessage, SideQuestsMessage(..))
 import Model exposing (Model)
+import Theme
 import Types exposing (RecentPostedQuest, SideQuest)
+import View.SideQuestsView.SideQuestForm exposing (sideQuestForm)
 
 
 {-
@@ -26,8 +29,36 @@ ready : Model -> RecentPostedQuest -> List SideQuest -> Html SideQuestsMessage
 ready model quest sideQuests =
     div [ class "container" ]
         [ div []
-            [ h4 [] [ text quest.name ]
-            , p [ class "flow-text" ] [ text "Sidequests" ]
+            [ h4 []
+                [ text quest.name ]
+            , div
+                [ css
+                    [ position relative
+                    ]
+                ]
+                [ hr [] []
+                , (sideQuestForm
+                    { name = model.sideQuests.sideQuestName
+                    , description = model.sideQuests.sideQuestDescription
+                    , open = model.sideQuests.questFormOpen
+                    }
+                  )
+                , span [ class "flow-text" ] [ text "Care to propose a" ]
+                , a
+                    [ class "flow-text"
+                    , css
+                        [ cursor pointer
+                        ]
+                    , onClick
+                        (if model.sideQuests.questFormOpen then
+                            HideSideQuestForm
+                         else
+                            ShowSideQuestForm
+                        )
+                    ]
+                    [ text " Side Quest " ]
+                , span [ class "flow-text" ] [ text "for this adventurer to complete while on their journey?" ]
+                ]
             ]
         ]
 
