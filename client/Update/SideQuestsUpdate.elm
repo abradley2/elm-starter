@@ -4,7 +4,7 @@ import Message exposing (Message, Message(..))
 import Message.SideQuestsMessage exposing (SideQuestsMessage, SideQuestsMessage(..))
 import UrlParser exposing (..)
 import Types exposing (SessionModel, SideQuest, GetSideQuestsResponse, RecentPostedQuest)
-import Request.QuestsRequest exposing (getSideQuests)
+import Request.QuestsRequest exposing (getSideQuests, suggestSideQuest)
 import Array
 
 
@@ -15,6 +15,8 @@ type alias SideQuestsModel =
     , questFormOpen : Bool
     , sideQuestName : String
     , sideQuestDescription : String
+    , suggestingSideQuest : Bool
+    , suggestSideQuestSuccess : Maybe Bool
     }
 
 
@@ -26,12 +28,30 @@ sideQuestsModel =
     , sideQuestList = Nothing
     , sideQuestName = ""
     , sideQuestDescription = ""
+    , suggestingSideQuest = False
+    , suggestSideQuestSuccess = Nothing
     }
 
 
-onSideQuestsMessage : SideQuestsMessage -> SideQuestsModel -> List (Cmd Message) -> ( SideQuestsModel, List (Cmd Message) )
-onSideQuestsMessage sideQuestsMessage sideQuests commands =
+onSideQuestsMessage : SideQuestsMessage -> ( SessionModel, SideQuestsModel ) -> List (Cmd Message) -> ( SideQuestsModel, List (Cmd Message) )
+onSideQuestsMessage sideQuestsMessage ( session, sideQuests ) commands =
     case sideQuestsMessage of
+        SuggestSideQuestResult (Result.Err _) ->
+            ( { sideQuests
+                | suggestingSideQuest = False
+                , suggestSideQuestSuccess = Just False
+              }
+            , commands
+            )
+
+        SuggestSideQuestResult (Result.Ok success) ->
+            ( { sideQuests
+                | suggestingSideQuest = False
+                , suggestSideQuestSuccess = Just True
+              }
+            , commands
+            )
+
         GetSideQuestsResult (Result.Err _) ->
             ( { sideQuests
                 | loading = False
@@ -63,8 +83,31 @@ onSideQuestsMessage sideQuestsMessage sideQuests commands =
         SubmitSideQuestForm ->
             ( { sideQuests
                 | questFormOpen = False
+                , suggestingSideQuest = True
               }
-            , commands
+            , (commands
+                ++ (let
+                        result =
+                            Maybe.map2
+                                (\quest userId ->
+                                    [ Cmd.map SideQuests
+                                        (suggestSideQuest
+                                            session.flags.apiEndpoint
+                                            userId
+                                            quest
+                                            { guid = ""
+                                            , name = sideQuests.sideQuestName
+                                            , description = sideQuests.sideQuestDescription
+                                            }
+                                        )
+                                    ]
+                                )
+                                sideQuests.questInfo
+                                session.userId
+                    in
+                        Maybe.withDefault [] result
+                   )
+              )
             )
 
         EditSideQuestName newName ->
@@ -81,7 +124,7 @@ sideQuestsUpdate : Message -> ( SessionModel, SideQuestsModel ) -> List (Cmd Mes
 sideQuestsUpdate message ( session, sideQuests ) commands =
     case message of
         SideQuests sideQuestsMessage ->
-            onSideQuestsMessage sideQuestsMessage sideQuests commands
+            onSideQuestsMessage sideQuestsMessage ( session, sideQuests ) commands
 
         OnLocationChange location ->
             case parseHash (s "sidequests" </> string) location of

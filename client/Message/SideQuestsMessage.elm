@@ -9,6 +9,7 @@ type SideQuestsMessage
     | ShowSideQuestForm
     | HideSideQuestForm
     | SubmitSideQuestForm
+    | SuggestSideQuestResult (Result Http.Error Bool)
     | EditSideQuestName String
     | EditSideQuestDescription String
     | NoOp

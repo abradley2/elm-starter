@@ -29,7 +29,16 @@ navs model =
             in
                 a
                     [ href ("https://www.facebook.com/v2.11/dialog/oauth?client_id=169926423737270&redirect_uri=" ++ location.origin ++ "&state=success") ]
-                    [ text "fb login" ]
+                    [ i
+                        [ css
+                            [ transform (translateY (pct 25))
+                            , paddingRight (px 8)
+                            ]
+                        , class "fab fa-2x fa-facebook"
+                        ]
+                        []
+                    , span [] [ text "Login" ]
+                    ]
         ]
     ]
 

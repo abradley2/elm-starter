@@ -49,7 +49,7 @@ type alias RecentPostedQuest =
 
 type alias SideQuest =
     { name : String
-    , id : String
+    , description : String
     , guid : String
     }
 
