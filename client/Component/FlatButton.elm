@@ -7,6 +7,13 @@ import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
 
 
+type alias Params a =
+    { label : String
+    , onClick : a
+    }
+
+
+flatButton : Params a -> Html a
 flatButton params =
     span
         [ class "waves-effect waves-teal btn-flat"

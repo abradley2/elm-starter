@@ -10,6 +10,10 @@ exports.getRecentQuestsKey = function () {
   return 'es:quests:recent'
 }
 
+exports.getSuggestedSideQuestsKey = function (userId, questId) {
+  return `es:suggested:${userId}:${questId}`
+}
+
 Object.keys(module.exports).forEach(method => {
   module.exports[method] = (getKey => (...args) => {
     return `${global.config.redisKeysVersion}:${getKey(...args)}`

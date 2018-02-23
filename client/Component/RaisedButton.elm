@@ -7,6 +7,15 @@ import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
 
 
+type alias Params a =
+    { disabled : Bool
+    , icon : Maybe String
+    , label : String
+    , onClick : a
+    }
+
+
+raisedButton : Params a -> Html a
 raisedButton params =
     span
         [ class

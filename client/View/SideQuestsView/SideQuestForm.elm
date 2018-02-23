@@ -8,6 +8,8 @@ import Html.Styled.Events exposing (..)
 import Message.SideQuestsMessage exposing (SideQuestsMessage, SideQuestsMessage(..))
 import Component.TextField exposing (textField)
 import Component.TextArea exposing (textArea)
+import Component.RaisedButton exposing (raisedButton)
+import Component.FlatButton exposing (flatButton)
 import Theme
 
 
@@ -64,5 +66,35 @@ sideQuestForm formParams =
                 , class = Nothing
                 , onInput = EditSideQuestDescription
                 }
+            , div
+                [ css
+                    [ displayFlex
+                    , justifyContent center
+                    ]
+                ]
+                [ (flatButton
+                    { onClick = HideSideQuestForm
+                    , label = "Close"
+                    }
+                  )
+                , (let
+                    canSubmit =
+                        List.all (\isTrue -> isTrue)
+                            [ formParams.description /= ""
+                            , formParams.name /= ""
+                            ]
+                   in
+                    raisedButton
+                        { disabled = not canSubmit
+                        , label =
+                            if canSubmit then
+                                "Submit!"
+                            else
+                                "Add details"
+                        , onClick = SubmitSideQuestForm
+                        , icon = Nothing
+                        }
+                  )
+                ]
             ]
         ]
