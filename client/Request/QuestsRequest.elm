@@ -27,17 +27,17 @@ decodeQuestsList =
 
 
 decodeSideQuest =
-    Json.Decode.map4 SideQuest
+    Json.Decode.map5 SideQuest
         (field "name" string)
-        (field "id" string)
+        (field "description" string)
         (field "guid" string)
         (field "suggestedBy" string)
+        (field "id" string)
 
 
 decodeQuestDetails =
-    Json.Decode.map3 QuestDetailsResponse
-        (field "quests" decodeQuest)
-        (field "sideQuests" (Json.Decode.list decodeSideQuest))
+    Json.Decode.map2 QuestDetailsResponse
+        (field "quest" decodeQuest)
         (field "suggestedSideQuests" (Json.Decode.list decodeSideQuest))
 
 
@@ -143,7 +143,7 @@ suggestSideQuest apiEndpoint userToken quest sideQuest =
                 , headers =
                     [ Http.header "Authorization" ("Bearer " ++ userToken)
                     ]
-                , url = (apiEndpoint ++ "sidequests/" ++ quest.userId ++ "/" ++ quest.guid)
+                , url = (apiEndpoint ++ "sidequests/" ++ quest.userId ++ "/" ++ quest.id)
                 , body = Http.jsonBody (encodeSideQuest sideQuest)
                 , expect = Http.expectJson (Json.Decode.field "success" bool)
                 , timeout = Nothing

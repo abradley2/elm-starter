@@ -3,24 +3,35 @@ module Update.QuestDetailsUpdate exposing (QuestDetailsModel, questDetailsUpdate
 import Message exposing (Message, Message(..))
 import Message.QuestDetailsMessage exposing (QuestDetailsMessage, QuestDetailsMessage(..))
 import UrlParser exposing (..)
-import Types exposing (SessionModel, Route, Route(..))
+import Types exposing (SessionModel, Route, Route(..), SideQuest, RecentPostedQuest)
 import Request.QuestsRequest exposing (getQuestDetails)
+import String
+import Array
 
 
 type alias QuestDetailsModel =
-    {}
+    { quest : Maybe RecentPostedQuest
+    , suggestedSideQuests : Maybe (List SideQuest)
+    }
 
 
 questDetailsInitialModel : QuestDetailsModel
 questDetailsInitialModel =
-    {}
+    { quest = Nothing
+    , suggestedSideQuests = Nothing
+    }
 
 
 onQuestDetailsMessage : QuestDetailsMessage -> ( SessionModel, QuestDetailsModel ) -> List (Cmd Message) -> ( QuestDetailsModel, List (Cmd Message) )
 onQuestDetailsMessage message ( session, questDetails ) commands =
     case message of
         GetQuestDetailsResult (Result.Ok response) ->
-            ( questDetails, commands )
+            ( { questDetails
+                | quest = Just response.quest
+                , suggestedSideQuests = Just response.suggestedSideQuests
+              }
+            , commands
+            )
 
         GetQuestDetailsResult (Result.Err _) ->
             ( questDetails, commands )
@@ -42,7 +53,27 @@ questDetailsUpdate message ( session, questDetails ) commands =
             in
                 case route of
                     QuestDetailsRoute params ->
-                        ( questDetails, commands )
+                        let
+                            paramArray =
+                                Array.fromList (String.split ":" params)
+
+                            request =
+                                Maybe.map3
+                                    (\userToken userId questId ->
+                                        [ Cmd.map QuestDetails
+                                            (getQuestDetails
+                                                session.flags.apiEndpoint
+                                                userToken
+                                                userId
+                                                questId
+                                            )
+                                        ]
+                                    )
+                                    session.token
+                                    (Array.get 0 paramArray)
+                                    (Array.get 1 paramArray)
+                        in
+                            ( questDetails, commands ++ (Maybe.withDefault [] request) )
 
                     _ ->
                         ( questDetails, commands )

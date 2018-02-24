@@ -68,12 +68,12 @@ type alias SideQuest =
     , description : String
     , guid : String
     , suggestedBy : String
+    , id : String
     }
 
 
 type alias QuestDetailsResponse =
     { quest : RecentPostedQuest
-    , sideQuests : List SideQuest
     , suggestedSideQuests : List SideQuest
     }
 

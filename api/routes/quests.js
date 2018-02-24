@@ -7,7 +7,8 @@ const redis = require('../redis')
 const {
   getQuestsListKey,
   getRecentQuestsKey,
-  getAcccessTokenKey
+  getAcccessTokenKey,
+  getSuggestedSideQuestsKey
 } = require('./util/redis-keys')
 
 const questsRouter = router()
@@ -17,6 +18,27 @@ const graphApi = 'https://graph.facebook.com/v2.11/'
 const formatQuest = quest => Object.assign({}, quest, {
   upvotes: quest.upvotes.length
 })
+
+questsRouter.get('/details/:userId/:questId', (req, res) => co(function * () {
+  const {userId, questId} = req.params
+
+  const [userQuests, suggestedSideQuests] = yield Promise.all([
+    redis.lrange(getQuestsListKey(userId), 0, -1),
+    redis.lrange(getSuggestedSideQuestsKey(userId, questId), 0, -1)
+  ])
+
+  const quest = userQuests
+    .map(JSON.parse)
+    .reduce((found, cur) => cur.id === questId ? cur : found, null)
+
+  return res.json({
+    quest: formatQuest(quest),
+    suggestedSideQuests: suggestedSideQuests.map(JSON.parse)
+  })
+}).catch(err => {
+  global.logger.error(err)
+  res.sendStatus(500)
+}))
 
 questsRouter.get('/:userId', (req, res) => co(function * () {
   const userId = req.params.userId

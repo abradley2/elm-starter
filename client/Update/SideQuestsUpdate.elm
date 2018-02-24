@@ -99,6 +99,7 @@ onSideQuestsMessage sideQuestsMessage ( session, sideQuests ) commands =
                                             , name = sideQuests.sideQuestName
                                             , description = sideQuests.sideQuestDescription
                                             , suggestedBy = ""
+                                            , id = ""
                                             }
                                         )
                                     ]
