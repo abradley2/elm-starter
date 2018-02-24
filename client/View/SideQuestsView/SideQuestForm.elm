@@ -17,6 +17,7 @@ type alias FormParams =
     { name : String
     , description : String
     , open : Bool
+    , submitting : Bool
     }
 
 
@@ -85,10 +86,14 @@ sideQuestForm formParams =
                             ]
                    in
                     raisedButton
-                        { disabled = not canSubmit
+                        { disabled = List.any (\v -> v) [ not canSubmit, formParams.submitting ]
                         , label =
                             if canSubmit then
-                                "Submit!"
+                                (if formParams.submitting then
+                                    "Loading"
+                                 else
+                                    "Submit!"
+                                )
                             else
                                 "Add details"
                         , onClick = SubmitSideQuestForm

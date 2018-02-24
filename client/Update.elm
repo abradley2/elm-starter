@@ -8,6 +8,7 @@ import Update.RouteUpdate exposing (routeUpdate)
 import Update.CreateQuestUpdate exposing (createQuestUpdate)
 import Update.SessionUpdate exposing (sessionUpdate)
 import Update.MyAdventurerUpdate exposing (myAdventurerUpdate)
+import Update.QuestDetailsUpdate exposing (questDetailsUpdate)
 
 
 updater getter setter reducer =
@@ -51,5 +52,9 @@ update message model =
                     (\model -> ( model.session, model.myAdventurer ))
                     (\model myAdventurer -> ({ model | myAdventurer = myAdventurer }))
                     myAdventurerUpdate
+                |> updater
+                    (\model -> ( model.session, model.questDetails ))
+                    (\model questDetails -> ({ model | questDetails = questDetails }))
+                    questDetailsUpdate
     in
         ( updatedModel, Cmd.batch commands )

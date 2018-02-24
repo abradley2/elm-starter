@@ -1,5 +1,20 @@
 module Types exposing (..)
 
+import Navigation exposing (Location)
+
+
+type Route
+    = QuestsRoute
+    | SideQuestsRoute String
+    | MyAdventurerRoute
+    | CreateQuestRoute
+    | QuestDetailsRoute String
+    | NotFoundRoute
+
+
+type alias RouteData =
+    ( Route, Location )
+
 
 type alias Flags =
     { apiEndpoint : String
@@ -11,6 +26,7 @@ type alias SessionModel =
     , token : Maybe String
     , username : Maybe String
     , userId : Maybe String
+    , routeData : RouteData
     }
 
 
@@ -51,6 +67,14 @@ type alias SideQuest =
     { name : String
     , description : String
     , guid : String
+    , suggestedBy : String
+    }
+
+
+type alias QuestDetailsResponse =
+    { quest : RecentPostedQuest
+    , sideQuests : List SideQuest
+    , suggestedSideQuests : List SideQuest
     }
 
 

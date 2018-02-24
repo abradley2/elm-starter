@@ -10,9 +10,9 @@ import Html.Attributes exposing (name)
 import Message exposing (Message, Message(..))
 import Message.CreateQuestMessage exposing (CreateQuestMessage, CreateQuestMessage(..))
 import Request.CreateQuestRequest exposing (createQuestRequest)
-import Update.RouteUpdate exposing (parseLocation, Route(..))
+import Update.RouteUpdate exposing (parseLocation)
 import Ports exposing (requestQuestStepId, requestQuestId, uploadQuestImage)
-import Types exposing (SessionModel)
+import Types exposing (SessionModel, Route(..))
 import Array
 
 

@@ -8,13 +8,14 @@ import Message exposing (Message, Message(..))
 import Model exposing (Model, model)
 import Navigation exposing (Location)
 import Ports exposing (..)
-import Types exposing (Flags)
+import Types exposing (Flags, Route(..))
 import Update exposing (update)
-import Update.RouteUpdate exposing (Route(..), parseLocation)
+import Update.RouteUpdate exposing (parseLocation)
 import View.MyAdventurerView.Main exposing (myAdventurerView)
 import View.QuestsView.Main exposing (questsView)
 import View.SideQuestsView.Main exposing (sideQuestsView)
 import View.CreateQuestView.Main exposing (createQuestView)
+import View.QuestDetailsView.Main exposing (questDetailsView)
 
 
 view : Model -> Html Message
@@ -28,7 +29,10 @@ view model =
                 QuestsRoute ->
                     Html.Styled.map Quests (questsView model)
 
-                SideQuestsRoute questId ->
+                QuestDetailsRoute params ->
+                    Html.Styled.map QuestDetails (questDetailsView model)
+
+                SideQuestsRoute params ->
                     Html.Styled.map SideQuests (sideQuestsView model)
 
                 MyAdventurerRoute ->

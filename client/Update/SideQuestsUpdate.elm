@@ -98,12 +98,13 @@ onSideQuestsMessage sideQuestsMessage ( session, sideQuests ) commands =
                                             { guid = ""
                                             , name = sideQuests.sideQuestName
                                             , description = sideQuests.sideQuestDescription
+                                            , suggestedBy = ""
                                             }
                                         )
                                     ]
                                 )
                                 sideQuests.questInfo
-                                session.userId
+                                session.token
                     in
                         Maybe.withDefault [] result
                    )

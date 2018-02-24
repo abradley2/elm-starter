@@ -1,12 +1,13 @@
-module Request.QuestsRequest exposing (getQuests, getQuestsByUser, getSideQuests, suggestSideQuest)
+module Request.QuestsRequest exposing (getQuests, getQuestsByUser, getSideQuests, suggestSideQuest, getQuestDetails)
 
 import Http
 import Message.SideQuestsMessage exposing (SideQuestsMessage, SideQuestsMessage(..))
 import Message.QuestsMessage exposing (QuestsMessage(..), QuestsMessage)
 import Message.MyAdventurerMessage exposing (MyAdventurerMessage(..), MyAdventurerMessage)
+import Message.QuestDetailsMessage exposing (QuestDetailsMessage(..), QuestDetailsMessage)
 import Json.Decode exposing (..)
 import Json.Encode as Encode
-import Types exposing (RecentPostedQuest, SideQuest, GetSideQuestsResponse)
+import Types exposing (RecentPostedQuest, SideQuest, GetSideQuestsResponse, QuestDetailsResponse)
 
 
 decodeQuest =
@@ -26,10 +27,18 @@ decodeQuestsList =
 
 
 decodeSideQuest =
-    Json.Decode.map3 SideQuest
+    Json.Decode.map4 SideQuest
         (field "name" string)
         (field "id" string)
         (field "guid" string)
+        (field "suggestedBy" string)
+
+
+decodeQuestDetails =
+    Json.Decode.map3 QuestDetailsResponse
+        (field "quests" decodeQuest)
+        (field "sideQuests" (Json.Decode.list decodeSideQuest))
+        (field "suggestedSideQuests" (Json.Decode.list decodeSideQuest))
 
 
 encodeSideQuest sideQuest =
@@ -104,6 +113,25 @@ getQuestsByUser apiEndpoint userToken userId =
                 }
     in
         Http.send GetQuestsByUserResult request
+
+
+getQuestDetails : String -> String -> String -> String -> Cmd QuestDetailsMessage
+getQuestDetails apiEndpoint userToken userId questId =
+    let
+        request =
+            Http.request
+                { method = "GET"
+                , headers =
+                    [ Http.header "Authorization" ("Bearer " ++ userToken)
+                    ]
+                , url = (apiEndpoint ++ "quests/details/" ++ userId ++ "/" ++ questId)
+                , body = Http.emptyBody
+                , expect = Http.expectJson decodeQuestDetails
+                , timeout = Nothing
+                , withCredentials = False
+                }
+    in
+        Http.send GetQuestDetailsResult request
 
 
 suggestSideQuest : String -> String -> RecentPostedQuest -> SideQuest -> Cmd SideQuestsMessage

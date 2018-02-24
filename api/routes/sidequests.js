@@ -1,4 +1,5 @@
 const uuid = require('uuid')
+const jwt = require('jsonwebtoken')
 const router = require('express').Router
 const co = require('co')
 const redis = require('../redis')
@@ -37,8 +38,11 @@ sideQuestsRouter.post('/:userId/:questId', (req, res) => co(function * () {
   const userId = req.params.userId
   const questId = req.params.questId
 
+  const user = yield jwt.verify(res.locals.token, global.config.appSecret)
+
   const suggestedQuest = Object.assign({}, req.body, {
-    guid: uuid.v4()
+    guid: uuid.v4(),
+    suggestedBy: user.userId
   })
 
   yield redis.lpush(getSuggestedSideQuestsKey(userId, questId), JSON.stringify(suggestedQuest))

@@ -1,20 +1,9 @@
-module Update.RouteUpdate exposing (parseLocation, routeUpdate, Route, Route(..), routeData, RouteData)
+module Update.RouteUpdate exposing (parseLocation, routeUpdate, routeData)
 
 import Message exposing (Message(..))
 import Navigation exposing (Location)
 import UrlParser exposing (..)
-
-
-type Route
-    = QuestsRoute
-    | SideQuestsRoute String
-    | MyAdventurerRoute
-    | CreateQuestRoute
-    | NotFoundRoute
-
-
-type alias RouteData =
-    ( Route, Location )
+import Types exposing (Route, Route(..), RouteData)
 
 
 matchers : Parser (Route -> a) a
@@ -22,6 +11,7 @@ matchers =
     oneOf
         [ map QuestsRoute (UrlParser.top)
         , map QuestsRoute (UrlParser.s "quests")
+        , map QuestDetailsRoute (UrlParser.s "details" </> UrlParser.string)
         , map SideQuestsRoute (UrlParser.s "sidequests" </> UrlParser.string)
         , map MyAdventurerRoute (UrlParser.s "profile")
         , map CreateQuestRoute (UrlParser.s "newquest")

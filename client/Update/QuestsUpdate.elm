@@ -2,9 +2,9 @@ module Update.QuestsUpdate exposing (questsModel, questsUpdate, QuestsModel)
 
 import Message exposing (Message, Message(..))
 import Message.QuestsMessage exposing (QuestsMessage, QuestsMessage(..))
-import Update.RouteUpdate exposing (parseLocation, RouteData, Route, Route(..))
+import Update.RouteUpdate exposing (parseLocation)
 import Request.QuestsRequest exposing (getQuests)
-import Types exposing (SessionModel, RecentPostedQuest)
+import Types exposing (SessionModel, RecentPostedQuest, RouteData, Route, Route(..))
 
 
 type alias QuestsModel =

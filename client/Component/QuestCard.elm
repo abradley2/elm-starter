@@ -20,7 +20,7 @@ questCardBase quest params =
                 ([ img
                     [ src quest.imageUrl
                     , css
-                        [ maxWidth (px 320)
+                        [ maxWidth (px 400)
                         , maxHeight (px 320)
                         ]
                     ]

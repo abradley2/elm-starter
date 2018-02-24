@@ -12,19 +12,6 @@ import Types exposing (RecentPostedQuest, SideQuest)
 import View.SideQuestsView.SideQuestForm exposing (sideQuestForm)
 
 
-{-
-   <ul class="collection">
-      <li class="collection-item avatar">
-        <img src="images/yuna.jpg" alt="" class="circle">
-        <span class="title">Title</span>
-        <p>First Line <br>
-           Second Line
-        </p>
-        <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-      </li>
--}
-
-
 ready : Model -> RecentPostedQuest -> List SideQuest -> Html SideQuestsMessage
 ready model quest sideQuests =
     div [ class "container" ]
@@ -41,6 +28,7 @@ ready model quest sideQuests =
                     { name = model.sideQuests.sideQuestName
                     , description = model.sideQuests.sideQuestDescription
                     , open = model.sideQuests.questFormOpen
+                    , submitting = model.sideQuests.suggestingSideQuest
                     }
                   )
                 , span [ class "flow-text" ] [ text "Care to propose a" ]

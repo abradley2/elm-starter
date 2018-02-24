@@ -7,9 +7,9 @@ module Update.MyAdventurerUpdate
 
 import Message exposing (Message, Message(..))
 import Message.MyAdventurerMessage exposing (MyAdventurerMessage, MyAdventurerMessage(..))
-import Update.RouteUpdate exposing (parseLocation, RouteData, Route, Route(..))
+import Update.RouteUpdate exposing (parseLocation)
 import Request.QuestsRequest exposing (getQuestsByUser)
-import Types exposing (SessionModel, RecentPostedQuest)
+import Types exposing (SessionModel, RecentPostedQuest, RouteData, Route, Route(..))
 
 
 type alias MyAdventurerModel =

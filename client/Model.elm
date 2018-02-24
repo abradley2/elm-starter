@@ -5,9 +5,9 @@ import Update.MyAdventurerUpdate exposing (MyAdventurerModel, myAdventurerInitia
 import Update.CreateQuestUpdate exposing (CreateQuestModel, createQuestInitialModel)
 import Update.QuestsUpdate exposing (QuestsModel, questsModel)
 import Update.SideQuestsUpdate exposing (SideQuestsModel, sideQuestsModel)
+import Update.QuestDetailsUpdate exposing (QuestDetailsModel, questDetailsInitialModel)
 import Update.SessionUpdate exposing (sessionInitialModel)
-import Update.RouteUpdate exposing (RouteData)
-import Types exposing (SessionModel)
+import Types exposing (SessionModel, RouteData)
 
 
 type alias Model =
@@ -18,6 +18,7 @@ type alias Model =
     , layout : LayoutModel
     , session : SessionModel
     , createQuest : CreateQuestModel
+    , questDetails : QuestDetailsModel
     }
 
 
@@ -27,6 +28,7 @@ model flags initialLocation =
     , myAdventurer = myAdventurerInitialModel
     , sideQuests = sideQuestsModel
     , layout = layoutModel
-    , session = sessionInitialModel flags
+    , session = sessionInitialModel flags initialLocation
     , createQuest = createQuestInitialModel
+    , questDetails = questDetailsInitialModel
     }

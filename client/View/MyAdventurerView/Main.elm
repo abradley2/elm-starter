@@ -8,7 +8,8 @@ import Html.Styled.Events exposing (..)
 import Model exposing (Model)
 import Message.MyAdventurerMessage exposing (MyAdventurerMessage, MyAdventurerMessage(..))
 import Component.TextField exposing (textField)
-import Component.QuestCard exposing (questCard)
+import Component.QuestCard exposing (questCardWithActionSection)
+import Component.QuestAction exposing (questAction)
 
 
 noQuests : Model -> Bool
@@ -48,7 +49,20 @@ myAdventurerView model =
                 ]
             ]
             (List.map
-                (\quest -> questCard quest { showUserImage = False })
+                (\quest ->
+                    questCardWithActionSection quest
+                        { showUserImage = False
+                        , actionSection =
+                            div []
+                                [ (questAction
+                                    { icon = "list"
+                                    , text = "Details"
+                                    , href = "#details/" ++ quest.userId ++ ":" ++ quest.id
+                                    }
+                                  )
+                                ]
+                        }
+                )
                 model.myAdventurer.quests
             )
         ]

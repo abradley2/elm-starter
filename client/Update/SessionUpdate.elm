@@ -1,19 +1,19 @@
 module Update.SessionUpdate exposing (sessionUpdate, sessionInitialModel, userIsLoggedIn)
 
-import Navigation
+import Navigation exposing (Location)
 import Message exposing (Message, Message(..))
 import Message.SessionMessage exposing (SessionMessage, SessionMessage(..))
 import Request.SessionRequest exposing (loadSession)
-import Update.RouteUpdate exposing (RouteData, Route, Route(..))
-import Types exposing (SessionModel, Flags)
+import Types exposing (SessionModel, Flags, RouteData, Route, Route(..))
 
 
-sessionInitialModel : Flags -> SessionModel
-sessionInitialModel flags =
+sessionInitialModel : Flags -> RouteData -> SessionModel
+sessionInitialModel flags routeData =
     { flags = flags
     , token = Nothing
     , username = Nothing
     , userId = Nothing
+    , routeData = routeData
     }
 
 
@@ -66,6 +66,9 @@ onSessionMessage userMessage ( routeData, session ) commands =
 sessionUpdate : Message -> ( RouteData, SessionModel ) -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
 sessionUpdate message ( routeData, session ) commands =
     case message of
+        OnLocationChange location ->
+            ( { session | routeData = routeData }, commands )
+
         Session sessionMessage ->
             onSessionMessage sessionMessage ( routeData, session ) commands
 
