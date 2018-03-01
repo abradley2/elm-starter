@@ -10,18 +10,6 @@ import Json.Encode as Encode
 import Types exposing (RecentPostedQuest, SideQuest, GetSideQuestsResponse, QuestDetailsResponse)
 
 
-decodeQuest =
-    Json.Decode.map8 RecentPostedQuest
-        (field "name" string)
-        (field "description" string)
-        (field "imageUrl" string)
-        (field "id" string)
-        (field "guid" string)
-        (field "username" string)
-        (field "userId" string)
-        (field "upvotes" int)
-
-
 decodeQuestsList =
     Json.Decode.list decodeQuest
 
@@ -35,6 +23,22 @@ decodeSideQuest =
         (field "id" string)
 
 
+decodeSideQuestsList =
+    Json.Decode.list decodeSideQuest
+
+
+decodeQuest =
+    Json.Decode.map8 RecentPostedQuest
+        (field "name" string)
+        (field "description" string)
+        (field "imageUrl" string)
+        (field "id" string)
+        (field "guid" string)
+        (field "username" string)
+        (field "userId" string)
+        (field "upvotes" int)
+
+
 decodeQuestDetails =
     Json.Decode.map2 QuestDetailsResponse
         (field "quest" decodeQuest)
@@ -46,10 +50,6 @@ encodeSideQuest sideQuest =
         [ ( "name", Encode.string sideQuest.name )
         , ( "description", Encode.string sideQuest.description )
         ]
-
-
-decodeSideQuestsList =
-    Json.Decode.list decodeSideQuest
 
 
 decodeGetSideQuestsResponse =
@@ -115,15 +115,14 @@ getQuestsByUser apiEndpoint userToken userId =
         Http.send GetQuestsByUserResult request
 
 
-getQuestDetails : String -> String -> String -> String -> Cmd QuestDetailsMessage
-getQuestDetails apiEndpoint userToken userId questId =
+getQuestDetails : String -> String -> String -> Cmd QuestDetailsMessage
+getQuestDetails apiEndpoint userId questId =
     let
         request =
             Http.request
                 { method = "GET"
                 , headers =
-                    [ Http.header "Authorization" ("Bearer " ++ userToken)
-                    ]
+                    []
                 , url = (apiEndpoint ++ "quests/details/" ++ userId ++ "/" ++ questId)
                 , body = Http.emptyBody
                 , expect = Http.expectJson decodeQuestDetails

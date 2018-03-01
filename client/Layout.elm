@@ -2,6 +2,7 @@ module Layout exposing (layout)
 
 import Css exposing (..)
 import Css.Colors
+import Http
 import Html
 import Html.Events exposing (onWithOptions)
 import Html.Styled exposing (..)

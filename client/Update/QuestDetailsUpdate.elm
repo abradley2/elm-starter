@@ -58,18 +58,16 @@ questDetailsUpdate message ( session, questDetails ) commands =
                                 Array.fromList (String.split ":" params)
 
                             request =
-                                Maybe.map3
-                                    (\userToken userId questId ->
+                                Maybe.map2
+                                    (\userId questId ->
                                         [ Cmd.map QuestDetails
                                             (getQuestDetails
                                                 session.flags.apiEndpoint
-                                                userToken
                                                 userId
                                                 questId
                                             )
                                         ]
                                     )
-                                    session.token
                                     (Array.get 0 paramArray)
                                     (Array.get 1 paramArray)
                         in

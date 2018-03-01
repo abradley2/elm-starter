@@ -51,6 +51,15 @@ type alias Quest =
     }
 
 
+type alias SideQuest =
+    { name : String
+    , description : String
+    , guid : String
+    , suggestedBy : String
+    , id : String
+    }
+
+
 type alias RecentPostedQuest =
     { name : String
     , description : String
@@ -60,15 +69,6 @@ type alias RecentPostedQuest =
     , username : String
     , userId : String
     , upvotes : Int
-    }
-
-
-type alias SideQuest =
-    { name : String
-    , description : String
-    , guid : String
-    , suggestedBy : String
-    , id : String
     }
 
 
