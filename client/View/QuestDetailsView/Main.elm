@@ -13,10 +13,35 @@ import Component.Stepper exposing (stepper)
 import Types exposing (RecentPostedQuest, SideQuest)
 
 
-view : RecentPostedQuest -> List SideQuest -> Model -> Html QuestDetailsMessage
-view quest suggestedSideQuests model =
+view : RecentPostedQuest -> List SideQuest -> List SideQuest -> Model -> Html QuestDetailsMessage
+view quest sideQuests suggestedSideQuests model =
     div [ class "container" ]
-        [ h3 [] [ text quest.name ]
+        [ (if (List.length suggestedSideQuests) == 0 then
+            div [] []
+           else
+            div
+                [ css
+                    [ marginTop (px 24)
+                    ]
+                ]
+                [ a
+                    [ class "flow-text"
+                    ]
+                    [ span [] [ text "thou hath mail" ]
+                    , span
+                        [ css
+                            [ paddingLeft (px 12)
+                            ]
+                        ]
+                        [ i
+                            [ class "fa fa-envelope"
+                            ]
+                            []
+                        ]
+                    ]
+                ]
+          )
+        , h3 [] [ text quest.name ]
         , div []
             [ (stepper
                 { steps =
@@ -26,7 +51,7 @@ view quest suggestedSideQuests model =
                             , description = sideQuest.description
                             }
                         )
-                        suggestedSideQuests
+                        sideQuests
                     )
                 }
               )
@@ -38,9 +63,10 @@ questDetailsView : Model -> Html QuestDetailsMessage
 questDetailsView model =
     let
         viewReady =
-            Maybe.map2
-                (\quest suggestedSideQuests -> view quest suggestedSideQuests model)
+            Maybe.map3
+                (\quest sideQuests suggestedSideQuests -> view quest sideQuests suggestedSideQuests model)
                 model.questDetails.quest
+                model.questDetails.sideQuests
                 model.questDetails.suggestedSideQuests
     in
         case viewReady of

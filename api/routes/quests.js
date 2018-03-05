@@ -33,6 +33,7 @@ questsRouter.get('/details/:userId/:questId', (req, res) => co(function * () {
 
   return res.json({
     quest: formatQuest(quest),
+    sideQuests: quest.sideQuests,
     suggestedSideQuests: suggestedSideQuests.map(JSON.parse)
   })
 }).catch(err => {

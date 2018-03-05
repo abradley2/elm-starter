@@ -40,8 +40,9 @@ decodeQuest =
 
 
 decodeQuestDetails =
-    Json.Decode.map2 QuestDetailsResponse
+    Json.Decode.map3 QuestDetailsResponse
         (field "quest" decodeQuest)
+        (field "sideQuests" (Json.Decode.list decodeSideQuest))
         (field "suggestedSideQuests" (Json.Decode.list decodeSideQuest))
 
 

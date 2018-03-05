@@ -74,6 +74,7 @@ type alias RecentPostedQuest =
 
 type alias QuestDetailsResponse =
     { quest : RecentPostedQuest
+    , sideQuests : List SideQuest
     , suggestedSideQuests : List SideQuest
     }
 

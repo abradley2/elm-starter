@@ -11,6 +11,7 @@ import Array
 
 type alias QuestDetailsModel =
     { quest : Maybe RecentPostedQuest
+    , sideQuests : Maybe (List SideQuest)
     , suggestedSideQuests : Maybe (List SideQuest)
     }
 
@@ -18,6 +19,7 @@ type alias QuestDetailsModel =
 questDetailsInitialModel : QuestDetailsModel
 questDetailsInitialModel =
     { quest = Nothing
+    , sideQuests = Nothing
     , suggestedSideQuests = Nothing
     }
 
@@ -28,6 +30,7 @@ onQuestDetailsMessage message ( session, questDetails ) commands =
         GetQuestDetailsResult (Result.Ok response) ->
             ( { questDetails
                 | quest = Just response.quest
+                , sideQuests = Just response.sideQuests
                 , suggestedSideQuests = Just response.suggestedSideQuests
               }
             , commands
