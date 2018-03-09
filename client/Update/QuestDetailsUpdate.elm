@@ -13,6 +13,7 @@ type alias QuestDetailsModel =
     { quest : Maybe RecentPostedQuest
     , sideQuests : Maybe (List SideQuest)
     , suggestedSideQuests : Maybe (List SideQuest)
+    , showingSuggestedSideQuests : Bool
     }
 
 
@@ -21,6 +22,7 @@ questDetailsInitialModel =
     { quest = Nothing
     , sideQuests = Nothing
     , suggestedSideQuests = Nothing
+    , showingSuggestedSideQuests = False
     }
 
 
@@ -37,6 +39,19 @@ onQuestDetailsMessage message ( session, questDetails ) commands =
             )
 
         GetQuestDetailsResult (Result.Err _) ->
+            ( questDetails, commands )
+
+        ToggleShowingSuggestedSideQuests isShowing ->
+            ( { questDetails
+                | showingSuggestedSideQuests = isShowing
+              }
+            , commands
+            )
+
+        AcceptSuggestedSideQuest sideQuestId ->
+            ( questDetails, commands )
+
+        DeclineSuggestedSideQuest sideQuestId ->
             ( questDetails, commands )
 
         NoOp ->

@@ -10,7 +10,21 @@ import Html.Styled.Events exposing (..)
 import Model exposing (Model)
 import Message.QuestDetailsMessage exposing (QuestDetailsMessage, QuestDetailsMessage(..))
 import Component.Stepper exposing (stepper)
+import View.QuestDetailsView.SuggestedQuestsList exposing (suggestedQuestsList)
 import Types exposing (RecentPostedQuest, SideQuest)
+
+
+{-
+   <ul class="collection">
+      <li class="collection-item avatar">
+        <img src="images/yuna.jpg" alt="" class="circle">
+        <span class="title">Title</span>
+        <p>First Line <br>
+           Second Line
+        </p>
+        <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+      </li>
+-}
 
 
 view : RecentPostedQuest -> List SideQuest -> List SideQuest -> Model -> Html QuestDetailsMessage
@@ -24,21 +38,10 @@ view quest sideQuests suggestedSideQuests model =
                     [ marginTop (px 24)
                     ]
                 ]
-                [ a
-                    [ class "flow-text"
-                    ]
-                    [ span [] [ text "thou hath mail" ]
-                    , span
-                        [ css
-                            [ paddingLeft (px 12)
-                            ]
-                        ]
-                        [ i
-                            [ class "fa fa-envelope"
-                            ]
-                            []
-                        ]
-                    ]
+                [ (suggestedQuestsList
+                    model.questDetails.showingSuggestedSideQuests
+                    suggestedSideQuests
+                  )
                 ]
           )
         , h3 [] [ text quest.name ]
