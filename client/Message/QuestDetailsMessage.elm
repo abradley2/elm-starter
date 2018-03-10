@@ -1,7 +1,7 @@
 module Message.QuestDetailsMessage exposing (QuestDetailsMessage, QuestDetailsMessage(..))
 
 import Http
-import Types exposing (QuestDetailsResponse)
+import Types exposing (QuestDetailsResponse, SideQuest)
 
 
 type QuestDetailsMessage
@@ -9,8 +9,8 @@ type QuestDetailsMessage
     | GetQuestDetailsResult (Result Http.Error QuestDetailsResponse)
     | DecideSideQuestResult (Result Http.Error QuestDetailsResponse)
     | ToggleShowingSuggestedSideQuests Bool
-    | AcceptSuggestedSideQuest String
-    | DeclineSuggestedSideQuest String
-    | ToggleShowingSideQuestModal Bool
+    | AcceptSuggestedSideQuest
+    | DeclineSuggestedSideQuest
+    | ToggleShowingSideQuestModal (Maybe SideQuest)
     | AcceptSideQuest String
     | DeclineSideQuest String

@@ -46,6 +46,13 @@ view quest sideQuests suggestedSideQuests model =
                     )
                 }
               )
+            , (case model.questDetails.decidingSideQuest of
+                Just sideQuest ->
+                    sideQuestDetails sideQuest
+
+                Nothing ->
+                    div [] []
+              )
             ]
         ]
 

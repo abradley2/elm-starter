@@ -32,18 +32,39 @@ questsRouter.put('/:questId/decidesidequest', (req, res) => co(function * () {
       .then(jsonQuests => jsonQuests.map(JSON.parse))
   ])
 
-  const quest = quests.reduce((found, sut) => sut.id === questId ? sut : found, null)
-  const sideQuest = suggestedSideQuests.reduce((found, sut) => sut.id === sideQuestId ? sut : found, null)
+  const [quest, questIdx] =
+    quests.reduce(
+      (found, sut, idx) => sut.id === questId ? [sut, idx] : found
+      , null
+    )
 
-  const resultSuggestedSideQuests = suggestedSideQuests.filter(quest => quest.id !== sideQuest.id)
+  const sideQuest =
+    suggestedSideQuests.reduce(
+      (found, sut) => sut.id === sideQuestId ? sut : found
+      , null
+    )
+
   const resultQuest = isAccepted ?
     Object.assign({}, quest, {sideQuests: [sideQuest].concat(quest.sideQuests)}) :
     quest
 
+  yield Promise.all([
+    redis.lrem(getSuggestedSideQuestsKey(userId, questId), 1, JSON.stringify(sideQuest)),
+    redis.lset(getQuestsListKey(userId), questIdx, JSON.stringify(resultQuest))
+  ])
+
+  const [updatedQuests, updatedSuggestedSideQuests] = yield Promise.all([
+    redis.lrange(getQuestsListKey(userId), 0, -1)
+      .then(jsonQuests => jsonQuests.map(JSON.parse)),
+
+    redis.lrange(getSuggestedSideQuestsKey(userId, questId), 0, -1)
+      .then(jsonQuests => jsonQuests.map(JSON.parse))
+  ])
+
   return res.json({
-    quest: resultQuest,
-    sideQuests: resultQuest.sideQuests,
-    suggestedSideQuests: resultSuggestedSideQuests
+    quest: formatQuest(updatedQuests[questIdx]),
+    sideQuests: updatedQuests[questIdx].sideQuests,
+    suggestedSideQuests: updatedSuggestedSideQuests
   })
 }).catch(err => {
   global.logger.error(err)

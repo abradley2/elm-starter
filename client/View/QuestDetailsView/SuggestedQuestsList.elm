@@ -79,7 +79,13 @@ suggestedQuestsList isOpen sideQuests =
                     ]
                     (List.map
                         (\sideQuest ->
-                            li [ class "collection-item avatar" ]
+                            li
+                                [ class "collection-item avatar"
+                                , onClick (ToggleShowingSideQuestModal (Just sideQuest))
+                                , css
+                                    [ cursor pointer
+                                    ]
+                                ]
                                 [ img
                                     [ src ("https://graph.facebook.com/" ++ sideQuest.suggestedBy ++ "/picture?type=small")
                                     , class "circle"

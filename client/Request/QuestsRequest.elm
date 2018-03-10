@@ -1,4 +1,12 @@
-module Request.QuestsRequest exposing (getQuests, getQuestsByUser, getSideQuests, suggestSideQuest, getQuestDetails)
+module Request.QuestsRequest
+    exposing
+        ( decideSideQuest
+        , getQuests
+        , getQuestsByUser
+        , getSideQuests
+        , suggestSideQuest
+        , getQuestDetails
+        )
 
 import Http
 import Message.SideQuestsMessage exposing (SideQuestsMessage, SideQuestsMessage(..))

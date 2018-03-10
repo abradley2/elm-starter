@@ -4,7 +4,7 @@ import Message exposing (Message, Message(..))
 import Message.QuestDetailsMessage exposing (QuestDetailsMessage, QuestDetailsMessage(..))
 import UrlParser exposing (..)
 import Types exposing (SessionModel, Route, Route(..), SideQuest, RecentPostedQuest)
-import Request.QuestsRequest exposing (getQuestDetails)
+import Request.QuestsRequest exposing (getQuestDetails, decideSideQuest)
 import String
 import Array
 
@@ -14,7 +14,7 @@ type alias QuestDetailsModel =
     , sideQuests : Maybe (List SideQuest)
     , suggestedSideQuests : Maybe (List SideQuest)
     , showingSuggestedSideQuests : Bool
-    , showingSideQuestModal : Bool
+    , decidingSideQuest : Maybe SideQuest
     }
 
 
@@ -24,8 +24,34 @@ questDetailsInitialModel =
     , sideQuests = Nothing
     , suggestedSideQuests = Nothing
     , showingSuggestedSideQuests = False
-    , showingSideQuestModal = False
+    , decidingSideQuest = Nothing
     }
+
+
+decideOnSuggestedSideQuest : SessionModel -> QuestDetailsModel -> Bool -> Cmd Message
+decideOnSuggestedSideQuest session questDetails isAccepted =
+    let
+        isCmd =
+            Maybe.map3
+                (\userToken quest sideQuest ->
+                    decideSideQuest
+                        { apiEndpoint = session.flags.apiEndpoint
+                        , userToken = userToken
+                        , isAccepted = isAccepted
+                        , sideQuestId = sideQuest.id
+                        , questId = quest.id
+                        }
+                )
+                session.token
+                questDetails.quest
+                questDetails.decidingSideQuest
+    in
+        case isCmd of
+            Just cmd ->
+                Cmd.map QuestDetails cmd
+
+            Nothing ->
+                Cmd.none
 
 
 onQuestDetailsMessage : QuestDetailsMessage -> ( SessionModel, QuestDetailsModel ) -> List (Cmd Message) -> ( QuestDetailsModel, List (Cmd Message) )
@@ -62,18 +88,28 @@ onQuestDetailsMessage message ( session, questDetails ) commands =
             , commands
             )
 
-        AcceptSuggestedSideQuest sideQuestId ->
-            ( questDetails, commands )
-
-        DeclineSuggestedSideQuest sideQuestId ->
-            ( questDetails, commands )
-
-        ToggleShowingSideQuestModal isShowing ->
+        AcceptSuggestedSideQuest ->
             ( { questDetails
-                | showingSideQuestModal = isShowing
+                | decidingSideQuest = Nothing
+                , quest = Nothing
+                , sideQuests = Nothing
+                , suggestedSideQuests = Nothing
               }
-            , commands
+            , commands ++ [ decideOnSuggestedSideQuest session questDetails True ]
             )
+
+        DeclineSuggestedSideQuest ->
+            ( { questDetails
+                | decidingSideQuest = Nothing
+                , quest = Nothing
+                , sideQuests = Nothing
+                , suggestedSideQuests = Nothing
+              }
+            , commands ++ [ decideOnSuggestedSideQuest session questDetails False ]
+            )
+
+        ToggleShowingSideQuestModal ifSideQuest ->
+            ( { questDetails | decidingSideQuest = ifSideQuest }, commands )
 
         AcceptSideQuest sideQuestId ->
             ( questDetails, commands )
