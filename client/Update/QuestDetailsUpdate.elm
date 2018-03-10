@@ -14,6 +14,7 @@ type alias QuestDetailsModel =
     , sideQuests : Maybe (List SideQuest)
     , suggestedSideQuests : Maybe (List SideQuest)
     , showingSuggestedSideQuests : Bool
+    , showingSideQuestModal : Bool
     }
 
 
@@ -23,12 +24,25 @@ questDetailsInitialModel =
     , sideQuests = Nothing
     , suggestedSideQuests = Nothing
     , showingSuggestedSideQuests = False
+    , showingSideQuestModal = False
     }
 
 
 onQuestDetailsMessage : QuestDetailsMessage -> ( SessionModel, QuestDetailsModel ) -> List (Cmd Message) -> ( QuestDetailsModel, List (Cmd Message) )
 onQuestDetailsMessage message ( session, questDetails ) commands =
     case message of
+        DecideSideQuestResult (Result.Ok response) ->
+            ( { questDetails
+                | quest = Just response.quest
+                , sideQuests = Just response.sideQuests
+                , suggestedSideQuests = Just response.suggestedSideQuests
+              }
+            , commands
+            )
+
+        DecideSideQuestResult (Result.Err _) ->
+            ( questDetails, commands )
+
         GetQuestDetailsResult (Result.Ok response) ->
             ( { questDetails
                 | quest = Just response.quest
@@ -52,6 +66,19 @@ onQuestDetailsMessage message ( session, questDetails ) commands =
             ( questDetails, commands )
 
         DeclineSuggestedSideQuest sideQuestId ->
+            ( questDetails, commands )
+
+        ToggleShowingSideQuestModal isShowing ->
+            ( { questDetails
+                | showingSideQuestModal = isShowing
+              }
+            , commands
+            )
+
+        AcceptSideQuest sideQuestId ->
+            ( questDetails, commands )
+
+        DeclineSideQuest sideQuestId ->
             ( questDetails, commands )
 
         NoOp ->
@@ -89,7 +116,7 @@ questDetailsUpdate message ( session, questDetails ) commands =
                                     (Array.get 0 paramArray)
                                     (Array.get 1 paramArray)
                         in
-                            ( questDetails, commands ++ (Maybe.withDefault [] request) )
+                            ( questDetailsInitialModel, commands ++ (Maybe.withDefault [] request) )
 
                     _ ->
                         ( questDetails, commands )

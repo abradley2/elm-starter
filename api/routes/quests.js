@@ -19,6 +19,37 @@ const formatQuest = quest => Object.assign({}, quest, {
   upvotes: quest.upvotes.length
 })
 
+questsRouter.put('/:questId/decidesidequest', (req, res) => co(function * () {
+  const {sideQuestId, isAccepted} = req.body
+  const {questId} = req.params
+  const {userId} = yield jwt.verify(res.locals.token, global.config.appSecret)
+
+  const [quests, suggestedSideQuests] = yield Promise.all([
+    redis.lrange(getQuestsListKey(userId), 0, -1)
+      .then(jsonQuests => jsonQuests.map(JSON.parse)),
+
+    redis.lrange(getSuggestedSideQuestsKey(userId, questId), 0, -1)
+      .then(jsonQuests => jsonQuests.map(JSON.parse))
+  ])
+
+  const quest = quests.reduce((found, sut) => sut.id === questId ? sut : found, null)
+  const sideQuest = suggestedSideQuests.reduce((found, sut) => sut.id === sideQuestId ? sut : found, null)
+
+  const resultSuggestedSideQuests = suggestedSideQuests.filter(quest => quest.id !== sideQuest.id)
+  const resultQuest = isAccepted ?
+    Object.assign({}, quest, {sideQuests: [sideQuest].concat(quest.sideQuests)}) :
+    quest
+
+  return res.json({
+    quest: resultQuest,
+    sideQuests: resultQuest.sideQuests,
+    suggestedSideQuests: resultSuggestedSideQuests
+  })
+}).catch(err => {
+  global.logger.error(err)
+  res.sendStatus(500)
+}))
+
 questsRouter.get('/details/:userId/:questId', (req, res) => co(function * () {
   const {userId, questId} = req.params
 

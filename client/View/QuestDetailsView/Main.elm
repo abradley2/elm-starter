@@ -11,20 +11,8 @@ import Model exposing (Model)
 import Message.QuestDetailsMessage exposing (QuestDetailsMessage, QuestDetailsMessage(..))
 import Component.Stepper exposing (stepper)
 import View.QuestDetailsView.SuggestedQuestsList exposing (suggestedQuestsList)
+import View.QuestDetailsView.SideQuestDetails exposing (sideQuestDetails)
 import Types exposing (RecentPostedQuest, SideQuest)
-
-
-{-
-   <ul class="collection">
-      <li class="collection-item avatar">
-        <img src="images/yuna.jpg" alt="" class="circle">
-        <span class="title">Title</span>
-        <p>First Line <br>
-           Second Line
-        </p>
-        <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-      </li>
--}
 
 
 view : RecentPostedQuest -> List SideQuest -> List SideQuest -> Model -> Html QuestDetailsMessage

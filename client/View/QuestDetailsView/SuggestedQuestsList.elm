@@ -34,7 +34,7 @@ suggestedQuestsList isOpen sideQuests =
                     [ paddingLeft (px 12)
                     , display inlineBlock
                     , transform
-                        (rotate
+                        (rotateX
                             (if isOpen then
                                 deg 180
                              else
@@ -42,7 +42,7 @@ suggestedQuestsList isOpen sideQuests =
                             )
                         )
                     ]
-                , style [ ( "transition", "1s" ) ]
+                , style [ ( "transition", "0.5s" ) ]
                 ]
                 [ i
                     [ class "fa fa-caret-up"
@@ -53,6 +53,7 @@ suggestedQuestsList isOpen sideQuests =
         , div
             [ css
                 [ position relative
+                , marginTop (px 16)
                 ]
             ]
             [ div
@@ -63,14 +64,6 @@ suggestedQuestsList isOpen sideQuests =
                     , left (px 0)
                     , right (px 0)
                     , overflow Css.hidden
-                    , padding
-                        (px
-                            (if isOpen then
-                                16
-                             else
-                                0
-                            )
-                        )
                     , Css.height
                         (if isOpen then
                             (px 400)
@@ -80,21 +73,37 @@ suggestedQuestsList isOpen sideQuests =
                     ]
                 , style [ ( "transition", ".3s" ), ( "box-shadow", Theme.cardBoxShadow ) ]
                 ]
-                [ ul [ class "collection" ] []
+                [ ul
+                    [ class "collection"
+                    , style [ ( "margin", "0px" ) ]
+                    ]
+                    (List.map
+                        (\sideQuest ->
+                            li [ class "collection-item avatar" ]
+                                [ img
+                                    [ src ("https://graph.facebook.com/" ++ sideQuest.suggestedBy ++ "/picture?type=small")
+                                    , class "circle"
+                                    , css
+                                        [ Css.height (px 50)
+                                        , Css.width (px 50)
+                                        ]
+                                    ]
+                                    []
+                                , span
+                                    [ class "title"
+                                    , css
+                                        [ fontWeight bolder
+                                        ]
+                                    ]
+                                    [ text sideQuest.name ]
+                                , p [] [ text sideQuest.description ]
+                                , span [ class "secondary-content" ]
+                                    [ i [ class "fa fa-envelope" ] []
+                                    ]
+                                ]
+                        )
+                        sideQuests
+                    )
                 ]
             ]
         ]
-
-
-
-{-
-   <ul class="collection">
-      <li class="collection-item avatar">
-        <img src="images/yuna.jpg" alt="" class="circle">
-        <span class="title">Title</span>
-        <p>First Line <br>
-           Second Line
-        </p>
-        <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-      </li>
--}

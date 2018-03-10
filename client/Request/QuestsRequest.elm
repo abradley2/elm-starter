@@ -134,6 +134,40 @@ getQuestDetails apiEndpoint userId questId =
         Http.send GetQuestDetailsResult request
 
 
+type alias DecideSideQuestParams =
+    { apiEndpoint : String
+    , userToken : String
+    , questId : String
+    , sideQuestId : String
+    , isAccepted : Bool
+    }
+
+
+decideSideQuest : DecideSideQuestParams -> Cmd QuestDetailsMessage
+decideSideQuest params =
+    let
+        request =
+            Http.request
+                { method = "PUT"
+                , headers =
+                    [ Http.header "Authorization" ("Bearer " ++ params.userToken)
+                    ]
+                , url = (params.apiEndpoint ++ "quests/" ++ params.questId ++ "/decidesidequest")
+                , body =
+                    Http.jsonBody
+                        (Encode.object
+                            [ ( "sideQuestId", Encode.string params.sideQuestId )
+                            , ( "isAccepted", Encode.bool params.isAccepted )
+                            ]
+                        )
+                , expect = Http.expectJson decodeQuestDetails
+                , timeout = Nothing
+                , withCredentials = False
+                }
+    in
+        Http.send DecideSideQuestResult request
+
+
 suggestSideQuest : String -> String -> RecentPostedQuest -> SideQuest -> Cmd SideQuestsMessage
 suggestSideQuest apiEndpoint userToken quest sideQuest =
     let
