@@ -31,7 +31,7 @@ topCopy model =
             ]
     else
         p [ class "flow-text" ]
-            [ (text "Here are you active quests, adventurer!")
+            [ (text "Here are your active quests, adventurer!")
             , br [] []
             , a [ href "#newquest" ] [ text "Perhaps you'd like to embark upon another?" ]
             ]
