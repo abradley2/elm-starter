@@ -5,14 +5,14 @@ import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
-import Message.SideQuestsMessage exposing (SideQuestsMessage, SideQuestsMessage(..))
+import Msg.SideQuestsMsg exposing (SideQuestsMsg, SideQuestsMsg(..))
 import Model exposing (Model)
 import Theme
 import Types exposing (RecentPostedQuest, SideQuest)
 import View.SideQuestsView.SideQuestForm exposing (sideQuestForm)
 
 
-ready : Model -> RecentPostedQuest -> List SideQuest -> Html SideQuestsMessage
+ready : Model -> RecentPostedQuest -> List SideQuest -> Html SideQuestsMsg
 ready model quest sideQuests =
     div [ class "container" ]
         [ div []
@@ -51,14 +51,14 @@ ready model quest sideQuests =
         ]
 
 
-loading : Html SideQuestsMessage
+loading : Html SideQuestsMsg
 loading =
     div [ class "container" ]
         [ p [ class "flow-text" ] [ text "...loading" ]
         ]
 
 
-sideQuestsView : Model -> Html SideQuestsMessage
+sideQuestsView : Model -> Html SideQuestsMsg
 sideQuestsView model =
     let
         isLoaded =

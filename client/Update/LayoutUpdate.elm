@@ -1,7 +1,7 @@
 module Update.LayoutUpdate exposing (layoutUpdate, layoutModel, LayoutModel)
 
-import Message exposing (Message, Message(..))
-import Message.LayoutMessage exposing (LayoutMessage, LayoutMessage(..))
+import Msg exposing (Msg, Msg(..))
+import Msg.LayoutMsg exposing (LayoutMsg, LayoutMsg(..))
 
 
 type alias LayoutModel =
@@ -14,9 +14,9 @@ layoutModel =
     }
 
 
-onLayoutMessage : LayoutMessage -> LayoutModel -> List (Cmd Message) -> ( LayoutModel, List (Cmd Message) )
-onLayoutMessage layoutMessage layoutModel commands =
-    case layoutMessage of
+onLayoutMsg : LayoutMsg -> LayoutModel -> List (Cmd Msg) -> ( LayoutModel, List (Cmd Msg) )
+onLayoutMsg layoutMsg layoutModel commands =
+    case layoutMsg of
         ToggleSidenav ->
             ( { layoutModel
                 | sidenavOpen = not layoutModel.sidenavOpen
@@ -25,11 +25,11 @@ onLayoutMessage layoutMessage layoutModel commands =
             )
 
 
-layoutUpdate : Message -> LayoutModel -> List (Cmd Message) -> ( LayoutModel, List (Cmd Message) )
-layoutUpdate message layoutModel commands =
-    case message of
-        Layout layoutMessage ->
-            onLayoutMessage layoutMessage layoutModel commands
+layoutUpdate : Msg -> LayoutModel -> List (Cmd Msg) -> ( LayoutModel, List (Cmd Msg) )
+layoutUpdate msg layoutModel commands =
+    case msg of
+        Layout layoutMsg ->
+            onLayoutMsg layoutMsg layoutModel commands
 
         _ ->
             ( layoutModel, commands )

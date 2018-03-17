@@ -7,8 +7,8 @@ module Update.CreateQuestUpdate
 
 import Navigation
 import Html.Attributes exposing (name)
-import Message exposing (Message, Message(..))
-import Message.CreateQuestMessage exposing (CreateQuestMessage, CreateQuestMessage(..))
+import Msg exposing (Msg, Msg(..))
+import Msg.CreateQuestMsg exposing (CreateQuestMsg, CreateQuestMsg(..))
 import Request.CreateQuestRequest exposing (createQuestRequest)
 import Update.RouteUpdate exposing (parseLocation)
 import Ports exposing (requestQuestStepId, requestQuestId, uploadQuestImage)
@@ -58,7 +58,7 @@ createQuestInitialModel =
     }
 
 
-onMountCreateQuestView : CreateQuestModel -> List (Cmd Message) -> ( CreateQuestModel, List (Cmd Message) )
+onMountCreateQuestView : CreateQuestModel -> List (Cmd Msg) -> ( CreateQuestModel, List (Cmd Msg) )
 onMountCreateQuestView createQuest commands =
     ( ({ createQuestInitialModel | token = createQuest.token })
     , commands ++ [ requestQuestId "gimme!" ]
@@ -96,9 +96,9 @@ questStepEditor stepId setterFunc createQuest =
                 createQuest
 
 
-onCreateQuestMessage : CreateQuestMessage -> ( SessionModel, CreateQuestModel ) -> List (Cmd Message) -> ( CreateQuestModel, List (Cmd Message) )
-onCreateQuestMessage createQuestMessage ( session, createQuest ) commands =
-    case createQuestMessage of
+onCreateQuestMsg : CreateQuestMsg -> ( SessionModel, CreateQuestModel ) -> List (Cmd Msg) -> ( CreateQuestModel, List (Cmd Msg) )
+onCreateQuestMsg createQuestMsg ( session, createQuest ) commands =
+    case createQuestMsg of
         SubmitCreateQuest ->
             ( { createQuest
                 | submitPending = True
@@ -218,9 +218,9 @@ onCreateQuestMessage createQuestMessage ( session, createQuest ) commands =
             ( createQuest, commands )
 
 
-createQuestUpdate : Message -> ( SessionModel, CreateQuestModel ) -> List (Cmd Message) -> ( CreateQuestModel, List (Cmd Message) )
-createQuestUpdate message ( session, createQuest ) commands =
-    case message of
+createQuestUpdate : Msg -> ( SessionModel, CreateQuestModel ) -> List (Cmd Msg) -> ( CreateQuestModel, List (Cmd Msg) )
+createQuestUpdate msg ( session, createQuest ) commands =
+    case msg of
         UploadQuestImageFinished ( success, questImageUrl ) ->
             if success then
                 ( { createQuest
@@ -239,8 +239,8 @@ createQuestUpdate message ( session, createQuest ) commands =
                 , commands
                 )
 
-        CreateQuest createQuestMessage ->
-            onCreateQuestMessage createQuestMessage ( session, createQuest ) commands
+        CreateQuest createQuestMsg ->
+            onCreateQuestMsg createQuestMsg ( session, createQuest ) commands
 
         LoadQuestId cuid ->
             ( { createQuest | id = cuid }, commands )

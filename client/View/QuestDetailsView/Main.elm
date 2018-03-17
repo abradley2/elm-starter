@@ -8,14 +8,14 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
 import Model exposing (Model)
-import Message.QuestDetailsMessage exposing (QuestDetailsMessage, QuestDetailsMessage(..))
+import Msg.QuestDetailsMsg exposing (QuestDetailsMsg, QuestDetailsMsg(..))
 import Component.Stepper exposing (stepper)
 import View.QuestDetailsView.SuggestedQuestsList exposing (suggestedQuestsList)
 import View.QuestDetailsView.SideQuestDetails exposing (sideQuestDetails)
 import Types exposing (RecentPostedQuest, SideQuest)
 
 
-view : RecentPostedQuest -> List SideQuest -> List SideQuest -> Model -> Html QuestDetailsMessage
+view : RecentPostedQuest -> List SideQuest -> List SideQuest -> Model -> Html QuestDetailsMsg
 view quest sideQuests suggestedSideQuests model =
     div [ class "container" ]
         [ (if (List.length suggestedSideQuests) == 0 then
@@ -57,7 +57,7 @@ view quest sideQuests suggestedSideQuests model =
         ]
 
 
-questDetailsView : Model -> Html QuestDetailsMessage
+questDetailsView : Model -> Html QuestDetailsMsg
 questDetailsView model =
     let
         viewReady =

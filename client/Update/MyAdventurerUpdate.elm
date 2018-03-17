@@ -5,8 +5,8 @@ module Update.MyAdventurerUpdate
         , MyAdventurerModel
         )
 
-import Message exposing (Message, Message(..))
-import Message.MyAdventurerMessage exposing (MyAdventurerMessage, MyAdventurerMessage(..))
+import Msg exposing (Msg, Msg(..))
+import Msg.MyAdventurerMsg exposing (MyAdventurerMsg, MyAdventurerMsg(..))
 import Update.RouteUpdate exposing (parseLocation)
 import Request.QuestsRequest exposing (getQuestsByUser)
 import Types exposing (SessionModel, RecentPostedQuest, RouteData, Route, Route(..))
@@ -27,7 +27,7 @@ fetchQuests apiEndpoint token userId =
         (getQuestsByUser apiEndpoint token userId)
 
 
-onRouteChange : RouteData -> ( SessionModel, MyAdventurerModel ) -> List (Cmd Message) -> ( MyAdventurerModel, List (Cmd Message) )
+onRouteChange : RouteData -> ( SessionModel, MyAdventurerModel ) -> List (Cmd Msg) -> ( MyAdventurerModel, List (Cmd Msg) )
 onRouteChange routeData ( session, myAdventurer ) commands =
     let
         ( route, location ) =
@@ -50,9 +50,9 @@ onRouteChange routeData ( session, myAdventurer ) commands =
                 ( myAdventurer, commands )
 
 
-onMyAdventurerMessage : MyAdventurerMessage -> MyAdventurerModel -> List (Cmd Message) -> ( MyAdventurerModel, List (Cmd Message) )
-onMyAdventurerMessage myAdventurerMessage myAdventurer commands =
-    case myAdventurerMessage of
+onMyAdventurerMsg : MyAdventurerMsg -> MyAdventurerModel -> List (Cmd Msg) -> ( MyAdventurerModel, List (Cmd Msg) )
+onMyAdventurerMsg myAdventurerMsg myAdventurer commands =
+    case myAdventurerMsg of
         GetQuestsByUserResult (Result.Ok quests) ->
             ( { myAdventurer | quests = quests }, commands )
 
@@ -63,14 +63,14 @@ onMyAdventurerMessage myAdventurerMessage myAdventurer commands =
             ( myAdventurer, commands )
 
 
-myAdventurerUpdate : Message -> ( SessionModel, MyAdventurerModel ) -> List (Cmd Message) -> ( MyAdventurerModel, List (Cmd Message) )
-myAdventurerUpdate message ( session, myAdventurer ) commands =
-    case message of
+myAdventurerUpdate : Msg -> ( SessionModel, MyAdventurerModel ) -> List (Cmd Msg) -> ( MyAdventurerModel, List (Cmd Msg) )
+myAdventurerUpdate msg ( session, myAdventurer ) commands =
+    case msg of
         OnLocationChange location ->
             onRouteChange (parseLocation location) ( session, myAdventurer ) commands
 
-        MyAdventurer myAdventurerMessage ->
-            onMyAdventurerMessage myAdventurerMessage myAdventurer commands
+        MyAdventurer myAdventurerMsg ->
+            onMyAdventurerMsg myAdventurerMsg myAdventurer commands
 
         _ ->
             ( myAdventurer, commands )

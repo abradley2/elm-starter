@@ -8,14 +8,14 @@ import Html.Events exposing (onWithOptions)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
-import Message exposing (Message, Message(..))
-import Message.LayoutMessage exposing (LayoutMessage, LayoutMessage(..))
+import Msg exposing (Msg, Msg(..))
+import Msg.LayoutMsg exposing (LayoutMsg, LayoutMsg(..))
 import Model exposing (Model)
 import Update.SessionUpdate exposing (userIsLoggedIn)
 import Component.TextField exposing (textField)
 
 
-navs : Model -> List (Html LayoutMessage)
+navs : Model -> List (Html LayoutMsg)
 navs model =
     [ li []
         [ a [ href "#quests" ] [ text "Quests" ]
@@ -44,7 +44,7 @@ navs model =
     ]
 
 
-navbar : Model -> Html LayoutMessage
+navbar : Model -> Html LayoutMsg
 navbar model =
     nav []
         [ div
@@ -60,7 +60,7 @@ navbar model =
         ]
 
 
-toggleSidenavButton : Html LayoutMessage
+toggleSidenavButton : Html LayoutMsg
 toggleSidenavButton =
     a
         [ href "javascript:void(0);"
@@ -81,7 +81,7 @@ sideNavtransform isOpen =
         "translateX(-105%)"
 
 
-layout : Model -> Html Message -> Html Message
+layout : Model -> Html Msg -> Html Msg
 layout model view =
     div
         []

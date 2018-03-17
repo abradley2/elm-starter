@@ -1,7 +1,7 @@
 module Update.QuestDetailsUpdate exposing (QuestDetailsModel, questDetailsUpdate, questDetailsInitialModel)
 
-import Message exposing (Message, Message(..))
-import Message.QuestDetailsMessage exposing (QuestDetailsMessage, QuestDetailsMessage(..))
+import Msg exposing (Msg, Msg(..))
+import Msg.QuestDetailsMsg exposing (QuestDetailsMsg, QuestDetailsMsg(..))
 import UrlParser exposing (..)
 import Types exposing (SessionModel, Route, Route(..), SideQuest, RecentPostedQuest)
 import Request.QuestsRequest exposing (getQuestDetails, decideSideQuest)
@@ -28,7 +28,7 @@ questDetailsInitialModel =
     }
 
 
-decideOnSuggestedSideQuest : SessionModel -> QuestDetailsModel -> Bool -> Cmd Message
+decideOnSuggestedSideQuest : SessionModel -> QuestDetailsModel -> Bool -> Cmd Msg
 decideOnSuggestedSideQuest session questDetails isAccepted =
     let
         isCmd =
@@ -54,9 +54,9 @@ decideOnSuggestedSideQuest session questDetails isAccepted =
                 Cmd.none
 
 
-onQuestDetailsMessage : QuestDetailsMessage -> ( SessionModel, QuestDetailsModel ) -> List (Cmd Message) -> ( QuestDetailsModel, List (Cmd Message) )
-onQuestDetailsMessage message ( session, questDetails ) commands =
-    case message of
+onQuestDetailsMsg : QuestDetailsMsg -> ( SessionModel, QuestDetailsModel ) -> List (Cmd Msg) -> ( QuestDetailsModel, List (Cmd Msg) )
+onQuestDetailsMsg msg ( session, questDetails ) commands =
+    case msg of
         DecideSideQuestResult (Result.Ok response) ->
             ( { questDetails
                 | quest = Just response.quest
@@ -121,11 +121,11 @@ onQuestDetailsMessage message ( session, questDetails ) commands =
             ( questDetails, commands )
 
 
-questDetailsUpdate : Message -> ( SessionModel, QuestDetailsModel ) -> List (Cmd Message) -> ( QuestDetailsModel, List (Cmd Message) )
-questDetailsUpdate message ( session, questDetails ) commands =
-    case message of
-        QuestDetails questDetailsMessage ->
-            onQuestDetailsMessage questDetailsMessage ( session, questDetails ) commands
+questDetailsUpdate : Msg -> ( SessionModel, QuestDetailsModel ) -> List (Cmd Msg) -> ( QuestDetailsModel, List (Cmd Msg) )
+questDetailsUpdate msg ( session, questDetails ) commands =
+    case msg of
+        QuestDetails questDetailsMsg ->
+            onQuestDetailsMsg questDetailsMsg ( session, questDetails ) commands
 
         OnLocationChange newLocation ->
             let

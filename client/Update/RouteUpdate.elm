@@ -1,6 +1,6 @@
 module Update.RouteUpdate exposing (parseLocation, routeUpdate, routeData)
 
-import Message exposing (Message(..))
+import Msg exposing (Msg(..))
 import Navigation exposing (Location)
 import UrlParser exposing (..)
 import Types exposing (Route, Route(..), RouteData)
@@ -32,9 +32,9 @@ routeData location =
     parseLocation location
 
 
-routeUpdate : Message -> RouteData -> List (Cmd Message) -> ( RouteData, List (Cmd Message) )
-routeUpdate message routeData commands =
-    case message of
+routeUpdate : Msg -> RouteData -> List (Cmd Msg) -> ( RouteData, List (Cmd Msg) )
+routeUpdate msg routeData commands =
+    case msg of
         OnLocationChange location ->
             ( parseLocation location, commands )
 

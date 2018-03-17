@@ -1,7 +1,7 @@
 module Request.CreateQuestRequest exposing (createQuestRequest)
 
 import Http
-import Message.CreateQuestMessage exposing (CreateQuestMessage(..), CreateQuestMessage)
+import Msg.CreateQuestMsg exposing (CreateQuestMsg(..), CreateQuestMsg)
 import Json.Decode exposing (..)
 import Json.Encode
 import Types exposing (Quest)
@@ -25,7 +25,7 @@ encodeQuest quest =
         ]
 
 
-createQuestRequest : String -> String -> Quest -> Cmd CreateQuestMessage
+createQuestRequest : String -> String -> Quest -> Cmd CreateQuestMsg
 createQuestRequest apiEndpoint userToken quest =
     let
         request =

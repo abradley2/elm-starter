@@ -1,7 +1,7 @@
 module Update.QuestsUpdate exposing (questsModel, questsUpdate, QuestsModel)
 
-import Message exposing (Message, Message(..))
-import Message.QuestsMessage exposing (QuestsMessage, QuestsMessage(..))
+import Msg exposing (Msg, Msg(..))
+import Msg.QuestsMsg exposing (QuestsMsg, QuestsMsg(..))
 import Update.RouteUpdate exposing (parseLocation)
 import Request.QuestsRequest exposing (getQuests)
 import Types exposing (SessionModel, RecentPostedQuest, RouteData, Route, Route(..))
@@ -18,7 +18,7 @@ questsModel =
     }
 
 
-onRouteChange : RouteData -> ( SessionModel, QuestsModel ) -> List (Cmd Message) -> ( QuestsModel, List (Cmd Message) )
+onRouteChange : RouteData -> ( SessionModel, QuestsModel ) -> List (Cmd Msg) -> ( QuestsModel, List (Cmd Msg) )
 onRouteChange routeData ( session, quests ) commands =
     let
         ( route, location ) =
@@ -38,9 +38,9 @@ onRouteChange routeData ( session, quests ) commands =
                 ( quests, commands )
 
 
-onQuestsMessage : QuestsMessage -> QuestsModel -> List (Cmd Message) -> ( QuestsModel, List (Cmd Message) )
-onQuestsMessage questsMessage quests commands =
-    case questsMessage of
+onQuestsMsg : QuestsMsg -> QuestsModel -> List (Cmd Msg) -> ( QuestsModel, List (Cmd Msg) )
+onQuestsMsg questsMsg quests commands =
+    case questsMsg of
         GetQuestsResult (Result.Ok questList) ->
             ( { quests | questList = questList }, commands )
 
@@ -51,14 +51,14 @@ onQuestsMessage questsMessage quests commands =
             ( quests, commands )
 
 
-questsUpdate : Message -> ( SessionModel, QuestsModel ) -> List (Cmd Message) -> ( QuestsModel, List (Cmd Message) )
-questsUpdate message ( session, quests ) commands =
-    case message of
+questsUpdate : Msg -> ( SessionModel, QuestsModel ) -> List (Cmd Msg) -> ( QuestsModel, List (Cmd Msg) )
+questsUpdate msg ( session, quests ) commands =
+    case msg of
         OnLocationChange location ->
             onRouteChange (parseLocation location) ( session, quests ) commands
 
-        Quests questsMessage ->
-            onQuestsMessage questsMessage quests commands
+        Quests questsMsg ->
+            onQuestsMsg questsMsg quests commands
 
         _ ->
             ( quests, commands )

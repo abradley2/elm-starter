@@ -6,7 +6,7 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
 import Model exposing (Model)
-import Message.QuestsMessage exposing (QuestsMessage, QuestsMessage(..))
+import Msg.QuestsMsg exposing (QuestsMsg, QuestsMsg(..))
 import Theme
 import View.QuestsView.QuestAction exposing (questAction)
 import Component.TextField exposing (textField)
@@ -14,7 +14,7 @@ import Component.QuestCard exposing (questCardWithActionSection)
 import Component.RaisedButton exposing (raisedButton)
 
 
-questsView : Model -> Html QuestsMessage
+questsView : Model -> Html QuestsMsg
 questsView model =
     div
         [ css

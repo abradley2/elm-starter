@@ -6,7 +6,7 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
 import Model exposing (Model)
-import Message.MyAdventurerMessage exposing (MyAdventurerMessage, MyAdventurerMessage(..))
+import Msg.MyAdventurerMsg exposing (MyAdventurerMsg, MyAdventurerMsg(..))
 import Component.TextField exposing (textField)
 import Component.QuestCard exposing (questCardWithActionSection)
 import Component.QuestAction exposing (questAction)
@@ -17,7 +17,7 @@ noQuests model =
     List.length model.myAdventurer.quests == 0
 
 
-topCopy : Model -> Html MyAdventurerMessage
+topCopy : Model -> Html MyAdventurerMsg
 topCopy model =
     if noQuests model then
         p [ class "flow-text" ]
@@ -37,7 +37,7 @@ topCopy model =
             ]
 
 
-myAdventurerView : Model -> Html MyAdventurerMessage
+myAdventurerView : Model -> Html MyAdventurerMsg
 myAdventurerView model =
     div [ class "container" ]
         [ topCopy model

@@ -4,7 +4,7 @@ import Html
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Layout exposing (layout)
-import Message exposing (Message, Message(..))
+import Msg exposing (Msg, Msg(..))
 import Model exposing (Model, model)
 import Navigation exposing (Location)
 import Ports exposing (..)
@@ -18,7 +18,7 @@ import View.CreateQuestView.Main exposing (createQuestView)
 import View.QuestDetailsView.Main exposing (questDetailsView)
 
 
-view : Model -> Html Message
+view : Model -> Html Msg
 view model =
     let
         ( route, location ) =
@@ -60,7 +60,7 @@ subscriptions model =
         ]
 
 
-init : Flags -> Location -> ( Model, Cmd Message )
+init : Flags -> Location -> ( Model, Cmd Msg )
 init flags location =
     let
         initialLocation =
@@ -69,7 +69,7 @@ init flags location =
         ( model flags initialLocation, Cmd.batch [ Navigation.modifyUrl location.href ] )
 
 
-main : Program Flags Model Message
+main : Program Flags Model Msg
 main =
     Navigation.programWithFlags OnLocationChange
         { init = init

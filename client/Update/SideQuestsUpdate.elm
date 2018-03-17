@@ -1,7 +1,7 @@
 module Update.SideQuestsUpdate exposing (SideQuestsModel, sideQuestsUpdate, sideQuestsModel)
 
-import Message exposing (Message, Message(..))
-import Message.SideQuestsMessage exposing (SideQuestsMessage, SideQuestsMessage(..))
+import Msg exposing (Msg, Msg(..))
+import Msg.SideQuestsMsg exposing (SideQuestsMsg, SideQuestsMsg(..))
 import UrlParser exposing (..)
 import Types exposing (SessionModel, SideQuest, GetSideQuestsResponse, RecentPostedQuest)
 import Request.QuestsRequest exposing (getSideQuests, suggestSideQuest)
@@ -33,9 +33,9 @@ sideQuestsModel =
     }
 
 
-onSideQuestsMessage : SideQuestsMessage -> ( SessionModel, SideQuestsModel ) -> List (Cmd Message) -> ( SideQuestsModel, List (Cmd Message) )
-onSideQuestsMessage sideQuestsMessage ( session, sideQuests ) commands =
-    case sideQuestsMessage of
+onSideQuestsMsg : SideQuestsMsg -> ( SessionModel, SideQuestsModel ) -> List (Cmd Msg) -> ( SideQuestsModel, List (Cmd Msg) )
+onSideQuestsMsg sideQuestsMsg ( session, sideQuests ) commands =
+    case sideQuestsMsg of
         SuggestSideQuestResult (Result.Err _) ->
             ( { sideQuests
                 | suggestingSideQuest = False
@@ -122,11 +122,11 @@ onSideQuestsMessage sideQuestsMessage ( session, sideQuests ) commands =
             ( sideQuests, commands )
 
 
-sideQuestsUpdate : Message -> ( SessionModel, SideQuestsModel ) -> List (Cmd Message) -> ( SideQuestsModel, List (Cmd Message) )
-sideQuestsUpdate message ( session, sideQuests ) commands =
-    case message of
-        SideQuests sideQuestsMessage ->
-            onSideQuestsMessage sideQuestsMessage ( session, sideQuests ) commands
+sideQuestsUpdate : Msg -> ( SessionModel, SideQuestsModel ) -> List (Cmd Msg) -> ( SideQuestsModel, List (Cmd Msg) )
+sideQuestsUpdate msg ( session, sideQuests ) commands =
+    case msg of
+        SideQuests sideQuestsMsg ->
+            onSideQuestsMsg sideQuestsMsg ( session, sideQuests ) commands
 
         OnLocationChange location ->
             case parseHash (s "sidequests" </> string) location of

@@ -1,6 +1,6 @@
 module Update exposing (update)
 
-import Message exposing (Message, Message(..))
+import Msg exposing (Msg, Msg(..))
 import Update.SideQuestsUpdate exposing (sideQuestsModel, sideQuestsUpdate)
 import Update.QuestsUpdate exposing (questsUpdate)
 import Update.LayoutUpdate exposing (layoutUpdate)

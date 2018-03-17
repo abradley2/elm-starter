@@ -2,7 +2,7 @@ module Request.SessionRequest exposing (loadSession)
 
 import Types
 import Http
-import Message.SessionMessage exposing (SessionMessage(..), SessionMessage)
+import Msg.SessionMsg exposing (SessionMsg(..), SessionMsg)
 import Json.Decode exposing (..)
 
 
@@ -12,7 +12,7 @@ decodeSessionInfo =
         (at [ "userId" ] string)
 
 
-loadSession : String -> String -> Cmd SessionMessage
+loadSession : String -> String -> Cmd SessionMsg
 loadSession apiEndpoint userToken =
     let
         request =

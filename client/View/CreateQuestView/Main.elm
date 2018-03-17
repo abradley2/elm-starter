@@ -8,7 +8,7 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
 import Model exposing (Model)
-import Message.CreateQuestMessage exposing (CreateQuestMessage, CreateQuestMessage(..))
+import Msg.CreateQuestMsg exposing (CreateQuestMsg, CreateQuestMsg(..))
 import Component.TextField exposing (textField)
 import Component.TextArea exposing (textArea)
 import Component.Modal exposing (modal)
@@ -30,7 +30,7 @@ validQuest model =
         ]
 
 
-createQuestView : Model -> Html CreateQuestMessage
+createQuestView : Model -> Html CreateQuestMsg
 createQuestView model =
     div []
         [ div []

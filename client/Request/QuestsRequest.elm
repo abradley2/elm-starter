@@ -9,10 +9,10 @@ module Request.QuestsRequest
         )
 
 import Http
-import Message.SideQuestsMessage exposing (SideQuestsMessage, SideQuestsMessage(..))
-import Message.QuestsMessage exposing (QuestsMessage(..), QuestsMessage)
-import Message.MyAdventurerMessage exposing (MyAdventurerMessage(..), MyAdventurerMessage)
-import Message.QuestDetailsMessage exposing (QuestDetailsMessage(..), QuestDetailsMessage)
+import Msg.SideQuestsMsg exposing (SideQuestsMsg, SideQuestsMsg(..))
+import Msg.QuestsMsg exposing (QuestsMsg(..), QuestsMsg)
+import Msg.MyAdventurerMsg exposing (MyAdventurerMsg(..), MyAdventurerMsg)
+import Msg.QuestDetailsMsg exposing (QuestDetailsMsg(..), QuestDetailsMsg)
 import Json.Decode exposing (..)
 import Json.Encode as Encode
 import Types exposing (RecentPostedQuest, SideQuest, GetSideQuestsResponse, QuestDetailsResponse)
@@ -67,7 +67,7 @@ decodeGetSideQuestsResponse =
         (field "sideQuests" decodeSideQuestsList)
 
 
-getQuests : String -> String -> Cmd QuestsMessage
+getQuests : String -> String -> Cmd QuestsMsg
 getQuests apiEndpoint userToken =
     let
         request =
@@ -86,7 +86,7 @@ getQuests apiEndpoint userToken =
         Http.send GetQuestsResult request
 
 
-getSideQuests : String -> String -> String -> String -> Cmd SideQuestsMessage
+getSideQuests : String -> String -> String -> String -> Cmd SideQuestsMsg
 getSideQuests apiEndpoint userToken userId questId =
     let
         request =
@@ -105,7 +105,7 @@ getSideQuests apiEndpoint userToken userId questId =
         Http.send GetSideQuestsResult request
 
 
-getQuestsByUser : String -> String -> String -> Cmd MyAdventurerMessage
+getQuestsByUser : String -> String -> String -> Cmd MyAdventurerMsg
 getQuestsByUser apiEndpoint userToken userId =
     let
         request =
@@ -124,7 +124,7 @@ getQuestsByUser apiEndpoint userToken userId =
         Http.send GetQuestsByUserResult request
 
 
-getQuestDetails : String -> String -> String -> Cmd QuestDetailsMessage
+getQuestDetails : String -> String -> String -> Cmd QuestDetailsMsg
 getQuestDetails apiEndpoint userId questId =
     let
         request =
@@ -151,7 +151,7 @@ type alias DecideSideQuestParams =
     }
 
 
-decideSideQuest : DecideSideQuestParams -> Cmd QuestDetailsMessage
+decideSideQuest : DecideSideQuestParams -> Cmd QuestDetailsMsg
 decideSideQuest params =
     let
         request =
@@ -176,7 +176,7 @@ decideSideQuest params =
         Http.send DecideSideQuestResult request
 
 
-suggestSideQuest : String -> String -> RecentPostedQuest -> SideQuest -> Cmd SideQuestsMessage
+suggestSideQuest : String -> String -> RecentPostedQuest -> SideQuest -> Cmd SideQuestsMsg
 suggestSideQuest apiEndpoint userToken quest sideQuest =
     let
         request =

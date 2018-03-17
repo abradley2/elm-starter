@@ -1,8 +1,8 @@
 module Update.SessionUpdate exposing (sessionUpdate, sessionInitialModel, userIsLoggedIn)
 
 import Navigation exposing (Location)
-import Message exposing (Message, Message(..))
-import Message.SessionMessage exposing (SessionMessage, SessionMessage(..))
+import Msg exposing (Msg, Msg(..))
+import Msg.SessionMsg exposing (SessionMsg, SessionMsg(..))
 import Request.SessionRequest exposing (loadSession)
 import Types exposing (SessionModel, Flags, RouteData, Route, Route(..))
 
@@ -22,9 +22,9 @@ userIsLoggedIn session =
     session.token /= Nothing
 
 
-onSessionMessage : SessionMessage -> ( RouteData, SessionModel ) -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
-onSessionMessage userMessage ( routeData, session ) commands =
-    case userMessage of
+onSessionMsg : SessionMsg -> ( RouteData, SessionModel ) -> List (Cmd Msg) -> ( SessionModel, List (Cmd Msg) )
+onSessionMsg userMsg ( routeData, session ) commands =
+    case userMsg of
         GetTokenResult (Result.Ok token) ->
             ( { session | token = Just token }, commands )
 
@@ -63,14 +63,14 @@ onSessionMessage userMessage ( routeData, session ) commands =
             )
 
 
-sessionUpdate : Message -> ( RouteData, SessionModel ) -> List (Cmd Message) -> ( SessionModel, List (Cmd Message) )
-sessionUpdate message ( routeData, session ) commands =
-    case message of
+sessionUpdate : Msg -> ( RouteData, SessionModel ) -> List (Cmd Msg) -> ( SessionModel, List (Cmd Msg) )
+sessionUpdate msg ( routeData, session ) commands =
+    case msg of
         OnLocationChange location ->
             ( { session | routeData = routeData }, commands )
 
-        Session sessionMessage ->
-            onSessionMessage sessionMessage ( routeData, session ) commands
+        Session sessionMsg ->
+            onSessionMsg sessionMsg ( routeData, session ) commands
 
         LoadToken token ->
             ( { session | token = Just token }, commands ++ [ Cmd.map Session (loadSession session.flags.apiEndpoint token) ] )

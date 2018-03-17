@@ -1,28 +1,28 @@
 port module Ports exposing (..)
 
 
-port mount : (( String, String ) -> message) -> Sub message
+port mount : (( String, String ) -> msg) -> Sub msg
 
 
-port unmount : (( String, String ) -> message) -> Sub message
+port unmount : (( String, String ) -> msg) -> Sub msg
 
 
-port loadQuestStepId : (( String, String ) -> message) -> Sub message
+port loadQuestStepId : (( String, String ) -> msg) -> Sub msg
 
 
-port loadToken : (String -> message) -> Sub message
+port loadToken : (String -> msg) -> Sub msg
 
 
-port loadQuestId : (String -> message) -> Sub message
+port loadQuestId : (String -> msg) -> Sub msg
 
 
-port requestQuestStepId : String -> Cmd message
+port requestQuestStepId : String -> Cmd msg
 
 
-port requestQuestId : String -> Cmd message
+port requestQuestId : String -> Cmd msg
 
 
-port uploadQuestImage : String -> Cmd message
+port uploadQuestImage : String -> Cmd msg
 
 
-port uploadQuestImageFinished : (( Bool, String ) -> message) -> Sub message
+port uploadQuestImageFinished : (( Bool, String ) -> msg) -> Sub msg
