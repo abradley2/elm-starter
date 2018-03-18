@@ -1,4 +1,4 @@
-module Layout exposing (layout)
+module View.Layout exposing (layout)
 
 import Css exposing (..)
 import Css.Colors

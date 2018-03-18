@@ -30,6 +30,10 @@ validQuest model =
         ]
 
 
+fileInputId =
+    "create-quest-image-upload"
+
+
 createQuestView : Model -> Html CreateQuestMsg
 createQuestView model =
     div []
@@ -42,7 +46,7 @@ createQuestView model =
                         [ p [ class "float-text" ] [ text "Upload a picture that describes this adventure" ]
                         , div [ class "row" ]
                             [ (fileInput
-                                { id = "image-upload"
+                                { id = fileInputId
                                 , label = "Image (max size 2mb)"
                                 , onChange = OnFileChosen
                                 , value = Maybe.withDefault "" model.createQuest.imageUploadPath
@@ -60,7 +64,7 @@ createQuestView model =
                                         { disabled = model.createQuest.questImageUploadPending
                                         , label = "Upload"
                                         , icon = Just "file_upload"
-                                        , onClick = ConfirmFileUpload "image-upload"
+                                        , onClick = ConfirmFileUpload fileInputId
                                         }
 
                                 Nothing ->
@@ -110,21 +114,21 @@ createQuestView model =
                                     ]
                                 , a
                                     [ class "btn-floating halfway-fab waves-effect waves-light red"
-                                    , onClick (ShowFileUploadModal model.createQuest.id)
+                                    , onClick (ShowFileUploadModal)
                                     ]
                                     [ i [ class "material-icons" ] [ text "add_a_photo" ]
                                     ]
                                 ]
                             , div [ class "card-content" ]
                                 [ textField
-                                    { id = "name-textfield" ++ model.createQuest.id
+                                    { id = "name-textfield-createquest"
                                     , value = model.createQuest.questName
                                     , onInput = EditQuestName
                                     , label = "Quest Name"
                                     , class = Nothing
                                     }
                                 , textArea
-                                    { id = "description-textarea" ++ model.createQuest.id
+                                    { id = "description-textarea-createquest"
                                     , value = model.createQuest.questDescription
                                     , label = "Quest Description"
                                     , class = Nothing

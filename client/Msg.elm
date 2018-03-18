@@ -14,9 +14,8 @@ import Types exposing (..)
 type Msg
     = Mount ( String, String )
     | Unmount ( String, String )
-    | UploadQuestImageFinished ( Bool, String )
     | LoadQuestId String
-    | LoadQuestStepId ( String, String )
+    | UploadQuestImageFinished ( Bool, String )
     | LoadToken String
     | OnLocationChange Location
     | Quests QuestsMsg

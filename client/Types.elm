@@ -36,13 +36,6 @@ type alias SessionInfo =
     }
 
 
-type alias QuestInfo =
-    { name : String
-    , shortDescription : String
-    , picture : String
-    }
-
-
 type alias Quest =
     { name : String
     , description : String

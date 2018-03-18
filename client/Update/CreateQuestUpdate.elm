@@ -11,14 +11,13 @@ import Msg exposing (Msg, Msg(..))
 import Msg.CreateQuestMsg exposing (CreateQuestMsg, CreateQuestMsg(..))
 import Request.CreateQuestRequest exposing (createQuestRequest)
 import Update.RouteUpdate exposing (parseLocation)
-import Ports exposing (requestQuestStepId, requestQuestId, uploadQuestImage)
+import Ports exposing (uploadQuestImage)
 import Types exposing (Taco, Route(..))
 import Array
 
 
 type alias CreateQuestModel =
-    { id : String
-    , questName : String
+    { questName : String
     , questDescription : String
     , questImageUrl : String
     , imageUploadModalOpen : Bool
@@ -33,8 +32,7 @@ type alias CreateQuestModel =
 
 
 createQuestInitialModel =
-    { id = ""
-    , questName = ""
+    { questName = ""
     , questDescription = ""
     , questImageUrl = "/placeholder.png"
     , imageUploadModalOpen = False
@@ -46,13 +44,6 @@ createQuestInitialModel =
     , submitError = False
     , token = Nothing
     }
-
-
-onMountCreateQuestView : CreateQuestModel -> List (Cmd Msg) -> ( CreateQuestModel, List (Cmd Msg) )
-onMountCreateQuestView createQuest commands =
-    ( ({ createQuestInitialModel | token = createQuest.token })
-    , commands ++ [ requestQuestId "gimme!" ]
-    )
 
 
 onCreateQuestMsg : CreateQuestMsg -> ( Taco, CreateQuestModel ) -> List (Cmd Msg) -> ( CreateQuestModel, List (Cmd Msg) )
@@ -68,7 +59,7 @@ onCreateQuestMsg createQuestMsg ( taco, createQuest ) commands =
                         (createQuestRequest
                             taco.flags.apiEndpoint
                             (Maybe.withDefault "" taco.token)
-                            { id = createQuest.id
+                            { id = ""
                             , name = createQuest.questName
                             , description = createQuest.questDescription
                             , imageUrl = createQuest.questImageUrl
@@ -99,11 +90,10 @@ onCreateQuestMsg createQuestMsg ( taco, createQuest ) commands =
             , commands
             )
 
-        ShowFileUploadModal id ->
+        ShowFileUploadModal ->
             ( { createQuest
                 | imageUploadModalOpen = True
                 , imageUploadPath = Nothing
-                , imageUploadModalFor = Just id
               }
             , commands
             )
@@ -116,12 +106,12 @@ onCreateQuestMsg createQuestMsg ( taco, createQuest ) commands =
             , commands
             )
 
-        ConfirmFileUpload id ->
+        ConfirmFileUpload fileInputId ->
             ( { createQuest
                 | questImageUploadPending = True
                 , questImageUploadError = False
               }
-            , commands ++ [ uploadQuestImage ("fileinput-" ++ id) ]
+            , commands ++ [ uploadQuestImage fileInputId ]
             )
 
         EditQuestName questName ->
@@ -169,9 +159,6 @@ createQuestUpdate msg ( taco, createQuest ) commands =
         CreateQuest createQuestMsg ->
             onCreateQuestMsg createQuestMsg ( taco, createQuest ) commands
 
-        LoadQuestId cuid ->
-            ( { createQuest | id = cuid }, commands )
-
         OnLocationChange location ->
             let
                 ( route, locationData ) =
@@ -179,7 +166,7 @@ createQuestUpdate msg ( taco, createQuest ) commands =
             in
                 case route of
                     CreateQuestRoute ->
-                        onMountCreateQuestView createQuest commands
+                        ( createQuestInitialModel, commands )
 
                     _ ->
                         ( createQuest, commands )

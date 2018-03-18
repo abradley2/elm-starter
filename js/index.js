@@ -1,6 +1,5 @@
 const axios = require('axios')
 const cookies = require('js-cookie')
-const cuid = require('cuid')
 const components = require('./components')
 
 const apiEndpoint = process.env.NODE_ENV === 'production' ?
@@ -55,14 +54,6 @@ const token = cookies.get('thyQuestIs:token')
 if (token) {
   app.ports.loadToken.send(token)
 }
-
-app.ports.requestQuestId.subscribe(() => {
-  app.ports.loadQuestId.send(cuid())
-})
-
-app.ports.requestQuestStepId.subscribe(prevStepId => {
-  app.ports.loadQuestStepId.send(prevStepId, cuid())
-})
 
 app.ports.uploadQuestImage.subscribe(inputId => {
   const fileInput = document.getElementById(inputId)

@@ -14,7 +14,7 @@ type CreateQuestMsg
     | DeleteQuestStepPrompt String
     | DeleteQuestStepConfirm
     | DeleteQuestStepCancel
-    | ShowFileUploadModal String
+    | ShowFileUploadModal
     | HideFileUploadModal
     | OnFileChosen String
     | ConfirmFileUpload String

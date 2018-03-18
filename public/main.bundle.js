@@ -20713,10 +20713,6 @@ var _user$project$Types$SessionInfo = F2(
 	function (a, b) {
 		return {username: a, userId: b};
 	});
-var _user$project$Types$QuestInfo = F3(
-	function (a, b, c) {
-		return {name: a, shortDescription: b, picture: c};
-	});
 var _user$project$Types$Quest = F4(
 	function (a, b, c, d) {
 		return {name: a, description: b, imageUrl: c, id: d};
@@ -21423,9 +21419,7 @@ var _user$project$Msg_CreateQuestMsg$OnFileChosen = function (a) {
 	return {ctor: 'OnFileChosen', _0: a};
 };
 var _user$project$Msg_CreateQuestMsg$HideFileUploadModal = {ctor: 'HideFileUploadModal'};
-var _user$project$Msg_CreateQuestMsg$ShowFileUploadModal = function (a) {
-	return {ctor: 'ShowFileUploadModal', _0: a};
-};
+var _user$project$Msg_CreateQuestMsg$ShowFileUploadModal = {ctor: 'ShowFileUploadModal'};
 var _user$project$Msg_CreateQuestMsg$DeleteQuestStepCancel = {ctor: 'DeleteQuestStepCancel'};
 var _user$project$Msg_CreateQuestMsg$DeleteQuestStepConfirm = {ctor: 'DeleteQuestStepConfirm'};
 var _user$project$Msg_CreateQuestMsg$DeleteQuestStepPrompt = function (a) {
@@ -21497,14 +21491,11 @@ var _user$project$Msg$OnLocationChange = function (a) {
 var _user$project$Msg$LoadToken = function (a) {
 	return {ctor: 'LoadToken', _0: a};
 };
-var _user$project$Msg$LoadQuestStepId = function (a) {
-	return {ctor: 'LoadQuestStepId', _0: a};
+var _user$project$Msg$UploadQuestImageFinished = function (a) {
+	return {ctor: 'UploadQuestImageFinished', _0: a};
 };
 var _user$project$Msg$LoadQuestId = function (a) {
 	return {ctor: 'LoadQuestId', _0: a};
-};
-var _user$project$Msg$UploadQuestImageFinished = function (a) {
-	return {ctor: 'UploadQuestImageFinished', _0: a};
 };
 var _user$project$Msg$Unmount = function (a) {
 	return {ctor: 'Unmount', _0: a};
@@ -22033,60 +22024,7 @@ var _user$project$Request_CreateQuestRequest$createQuestRequest = F3(
 		return A2(_elm_lang$http$Http$send, _user$project$Msg_CreateQuestMsg$SubmitCreateQuestResult, request);
 	});
 
-var _user$project$Ports$mount = _elm_lang$core$Native_Platform.incomingPort(
-	'mount',
-	A2(
-		_elm_lang$core$Json_Decode$andThen,
-		function (x0) {
-			return A2(
-				_elm_lang$core$Json_Decode$andThen,
-				function (x1) {
-					return _elm_lang$core$Json_Decode$succeed(
-						{ctor: '_Tuple2', _0: x0, _1: x1});
-				},
-				A2(_elm_lang$core$Json_Decode$index, 1, _elm_lang$core$Json_Decode$string));
-		},
-		A2(_elm_lang$core$Json_Decode$index, 0, _elm_lang$core$Json_Decode$string)));
-var _user$project$Ports$unmount = _elm_lang$core$Native_Platform.incomingPort(
-	'unmount',
-	A2(
-		_elm_lang$core$Json_Decode$andThen,
-		function (x0) {
-			return A2(
-				_elm_lang$core$Json_Decode$andThen,
-				function (x1) {
-					return _elm_lang$core$Json_Decode$succeed(
-						{ctor: '_Tuple2', _0: x0, _1: x1});
-				},
-				A2(_elm_lang$core$Json_Decode$index, 1, _elm_lang$core$Json_Decode$string));
-		},
-		A2(_elm_lang$core$Json_Decode$index, 0, _elm_lang$core$Json_Decode$string)));
-var _user$project$Ports$loadQuestStepId = _elm_lang$core$Native_Platform.incomingPort(
-	'loadQuestStepId',
-	A2(
-		_elm_lang$core$Json_Decode$andThen,
-		function (x0) {
-			return A2(
-				_elm_lang$core$Json_Decode$andThen,
-				function (x1) {
-					return _elm_lang$core$Json_Decode$succeed(
-						{ctor: '_Tuple2', _0: x0, _1: x1});
-				},
-				A2(_elm_lang$core$Json_Decode$index, 1, _elm_lang$core$Json_Decode$string));
-		},
-		A2(_elm_lang$core$Json_Decode$index, 0, _elm_lang$core$Json_Decode$string)));
 var _user$project$Ports$loadToken = _elm_lang$core$Native_Platform.incomingPort('loadToken', _elm_lang$core$Json_Decode$string);
-var _user$project$Ports$loadQuestId = _elm_lang$core$Native_Platform.incomingPort('loadQuestId', _elm_lang$core$Json_Decode$string);
-var _user$project$Ports$requestQuestStepId = _elm_lang$core$Native_Platform.outgoingPort(
-	'requestQuestStepId',
-	function (v) {
-		return v;
-	});
-var _user$project$Ports$requestQuestId = _elm_lang$core$Native_Platform.outgoingPort(
-	'requestQuestId',
-	function (v) {
-		return v;
-	});
 var _user$project$Ports$uploadQuestImage = _elm_lang$core$Native_Platform.outgoingPort(
 	'uploadQuestImage',
 	function (v) {
@@ -22132,7 +22070,7 @@ var _user$project$Update_CreateQuestUpdate$onCreateQuestMsg = F3(
 									_user$project$Request_CreateQuestRequest$createQuestRequest,
 									_p4.flags.apiEndpoint,
 									A2(_elm_lang$core$Maybe$withDefault, '', _p4.token),
-									{id: _p3.id, name: _p3.questName, description: _p3.questDescription, imageUrl: _p3.questImageUrl})),
+									{id: '', name: _p3.questName, description: _p3.questDescription, imageUrl: _p3.questImageUrl})),
 							_1: {ctor: '[]'}
 						})
 				};
@@ -22174,11 +22112,7 @@ var _user$project$Update_CreateQuestUpdate$onCreateQuestMsg = F3(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						_p3,
-						{
-							imageUploadModalOpen: true,
-							imageUploadPath: _elm_lang$core$Maybe$Nothing,
-							imageUploadModalFor: _elm_lang$core$Maybe$Just(_p2._0)
-						}),
+						{imageUploadModalOpen: true, imageUploadPath: _elm_lang$core$Maybe$Nothing}),
 					_1: commands
 				};
 			case 'HideFileUploadModal':
@@ -22200,8 +22134,7 @@ var _user$project$Update_CreateQuestUpdate$onCreateQuestMsg = F3(
 						commands,
 						{
 							ctor: '::',
-							_0: _user$project$Ports$uploadQuestImage(
-								A2(_elm_lang$core$Basics_ops['++'], 'fileinput-', _p2._0)),
+							_0: _user$project$Ports$uploadQuestImage(_p2._0),
 							_1: {ctor: '[]'}
 						})
 				};
@@ -22227,30 +22160,13 @@ var _user$project$Update_CreateQuestUpdate$onCreateQuestMsg = F3(
 				return {ctor: '_Tuple2', _0: _p3, _1: commands};
 		}
 	});
-var _user$project$Update_CreateQuestUpdate$createQuestInitialModel = {id: '', questName: '', questDescription: '', questImageUrl: '/placeholder.png', imageUploadModalOpen: false, imageUploadModalFor: _elm_lang$core$Maybe$Nothing, imageUploadPath: _elm_lang$core$Maybe$Nothing, questImageUploadPending: false, questImageUploadError: false, submitPending: false, submitError: false, token: _elm_lang$core$Maybe$Nothing};
-var _user$project$Update_CreateQuestUpdate$onMountCreateQuestView = F2(
-	function (createQuest, commands) {
-		return {
-			ctor: '_Tuple2',
-			_0: _elm_lang$core$Native_Utils.update(
-				_user$project$Update_CreateQuestUpdate$createQuestInitialModel,
-				{token: createQuest.token}),
-			_1: A2(
-				_elm_lang$core$Basics_ops['++'],
-				commands,
-				{
-					ctor: '::',
-					_0: _user$project$Ports$requestQuestId('gimme!'),
-					_1: {ctor: '[]'}
-				})
-		};
-	});
+var _user$project$Update_CreateQuestUpdate$createQuestInitialModel = {questName: '', questDescription: '', questImageUrl: '/placeholder.png', imageUploadModalOpen: false, imageUploadModalFor: _elm_lang$core$Maybe$Nothing, imageUploadPath: _elm_lang$core$Maybe$Nothing, questImageUploadPending: false, questImageUploadError: false, submitPending: false, submitError: false, token: _elm_lang$core$Maybe$Nothing};
 var _user$project$Update_CreateQuestUpdate$createQuestUpdate = F3(
 	function (msg, _p5, commands) {
 		var _p6 = _p5;
 		var _p10 = _p6._1;
 		var _p7 = msg;
-		_v3_4:
+		_v3_3:
 		do {
 			switch (_p7.ctor) {
 				case 'UploadQuestImageFinished':
@@ -22269,7 +22185,7 @@ var _user$project$Update_CreateQuestUpdate$createQuestUpdate = F3(
 							_1: commands
 						};
 					} else {
-						break _v3_4;
+						break _v3_3;
 					}
 				case 'CreateQuest':
 					return A3(
@@ -22277,26 +22193,18 @@ var _user$project$Update_CreateQuestUpdate$createQuestUpdate = F3(
 						_p7._0,
 						{ctor: '_Tuple2', _0: _p6._0, _1: _p10},
 						commands);
-				case 'LoadQuestId':
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							_p10,
-							{id: _p7._0}),
-						_1: commands
-					};
 				case 'OnLocationChange':
 					var _p8 = _user$project$Update_RouteUpdate$parseLocation(_p7._0);
 					var route = _p8._0;
 					var locationData = _p8._1;
 					var _p9 = route;
 					if (_p9.ctor === 'CreateQuestRoute') {
-						return A2(_user$project$Update_CreateQuestUpdate$onMountCreateQuestView, _p10, commands);
+						return {ctor: '_Tuple2', _0: _user$project$Update_CreateQuestUpdate$createQuestInitialModel, _1: commands};
 					} else {
 						return {ctor: '_Tuple2', _0: _p10, _1: commands};
 					}
 				default:
-					break _v3_4;
+					break _v3_3;
 			}
 		} while(false);
 		return {ctor: '_Tuple2', _0: _p10, _1: commands};
@@ -22312,9 +22220,7 @@ var _user$project$Update_CreateQuestUpdate$CreateQuestModel = function (a) {
 								return function (i) {
 									return function (j) {
 										return function (k) {
-											return function (l) {
-												return {id: a, questName: b, questDescription: c, questImageUrl: d, imageUploadModalOpen: e, imageUploadModalFor: f, imageUploadPath: g, questImageUploadPending: h, questImageUploadError: i, submitPending: j, submitError: k, token: l};
-											};
+											return {questName: a, questDescription: b, questImageUrl: c, imageUploadModalOpen: d, imageUploadModalFor: e, imageUploadPath: f, questImageUploadPending: g, questImageUploadError: h, submitPending: i, submitError: j, token: k};
 										};
 									};
 								};
@@ -22940,281 +22846,6 @@ var _user$project$Model$Model = F8(
 		return {routeData: a, quests: b, myAdventurer: c, sideQuests: d, layout: e, taco: f, createQuest: g, questDetails: h};
 	});
 
-var _user$project$Layout$sideNavtransform = function (isOpen) {
-	return isOpen ? 'translateX(0%)' : 'translateX(-105%)';
-};
-var _user$project$Layout$toggleSidenavButton = A2(
-	_rtfeldman$elm_css$Html_Styled$a,
-	{
-		ctor: '::',
-		_0: _rtfeldman$elm_css$Html_Styled_Attributes$href('javascript:void(0);'),
-		_1: {
-			ctor: '::',
-			_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('left sidenav-trigger hide-on-med-and-up'),
-			_1: {
-				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_user$project$Msg_LayoutMsg$ToggleSidenav),
-				_1: {
-					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
-						{
-							ctor: '::',
-							_0: _rtfeldman$elm_css$Css$cursor(_rtfeldman$elm_css$Css$pointer),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}
-			}
-		}
-	},
-	{
-		ctor: '::',
-		_0: A2(
-			_rtfeldman$elm_css$Html_Styled$i,
-			{
-				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('material-icons'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled$text('menu'),
-				_1: {ctor: '[]'}
-			}),
-		_1: {ctor: '[]'}
-	});
-var _user$project$Layout$navs = function (model) {
-	return {
-		ctor: '::',
-		_0: A2(
-			_rtfeldman$elm_css$Html_Styled$li,
-			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: A2(
-					_rtfeldman$elm_css$Html_Styled$a,
-					{
-						ctor: '::',
-						_0: _rtfeldman$elm_css$Html_Styled_Attributes$href('#quests'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _rtfeldman$elm_css$Html_Styled$text('Quests'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}),
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_rtfeldman$elm_css$Html_Styled$li,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: function () {
-						if (_user$project$Update_SessionUpdate$userIsLoggedIn(model.taco)) {
-							return A2(
-								_rtfeldman$elm_css$Html_Styled$a,
-								{
-									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Attributes$href('#profile'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled$text('My Adventurer'),
-									_1: {ctor: '[]'}
-								});
-						} else {
-							var _p0 = model.routeData;
-							var route = _p0._0;
-							var location = _p0._1;
-							return A2(
-								_rtfeldman$elm_css$Html_Styled$a,
-								{
-									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Attributes$href(
-										A2(
-											_elm_lang$core$Basics_ops['++'],
-											'https://www.facebook.com/v2.11/dialog/oauth?client_id=169926423737270&redirect_uri=',
-											A2(_elm_lang$core$Basics_ops['++'], location.origin, '&state=success'))),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: A2(
-										_rtfeldman$elm_css$Html_Styled$i,
-										{
-											ctor: '::',
-											_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
-												{
-													ctor: '::',
-													_0: _rtfeldman$elm_css$Css$transform(
-														_rtfeldman$elm_css$Css$translateY(
-															_rtfeldman$elm_css$Css$pct(25))),
-													_1: {
-														ctor: '::',
-														_0: _rtfeldman$elm_css$Css$paddingRight(
-															_rtfeldman$elm_css$Css$px(8)),
-														_1: {ctor: '[]'}
-													}
-												}),
-											_1: {
-												ctor: '::',
-												_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('fab fa-2x fa-facebook'),
-												_1: {ctor: '[]'}
-											}
-										},
-										{ctor: '[]'}),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_rtfeldman$elm_css$Html_Styled$span,
-											{ctor: '[]'},
-											{
-												ctor: '::',
-												_0: _rtfeldman$elm_css$Html_Styled$text('Login'),
-												_1: {ctor: '[]'}
-											}),
-										_1: {ctor: '[]'}
-									}
-								});
-						}
-					}(),
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		}
-	};
-};
-var _user$project$Layout$navbar = function (model) {
-	return A2(
-		_rtfeldman$elm_css$Html_Styled$nav,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: A2(
-				_rtfeldman$elm_css$Html_Styled$div,
-				{
-					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('nav-wrapper'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: _user$project$Layout$toggleSidenavButton,
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_rtfeldman$elm_css$Html_Styled$a,
-							{
-								ctor: '::',
-								_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('brand-logo center'),
-								_1: {
-									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Attributes$href('#quests'),
-									_1: {ctor: '[]'}
-								}
-							},
-							{
-								ctor: '::',
-								_0: A2(
-									_rtfeldman$elm_css$Html_Styled$i,
-									{
-										ctor: '::',
-										_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('fa fa-shield-alt'),
-										_1: {ctor: '[]'}
-									},
-									{ctor: '[]'}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_rtfeldman$elm_css$Html_Styled$span,
-										{ctor: '[]'},
-										{
-											ctor: '::',
-											_0: _rtfeldman$elm_css$Html_Styled$text('QUEST'),
-											_1: {ctor: '[]'}
-										}),
-									_1: {ctor: '[]'}
-								}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_rtfeldman$elm_css$Html_Styled$ul,
-								{
-									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('hide-on-small-only'),
-									_1: {ctor: '[]'}
-								},
-								_user$project$Layout$navs(model)),
-							_1: {ctor: '[]'}
-						}
-					}
-				}),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Layout$layout = F2(
-	function (model, view) {
-		return A2(
-			_rtfeldman$elm_css$Html_Styled$div,
-			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: A2(
-					_rtfeldman$elm_css$Html_Styled$map,
-					_user$project$Msg$Layout,
-					_user$project$Layout$navbar(model)),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_rtfeldman$elm_css$Html_Styled$map,
-						_user$project$Msg$Layout,
-						A2(
-							_rtfeldman$elm_css$Html_Styled$ul,
-							{
-								ctor: '::',
-								_0: _rtfeldman$elm_css$Html_Styled_Attributes$id('slide-out'),
-								_1: {
-									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('sidenav'),
-									_1: {
-										ctor: '::',
-										_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_user$project$Msg_LayoutMsg$ToggleSidenav),
-										_1: {
-											ctor: '::',
-											_0: _rtfeldman$elm_css$Html_Styled_Attributes$style(
-												{
-													ctor: '::',
-													_0: {
-														ctor: '_Tuple2',
-														_0: 'transform',
-														_1: _user$project$Layout$sideNavtransform(model.layout.sidenavOpen)
-													},
-													_1: {
-														ctor: '::',
-														_0: {ctor: '_Tuple2', _0: 'transition', _1: '.25s'},
-														_1: {ctor: '[]'}
-													}
-												}),
-											_1: {ctor: '[]'}
-										}
-									}
-								}
-							},
-							_user$project$Layout$navs(model))),
-					_1: {
-						ctor: '::',
-						_0: view,
-						_1: {ctor: '[]'}
-					}
-				}
-			});
-	});
-
 var _user$project$Update$updater = F4(
 	function (getter, setter, reducer, _p0) {
 		var _p1 = _p0;
@@ -23346,6 +22977,281 @@ var _user$project$Update$update = F2(
 			_0: updatedModel,
 			_1: _elm_lang$core$Platform_Cmd$batch(commands)
 		};
+	});
+
+var _user$project$View_Layout$sideNavtransform = function (isOpen) {
+	return isOpen ? 'translateX(0%)' : 'translateX(-105%)';
+};
+var _user$project$View_Layout$toggleSidenavButton = A2(
+	_rtfeldman$elm_css$Html_Styled$a,
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Html_Styled_Attributes$href('javascript:void(0);'),
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('left sidenav-trigger hide-on-med-and-up'),
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_user$project$Msg_LayoutMsg$ToggleSidenav),
+				_1: {
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+						{
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Css$cursor(_rtfeldman$elm_css$Css$pointer),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_rtfeldman$elm_css$Html_Styled$i,
+			{
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('material-icons'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Html_Styled$text('menu'),
+				_1: {ctor: '[]'}
+			}),
+		_1: {ctor: '[]'}
+	});
+var _user$project$View_Layout$navs = function (model) {
+	return {
+		ctor: '::',
+		_0: A2(
+			_rtfeldman$elm_css$Html_Styled$li,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Html_Styled$a,
+					{
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Html_Styled_Attributes$href('#quests'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Html_Styled$text('Quests'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_rtfeldman$elm_css$Html_Styled$li,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: function () {
+						if (_user$project$Update_SessionUpdate$userIsLoggedIn(model.taco)) {
+							return A2(
+								_rtfeldman$elm_css$Html_Styled$a,
+								{
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Html_Styled_Attributes$href('#profile'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Html_Styled$text('My Adventurer'),
+									_1: {ctor: '[]'}
+								});
+						} else {
+							var _p0 = model.routeData;
+							var route = _p0._0;
+							var location = _p0._1;
+							return A2(
+								_rtfeldman$elm_css$Html_Styled$a,
+								{
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Html_Styled_Attributes$href(
+										A2(
+											_elm_lang$core$Basics_ops['++'],
+											'https://www.facebook.com/v2.11/dialog/oauth?client_id=169926423737270&redirect_uri=',
+											A2(_elm_lang$core$Basics_ops['++'], location.origin, '&state=success'))),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: A2(
+										_rtfeldman$elm_css$Html_Styled$i,
+										{
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+												{
+													ctor: '::',
+													_0: _rtfeldman$elm_css$Css$transform(
+														_rtfeldman$elm_css$Css$translateY(
+															_rtfeldman$elm_css$Css$pct(25))),
+													_1: {
+														ctor: '::',
+														_0: _rtfeldman$elm_css$Css$paddingRight(
+															_rtfeldman$elm_css$Css$px(8)),
+														_1: {ctor: '[]'}
+													}
+												}),
+											_1: {
+												ctor: '::',
+												_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('fab fa-2x fa-facebook'),
+												_1: {ctor: '[]'}
+											}
+										},
+										{ctor: '[]'}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_rtfeldman$elm_css$Html_Styled$span,
+											{ctor: '[]'},
+											{
+												ctor: '::',
+												_0: _rtfeldman$elm_css$Html_Styled$text('Login'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}
+								});
+						}
+					}(),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		}
+	};
+};
+var _user$project$View_Layout$navbar = function (model) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled$nav,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_rtfeldman$elm_css$Html_Styled$div,
+				{
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('nav-wrapper'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _user$project$View_Layout$toggleSidenavButton,
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_rtfeldman$elm_css$Html_Styled$a,
+							{
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('brand-logo center'),
+								_1: {
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Html_Styled_Attributes$href('#quests'),
+									_1: {ctor: '[]'}
+								}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_rtfeldman$elm_css$Html_Styled$i,
+									{
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('fa fa-shield-alt'),
+										_1: {ctor: '[]'}
+									},
+									{ctor: '[]'}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_rtfeldman$elm_css$Html_Styled$span,
+										{ctor: '[]'},
+										{
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Html_Styled$text('QUEST'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_rtfeldman$elm_css$Html_Styled$ul,
+								{
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('hide-on-small-only'),
+									_1: {ctor: '[]'}
+								},
+								_user$project$View_Layout$navs(model)),
+							_1: {ctor: '[]'}
+						}
+					}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$View_Layout$layout = F2(
+	function (model, view) {
+		return A2(
+			_rtfeldman$elm_css$Html_Styled$div,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Html_Styled$map,
+					_user$project$Msg$Layout,
+					_user$project$View_Layout$navbar(model)),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_rtfeldman$elm_css$Html_Styled$map,
+						_user$project$Msg$Layout,
+						A2(
+							_rtfeldman$elm_css$Html_Styled$ul,
+							{
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Html_Styled_Attributes$id('slide-out'),
+								_1: {
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('sidenav'),
+									_1: {
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_user$project$Msg_LayoutMsg$ToggleSidenav),
+										_1: {
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Html_Styled_Attributes$style(
+												{
+													ctor: '::',
+													_0: {
+														ctor: '_Tuple2',
+														_0: 'transform',
+														_1: _user$project$View_Layout$sideNavtransform(model.layout.sidenavOpen)
+													},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: 'transition', _1: '.25s'},
+														_1: {ctor: '[]'}
+													}
+												}),
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							},
+							_user$project$View_Layout$navs(model))),
+					_1: {
+						ctor: '::',
+						_0: view,
+						_1: {ctor: '[]'}
+					}
+				}
+			});
 	});
 
 var _user$project$View_MyAdventurerView_Main$noQuests = function (model) {
@@ -24061,6 +23967,7 @@ var _user$project$View_SideQuestsView_Main$sideQuestsView = function (model) {
 	}
 };
 
+var _user$project$View_CreateQuestView_Main$fileInputId = 'create-quest-image-upload';
 var _user$project$View_CreateQuestView_Main$validQuest = function (model) {
 	return A2(
 		_elm_lang$core$List$all,
@@ -24119,7 +24026,7 @@ var _user$project$View_CreateQuestView_Main$createQuestView = function (model) {
 												ctor: '::',
 												_0: _user$project$Component_FileInput$fileInput(
 													{
-														id: 'image-upload',
+														id: _user$project$View_CreateQuestView_Main$fileInputId,
 														label: 'Image (max size 2mb)',
 														onChange: _user$project$Msg_CreateQuestMsg$OnFileChosen,
 														value: A2(_elm_lang$core$Maybe$withDefault, '', model.createQuest.imageUploadPath)
@@ -24149,7 +24056,7 @@ var _user$project$View_CreateQuestView_Main$createQuestView = function (model) {
 																		disabled: model.createQuest.questImageUploadPending,
 																		label: 'Upload',
 																		icon: _elm_lang$core$Maybe$Just('file_upload'),
-																		onClick: _user$project$Msg_CreateQuestMsg$ConfirmFileUpload('image-upload')
+																		onClick: _user$project$Msg_CreateQuestMsg$ConfirmFileUpload(_user$project$View_CreateQuestView_Main$fileInputId)
 																	});
 															} else {
 																return A2(
@@ -24383,8 +24290,7 @@ var _user$project$View_CreateQuestView_Main$createQuestView = function (model) {
 																					_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('btn-floating halfway-fab waves-effect waves-light red'),
 																					_1: {
 																						ctor: '::',
-																						_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(
-																							_user$project$Msg_CreateQuestMsg$ShowFileUploadModal(model.createQuest.id)),
+																						_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_user$project$Msg_CreateQuestMsg$ShowFileUploadModal),
 																						_1: {ctor: '[]'}
 																					}
 																				},
@@ -24420,23 +24326,11 @@ var _user$project$View_CreateQuestView_Main$createQuestView = function (model) {
 																	{
 																		ctor: '::',
 																		_0: _user$project$Component_TextField$textField(
-																			{
-																				id: A2(_elm_lang$core$Basics_ops['++'], 'name-textfield', model.createQuest.id),
-																				value: model.createQuest.questName,
-																				onInput: _user$project$Msg_CreateQuestMsg$EditQuestName,
-																				label: 'Quest Name',
-																				$class: _elm_lang$core$Maybe$Nothing
-																			}),
+																			{id: 'name-textfield-createquest', value: model.createQuest.questName, onInput: _user$project$Msg_CreateQuestMsg$EditQuestName, label: 'Quest Name', $class: _elm_lang$core$Maybe$Nothing}),
 																		_1: {
 																			ctor: '::',
 																			_0: _user$project$Component_TextArea$textArea(
-																				{
-																					id: A2(_elm_lang$core$Basics_ops['++'], 'description-textarea', model.createQuest.id),
-																					value: model.createQuest.questDescription,
-																					label: 'Quest Description',
-																					$class: _elm_lang$core$Maybe$Nothing,
-																					onInput: _user$project$Msg_CreateQuestMsg$EditQuestDescription
-																				}),
+																				{id: 'description-textarea-createquest', value: model.createQuest.questDescription, label: 'Quest Description', $class: _elm_lang$core$Maybe$Nothing, onInput: _user$project$Msg_CreateQuestMsg$EditQuestDescription}),
 																			_1: {
 																				ctor: '::',
 																				_0: _user$project$Component_RaisedButton$raisedButton(
@@ -25046,23 +24940,11 @@ var _user$project$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$batch(
 		{
 			ctor: '::',
-			_0: _user$project$Ports$mount(_user$project$Msg$Mount),
+			_0: _user$project$Ports$loadToken(_user$project$Msg$LoadToken),
 			_1: {
 				ctor: '::',
-				_0: _user$project$Ports$unmount(_user$project$Msg$Unmount),
-				_1: {
-					ctor: '::',
-					_0: _user$project$Ports$loadToken(_user$project$Msg$LoadToken),
-					_1: {
-						ctor: '::',
-						_0: _user$project$Ports$loadQuestId(_user$project$Msg$LoadQuestId),
-						_1: {
-							ctor: '::',
-							_0: _user$project$Ports$uploadQuestImageFinished(_user$project$Msg$UploadQuestImageFinished),
-							_1: {ctor: '[]'}
-						}
-					}
-				}
+				_0: _user$project$Ports$uploadQuestImageFinished(_user$project$Msg$UploadQuestImageFinished),
+				_1: {ctor: '[]'}
 			}
 		});
 };
@@ -25071,7 +24953,7 @@ var _user$project$Main$view = function (model) {
 	var route = _p0._0;
 	var location = _p0._1;
 	return A2(
-		_user$project$Layout$layout,
+		_user$project$View_Layout$layout,
 		model,
 		function () {
 			var _p1 = route;
@@ -25132,7 +25014,7 @@ var _user$project$Main$main = A2(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Msg.Msg":{"args":[],"tags":{"OnLocationChange":["Navigation.Location"],"Layout":["Msg.LayoutMsg.LayoutMsg"],"LoadQuestId":["String"],"UploadQuestImageFinished":["( Bool, String )"],"Unmount":["( String, String )"],"QuestDetails":["Msg.QuestDetailsMsg.QuestDetailsMsg"],"LoadQuestStepId":["( String, String )"],"CreateQuest":["Msg.CreateQuestMsg.CreateQuestMsg"],"Mount":["( String, String )"],"Quests":["Msg.QuestsMsg.QuestsMsg"],"LoadToken":["String"],"MyAdventurer":["Msg.MyAdventurerMsg.MyAdventurerMsg"],"SideQuests":["Msg.SideQuestsMsg.SideQuestsMsg"],"Session":["Msg.SessionMsg.SessionMsg"]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Msg.QuestDetailsMsg.QuestDetailsMsg":{"args":[],"tags":{"ToggleShowingSuggestedSideQuests":["Bool"],"AcceptSideQuest":["String"],"AcceptSuggestedSideQuest":[],"GetQuestDetailsResult":["Result.Result Http.Error Types.QuestDetailsResponse"],"DecideSideQuestResult":["Result.Result Http.Error Types.QuestDetailsResponse"],"DeclineSuggestedSideQuest":[],"ToggleShowingSideQuestModal":["Maybe.Maybe Types.SideQuest"],"NoOp":[],"DeclineSideQuest":["String"]}},"Msg.SideQuestsMsg.SideQuestsMsg":{"args":[],"tags":{"SuggestSideQuestResult":["Result.Result Http.Error Bool"],"ShowSideQuestForm":[],"HideSideQuestForm":[],"EditSideQuestName":["String"],"SubmitSideQuestForm":[],"EditSideQuestDescription":["String"],"NoOp":[],"GetSideQuestsResult":["Result.Result Http.Error Types.GetSideQuestsResponse"]}},"Msg.MyAdventurerMsg.MyAdventurerMsg":{"args":[],"tags":{"GetQuestsByUserResult":["Result.Result Http.Error (List Types.RecentPostedQuest)"],"NoOp":[]}},"Msg.LayoutMsg.LayoutMsg":{"args":[],"tags":{"ToggleSidenav":[]}},"Msg.QuestsMsg.QuestsMsg":{"args":[],"tags":{"GetQuestsResult":["Result.Result Http.Error (List Types.RecentPostedQuest)"],"NoOp":[]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Msg.CreateQuestMsg.CreateQuestMsg":{"args":[],"tags":{"EditQuestDescription":["String"],"SubmitCreateQuestResult":["Result.Result Http.Error Types.Quest"],"DeleteQuestStepConfirm":[],"EditQuestStepName":["String","String"],"ShowFileUploadModal":["String"],"AddQuestStep":[],"OnFileChosen":["String"],"EditQuestStepDescription":["String","String"],"ConfirmFileUpload":["String"],"EditQuestName":["String"],"DeleteQuestStepCancel":[],"HideFileUploadModal":[],"SubmitCreateQuest":[],"NoOp":[],"DeleteQuestStepPrompt":["String"]}},"Msg.SessionMsg.SessionMsg":{"args":[],"tags":{"GetTokenResult":["Result.Result Http.Error String"],"LoadSessionResult":["Result.Result Http.Error Types.SessionInfo"]}}},"aliases":{"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Types.QuestDetailsResponse":{"args":[],"type":"{ quest : Types.RecentPostedQuest , sideQuests : List Types.SideQuest , suggestedSideQuests : List Types.SideQuest }"},"Types.SessionInfo":{"args":[],"type":"{ username : String, userId : String }"},"Types.SideQuest":{"args":[],"type":"{ name : String , description : String , guid : String , suggestedBy : String , id : String }"},"Types.Quest":{"args":[],"type":"{ name : String , description : String , imageUrl : String , id : String }"},"Types.GetSideQuestsResponse":{"args":[],"type":"{ quest : Types.RecentPostedQuest , sideQuests : List Types.SideQuest }"},"Types.RecentPostedQuest":{"args":[],"type":"{ name : String , description : String , imageUrl : String , id : String , guid : String , username : String , userId : String , upvotes : Int }"},"Navigation.Location":{"args":[],"type":"{ href : String , host : String , hostname : String , protocol : String , origin : String , port_ : String , pathname : String , search : String , hash : String , username : String , password : String }"}},"message":"Msg.Msg"},"versions":{"elm":"0.18.0"}});
+    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Msg.Msg":{"args":[],"tags":{"OnLocationChange":["Navigation.Location"],"Layout":["Msg.LayoutMsg.LayoutMsg"],"LoadQuestId":["String"],"UploadQuestImageFinished":["( Bool, String )"],"Unmount":["( String, String )"],"QuestDetails":["Msg.QuestDetailsMsg.QuestDetailsMsg"],"CreateQuest":["Msg.CreateQuestMsg.CreateQuestMsg"],"Mount":["( String, String )"],"Quests":["Msg.QuestsMsg.QuestsMsg"],"LoadToken":["String"],"MyAdventurer":["Msg.MyAdventurerMsg.MyAdventurerMsg"],"SideQuests":["Msg.SideQuestsMsg.SideQuestsMsg"],"Session":["Msg.SessionMsg.SessionMsg"]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Msg.QuestDetailsMsg.QuestDetailsMsg":{"args":[],"tags":{"ToggleShowingSuggestedSideQuests":["Bool"],"AcceptSideQuest":["String"],"AcceptSuggestedSideQuest":[],"GetQuestDetailsResult":["Result.Result Http.Error Types.QuestDetailsResponse"],"DecideSideQuestResult":["Result.Result Http.Error Types.QuestDetailsResponse"],"DeclineSuggestedSideQuest":[],"ToggleShowingSideQuestModal":["Maybe.Maybe Types.SideQuest"],"NoOp":[],"DeclineSideQuest":["String"]}},"Msg.SideQuestsMsg.SideQuestsMsg":{"args":[],"tags":{"SuggestSideQuestResult":["Result.Result Http.Error Bool"],"ShowSideQuestForm":[],"HideSideQuestForm":[],"EditSideQuestName":["String"],"SubmitSideQuestForm":[],"EditSideQuestDescription":["String"],"NoOp":[],"GetSideQuestsResult":["Result.Result Http.Error Types.GetSideQuestsResponse"]}},"Msg.MyAdventurerMsg.MyAdventurerMsg":{"args":[],"tags":{"GetQuestsByUserResult":["Result.Result Http.Error (List Types.RecentPostedQuest)"],"NoOp":[]}},"Msg.LayoutMsg.LayoutMsg":{"args":[],"tags":{"ToggleSidenav":[]}},"Msg.QuestsMsg.QuestsMsg":{"args":[],"tags":{"GetQuestsResult":["Result.Result Http.Error (List Types.RecentPostedQuest)"],"NoOp":[]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Msg.CreateQuestMsg.CreateQuestMsg":{"args":[],"tags":{"EditQuestDescription":["String"],"SubmitCreateQuestResult":["Result.Result Http.Error Types.Quest"],"DeleteQuestStepConfirm":[],"EditQuestStepName":["String","String"],"ShowFileUploadModal":[],"AddQuestStep":[],"OnFileChosen":["String"],"EditQuestStepDescription":["String","String"],"ConfirmFileUpload":["String"],"EditQuestName":["String"],"DeleteQuestStepCancel":[],"HideFileUploadModal":[],"SubmitCreateQuest":[],"NoOp":[],"DeleteQuestStepPrompt":["String"]}},"Msg.SessionMsg.SessionMsg":{"args":[],"tags":{"GetTokenResult":["Result.Result Http.Error String"],"LoadSessionResult":["Result.Result Http.Error Types.SessionInfo"]}}},"aliases":{"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Types.QuestDetailsResponse":{"args":[],"type":"{ quest : Types.RecentPostedQuest , sideQuests : List Types.SideQuest , suggestedSideQuests : List Types.SideQuest }"},"Types.SessionInfo":{"args":[],"type":"{ username : String, userId : String }"},"Types.SideQuest":{"args":[],"type":"{ name : String , description : String , guid : String , suggestedBy : String , id : String }"},"Types.Quest":{"args":[],"type":"{ name : String , description : String , imageUrl : String , id : String }"},"Types.GetSideQuestsResponse":{"args":[],"type":"{ quest : Types.RecentPostedQuest , sideQuests : List Types.SideQuest }"},"Types.RecentPostedQuest":{"args":[],"type":"{ name : String , description : String , imageUrl : String , id : String , guid : String , username : String , userId : String , upvotes : Int }"},"Navigation.Location":{"args":[],"type":"{ href : String , host : String , hostname : String , protocol : String , origin : String , port_ : String , pathname : String , search : String , hash : String , username : String , password : String }"}},"message":"Msg.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])
