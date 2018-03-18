@@ -3,7 +3,7 @@ module Update.SideQuestsUpdate exposing (SideQuestsModel, sideQuestsUpdate, side
 import Msg exposing (Msg, Msg(..))
 import Msg.SideQuestsMsg exposing (SideQuestsMsg, SideQuestsMsg(..))
 import UrlParser exposing (..)
-import Types exposing (SessionModel, SideQuest, GetSideQuestsResponse, RecentPostedQuest)
+import Types exposing (Taco, SideQuest, GetSideQuestsResponse, RecentPostedQuest)
 import Request.QuestsRequest exposing (getSideQuests, suggestSideQuest)
 import Array
 
@@ -33,8 +33,8 @@ sideQuestsModel =
     }
 
 
-onSideQuestsMsg : SideQuestsMsg -> ( SessionModel, SideQuestsModel ) -> List (Cmd Msg) -> ( SideQuestsModel, List (Cmd Msg) )
-onSideQuestsMsg sideQuestsMsg ( session, sideQuests ) commands =
+onSideQuestsMsg : SideQuestsMsg -> ( Taco, SideQuestsModel ) -> List (Cmd Msg) -> ( SideQuestsModel, List (Cmd Msg) )
+onSideQuestsMsg sideQuestsMsg ( taco, sideQuests ) commands =
     case sideQuestsMsg of
         SuggestSideQuestResult (Result.Err _) ->
             ( { sideQuests
@@ -92,7 +92,7 @@ onSideQuestsMsg sideQuestsMsg ( session, sideQuests ) commands =
                                 (\quest userId ->
                                     [ Cmd.map SideQuests
                                         (suggestSideQuest
-                                            session.flags.apiEndpoint
+                                            taco.flags.apiEndpoint
                                             userId
                                             quest
                                             { guid = ""
@@ -105,7 +105,7 @@ onSideQuestsMsg sideQuestsMsg ( session, sideQuests ) commands =
                                     ]
                                 )
                                 sideQuests.questInfo
-                                session.token
+                                taco.token
                     in
                         Maybe.withDefault [] result
                    )
@@ -122,11 +122,11 @@ onSideQuestsMsg sideQuestsMsg ( session, sideQuests ) commands =
             ( sideQuests, commands )
 
 
-sideQuestsUpdate : Msg -> ( SessionModel, SideQuestsModel ) -> List (Cmd Msg) -> ( SideQuestsModel, List (Cmd Msg) )
-sideQuestsUpdate msg ( session, sideQuests ) commands =
+sideQuestsUpdate : Msg -> ( Taco, SideQuestsModel ) -> List (Cmd Msg) -> ( SideQuestsModel, List (Cmd Msg) )
+sideQuestsUpdate msg ( taco, sideQuests ) commands =
     case msg of
         SideQuests sideQuestsMsg ->
-            onSideQuestsMsg sideQuestsMsg ( session, sideQuests ) commands
+            onSideQuestsMsg sideQuestsMsg ( taco, sideQuests ) commands
 
         OnLocationChange location ->
             case parseHash (s "sidequests" </> string) location of
@@ -143,8 +143,8 @@ sideQuestsUpdate msg ( session, sideQuests ) commands =
                         , commands
                             ++ [ Cmd.map SideQuests
                                     (getSideQuests
-                                        session.flags.apiEndpoint
-                                        (Maybe.withDefault "" session.token)
+                                        taco.flags.apiEndpoint
+                                        (Maybe.withDefault "" taco.token)
                                         (Maybe.withDefault "" (Array.get 0 params))
                                         (Maybe.withDefault "" (Array.get 1 params))
                                     )

@@ -6,7 +6,7 @@ import Update.QuestsUpdate exposing (questsUpdate)
 import Update.LayoutUpdate exposing (layoutUpdate)
 import Update.RouteUpdate exposing (routeUpdate)
 import Update.CreateQuestUpdate exposing (createQuestUpdate)
-import Update.SessionUpdate exposing (sessionUpdate)
+import Update.SessionUpdate exposing (tacoUpdate)
 import Update.MyAdventurerUpdate exposing (myAdventurerUpdate)
 import Update.QuestDetailsUpdate exposing (questDetailsUpdate)
 
@@ -29,15 +29,15 @@ update message model =
                     (\model routeData -> ({ model | routeData = routeData }))
                     routeUpdate
                 |> updater
-                    (\model -> ( model.routeData, model.session ))
-                    (\model session -> ({ model | session = session }))
-                    sessionUpdate
+                    (\model -> ( model.routeData, model.taco ))
+                    (\model taco -> ({ model | taco = taco }))
+                    tacoUpdate
                 |> updater
-                    (\model -> ( model.session, model.sideQuests ))
+                    (\model -> ( model.taco, model.sideQuests ))
                     (\model sideQuests -> ({ model | sideQuests = sideQuests }))
                     sideQuestsUpdate
                 |> updater
-                    (\model -> ( model.session, model.quests ))
+                    (\model -> ( model.taco, model.quests ))
                     (\model quests -> ({ model | quests = quests }))
                     questsUpdate
                 |> updater
@@ -45,15 +45,15 @@ update message model =
                     (\model layout -> ({ model | layout = layout }))
                     layoutUpdate
                 |> updater
-                    (\model -> ( model.session, model.createQuest ))
+                    (\model -> ( model.taco, model.createQuest ))
                     (\model createQuest -> ({ model | createQuest = createQuest }))
                     createQuestUpdate
                 |> updater
-                    (\model -> ( model.session, model.myAdventurer ))
+                    (\model -> ( model.taco, model.myAdventurer ))
                     (\model myAdventurer -> ({ model | myAdventurer = myAdventurer }))
                     myAdventurerUpdate
                 |> updater
-                    (\model -> ( model.session, model.questDetails ))
+                    (\model -> ( model.taco, model.questDetails ))
                     (\model questDetails -> ({ model | questDetails = questDetails }))
                     questDetailsUpdate
     in

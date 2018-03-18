@@ -9,7 +9,7 @@ import Msg exposing (Msg, Msg(..))
 import Msg.MyAdventurerMsg exposing (MyAdventurerMsg, MyAdventurerMsg(..))
 import Update.RouteUpdate exposing (parseLocation)
 import Request.QuestsRequest exposing (getQuestsByUser)
-import Types exposing (SessionModel, RecentPostedQuest, RouteData, Route, Route(..))
+import Types exposing (Taco, RecentPostedQuest, RouteData, Route, Route(..))
 
 
 type alias MyAdventurerModel =
@@ -27,19 +27,19 @@ fetchQuests apiEndpoint token userId =
         (getQuestsByUser apiEndpoint token userId)
 
 
-onRouteChange : RouteData -> ( SessionModel, MyAdventurerModel ) -> List (Cmd Msg) -> ( MyAdventurerModel, List (Cmd Msg) )
-onRouteChange routeData ( session, myAdventurer ) commands =
+onRouteChange : RouteData -> ( Taco, MyAdventurerModel ) -> List (Cmd Msg) -> ( MyAdventurerModel, List (Cmd Msg) )
+onRouteChange routeData ( taco, myAdventurer ) commands =
     let
         ( route, location ) =
             routeData
     in
         case route of
             MyAdventurerRoute ->
-                case session.userId of
+                case taco.userId of
                     Just userId ->
                         ( myAdventurer
                         , commands
-                            ++ [ fetchQuests session.flags.apiEndpoint (Maybe.withDefault "" session.token) userId
+                            ++ [ fetchQuests taco.flags.apiEndpoint (Maybe.withDefault "" taco.token) userId
                                ]
                         )
 
@@ -63,11 +63,11 @@ onMyAdventurerMsg myAdventurerMsg myAdventurer commands =
             ( myAdventurer, commands )
 
 
-myAdventurerUpdate : Msg -> ( SessionModel, MyAdventurerModel ) -> List (Cmd Msg) -> ( MyAdventurerModel, List (Cmd Msg) )
-myAdventurerUpdate msg ( session, myAdventurer ) commands =
+myAdventurerUpdate : Msg -> ( Taco, MyAdventurerModel ) -> List (Cmd Msg) -> ( MyAdventurerModel, List (Cmd Msg) )
+myAdventurerUpdate msg ( taco, myAdventurer ) commands =
     case msg of
         OnLocationChange location ->
-            onRouteChange (parseLocation location) ( session, myAdventurer ) commands
+            onRouteChange (parseLocation location) ( taco, myAdventurer ) commands
 
         MyAdventurer myAdventurerMsg ->
             onMyAdventurerMsg myAdventurerMsg myAdventurer commands

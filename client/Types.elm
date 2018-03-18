@@ -21,7 +21,7 @@ type alias Flags =
     }
 
 
-type alias SessionModel =
+type alias Taco =
     { flags : Flags
     , token : Maybe String
     , username : Maybe String

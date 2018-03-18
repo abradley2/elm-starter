@@ -20705,7 +20705,7 @@ var _user$project$Component_QuestAction$questAction = function (params) {
 var _user$project$Types$Flags = function (a) {
 	return {apiEndpoint: a};
 };
-var _user$project$Types$SessionModel = F5(
+var _user$project$Types$Taco = F5(
 	function (a, b, c, d, e) {
 		return {flags: a, token: b, username: c, userId: d, routeData: e};
 	});
@@ -22404,8 +22404,8 @@ var _user$project$Update_QuestsUpdate$QuestsModel = function (a) {
 var _user$project$Update_SideQuestsUpdate$onSideQuestsMsg = F3(
 	function (sideQuestsMsg, _p0, commands) {
 		var _p1 = _p0;
-		var _p5 = _p1._1;
-		var _p4 = _p1._0;
+		var _p5 = _p1._0;
+		var _p4 = _p1._1;
 		var _p2 = sideQuestsMsg;
 		switch (_p2.ctor) {
 			case 'SuggestSideQuestResult':
@@ -22413,7 +22413,7 @@ var _user$project$Update_SideQuestsUpdate$onSideQuestsMsg = F3(
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
-							_p5,
+							_p4,
 							{
 								suggestingSideQuest: false,
 								suggestSideQuestSuccess: _elm_lang$core$Maybe$Just(false)
@@ -22424,7 +22424,7 @@ var _user$project$Update_SideQuestsUpdate$onSideQuestsMsg = F3(
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
-							_p5,
+							_p4,
 							{
 								suggestingSideQuest: false,
 								suggestSideQuestSuccess: _elm_lang$core$Maybe$Just(true)
@@ -22437,7 +22437,7 @@ var _user$project$Update_SideQuestsUpdate$onSideQuestsMsg = F3(
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
-							_p5,
+							_p4,
 							{loading: false}),
 						_1: commands
 					};
@@ -22446,7 +22446,7 @@ var _user$project$Update_SideQuestsUpdate$onSideQuestsMsg = F3(
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
-							_p5,
+							_p4,
 							{
 								sideQuestList: _elm_lang$core$Maybe$Just(_p3.sideQuests),
 								questInfo: _elm_lang$core$Maybe$Just(_p3.quest),
@@ -22459,7 +22459,7 @@ var _user$project$Update_SideQuestsUpdate$onSideQuestsMsg = F3(
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
-						_p5,
+						_p4,
 						{questFormOpen: true, sideQuestName: '', sideQuestDescription: ''}),
 					_1: commands
 				};
@@ -22467,7 +22467,7 @@ var _user$project$Update_SideQuestsUpdate$onSideQuestsMsg = F3(
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
-						_p5,
+						_p4,
 						{questFormOpen: false}),
 					_1: commands
 				};
@@ -22475,7 +22475,7 @@ var _user$project$Update_SideQuestsUpdate$onSideQuestsMsg = F3(
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
-						_p5,
+						_p4,
 						{questFormOpen: false, suggestingSideQuest: true}),
 					_1: A2(
 						_elm_lang$core$Basics_ops['++'],
@@ -22492,15 +22492,15 @@ var _user$project$Update_SideQuestsUpdate$onSideQuestsMsg = F3(
 												_user$project$Msg$SideQuests,
 												A4(
 													_user$project$Request_QuestsRequest$suggestSideQuest,
-													_p4.flags.apiEndpoint,
+													_p5.flags.apiEndpoint,
 													userId,
 													quest,
-													{guid: '', name: _p5.sideQuestName, description: _p5.sideQuestDescription, suggestedBy: '', id: ''})),
+													{guid: '', name: _p4.sideQuestName, description: _p4.sideQuestDescription, suggestedBy: '', id: ''})),
 											_1: {ctor: '[]'}
 										};
 									}),
-								_p5.questInfo,
-								_p4.token);
+								_p4.questInfo,
+								_p5.token);
 							return A2(
 								_elm_lang$core$Maybe$withDefault,
 								{ctor: '[]'},
@@ -22511,7 +22511,7 @@ var _user$project$Update_SideQuestsUpdate$onSideQuestsMsg = F3(
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
-						_p5,
+						_p4,
 						{sideQuestName: _p2._0}),
 					_1: commands
 				};
@@ -22519,27 +22519,27 @@ var _user$project$Update_SideQuestsUpdate$onSideQuestsMsg = F3(
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
-						_p5,
+						_p4,
 						{sideQuestDescription: _p2._0}),
 					_1: commands
 				};
 			default:
-				return {ctor: '_Tuple2', _0: _p5, _1: commands};
+				return {ctor: '_Tuple2', _0: _p4, _1: commands};
 		}
 	});
 var _user$project$Update_SideQuestsUpdate$sideQuestsModel = {questFormOpen: false, questInfo: _elm_lang$core$Maybe$Nothing, loading: false, sideQuestList: _elm_lang$core$Maybe$Nothing, sideQuestName: '', sideQuestDescription: '', suggestingSideQuest: false, suggestSideQuestSuccess: _elm_lang$core$Maybe$Nothing};
 var _user$project$Update_SideQuestsUpdate$sideQuestsUpdate = F3(
 	function (msg, _p6, commands) {
 		var _p7 = _p6;
-		var _p11 = _p7._1;
-		var _p10 = _p7._0;
+		var _p11 = _p7._0;
+		var _p10 = _p7._1;
 		var _p8 = msg;
 		switch (_p8.ctor) {
 			case 'SideQuests':
 				return A3(
 					_user$project$Update_SideQuestsUpdate$onSideQuestsMsg,
 					_p8._0,
-					{ctor: '_Tuple2', _0: _p10, _1: _p11},
+					{ctor: '_Tuple2', _0: _p11, _1: _p10},
 					commands);
 			case 'OnLocationChange':
 				var _p9 = A2(
@@ -22567,8 +22567,8 @@ var _user$project$Update_SideQuestsUpdate$sideQuestsUpdate = F3(
 									_user$project$Msg$SideQuests,
 									A4(
 										_user$project$Request_QuestsRequest$getSideQuests,
-										_p10.flags.apiEndpoint,
-										A2(_elm_lang$core$Maybe$withDefault, '', _p10.token),
+										_p11.flags.apiEndpoint,
+										A2(_elm_lang$core$Maybe$withDefault, '', _p11.token),
 										A2(
 											_elm_lang$core$Maybe$withDefault,
 											'',
@@ -22581,10 +22581,10 @@ var _user$project$Update_SideQuestsUpdate$sideQuestsUpdate = F3(
 							})
 					};
 				} else {
-					return {ctor: '_Tuple2', _0: _p11, _1: commands};
+					return {ctor: '_Tuple2', _0: _p10, _1: commands};
 				}
 			default:
-				return {ctor: '_Tuple2', _0: _p11, _1: commands};
+				return {ctor: '_Tuple2', _0: _p10, _1: commands};
 		}
 	});
 var _user$project$Update_SideQuestsUpdate$SideQuestsModel = F8(
@@ -22593,15 +22593,15 @@ var _user$project$Update_SideQuestsUpdate$SideQuestsModel = F8(
 	});
 
 var _user$project$Update_QuestDetailsUpdate$decideOnSuggestedSideQuest = F3(
-	function (session, questDetails, isAccepted) {
+	function (taco, questDetails, isAccepted) {
 		var isCmd = A4(
 			_elm_lang$core$Maybe$map3,
 			F3(
 				function (userToken, quest, sideQuest) {
 					return _user$project$Request_QuestsRequest$decideSideQuest(
-						{apiEndpoint: session.flags.apiEndpoint, userToken: userToken, isAccepted: isAccepted, sideQuestId: sideQuest.id, questId: quest.id});
+						{apiEndpoint: taco.flags.apiEndpoint, userToken: userToken, isAccepted: isAccepted, sideQuestId: sideQuest.id, questId: quest.id});
 				}),
-			session.token,
+			taco.token,
 			questDetails.quest,
 			questDetails.decidingSideQuest);
 		var _p0 = isCmd;
@@ -22798,7 +22798,7 @@ var _user$project$Request_SessionRequest$loadSession = F2(
 						A2(_elm_lang$core$Basics_ops['++'], 'Bearer ', userToken)),
 					_1: {ctor: '[]'}
 				},
-				url: A2(_elm_lang$core$Basics_ops['++'], apiEndpoint, 'session/load'),
+				url: A2(_elm_lang$core$Basics_ops['++'], apiEndpoint, 'taco/load'),
 				body: _elm_lang$http$Http$emptyBody,
 				expect: _elm_lang$http$Http$expectJson(_user$project$Request_SessionRequest$decodeSessionInfo),
 				timeout: _elm_lang$core$Maybe$Nothing,
@@ -22868,7 +22868,7 @@ var _user$project$Update_SessionUpdate$onSessionMsg = F3(
 			}
 		}
 	});
-var _user$project$Update_SessionUpdate$sessionUpdate = F3(
+var _user$project$Update_SessionUpdate$tacoUpdate = F3(
 	function (msg, _p6, commands) {
 		var _p7 = _p6;
 		var _p11 = _p7._1;
@@ -22914,10 +22914,10 @@ var _user$project$Update_SessionUpdate$sessionUpdate = F3(
 				return {ctor: '_Tuple2', _0: _p11, _1: commands};
 		}
 	});
-var _user$project$Update_SessionUpdate$userIsLoggedIn = function (session) {
-	return !_elm_lang$core$Native_Utils.eq(session.token, _elm_lang$core$Maybe$Nothing);
+var _user$project$Update_SessionUpdate$userIsLoggedIn = function (taco) {
+	return !_elm_lang$core$Native_Utils.eq(taco.token, _elm_lang$core$Maybe$Nothing);
 };
-var _user$project$Update_SessionUpdate$sessionInitialModel = F2(
+var _user$project$Update_SessionUpdate$tacoInitialModel = F2(
 	function (flags, routeData) {
 		return {flags: flags, token: _elm_lang$core$Maybe$Nothing, username: _elm_lang$core$Maybe$Nothing, userId: _elm_lang$core$Maybe$Nothing, routeData: routeData};
 	});
@@ -22930,14 +22930,14 @@ var _user$project$Model$model = F2(
 			myAdventurer: _user$project$Update_MyAdventurerUpdate$myAdventurerInitialModel,
 			sideQuests: _user$project$Update_SideQuestsUpdate$sideQuestsModel,
 			layout: _user$project$Update_LayoutUpdate$layoutModel,
-			session: A2(_user$project$Update_SessionUpdate$sessionInitialModel, flags, initialLocation),
+			taco: A2(_user$project$Update_SessionUpdate$tacoInitialModel, flags, initialLocation),
 			createQuest: _user$project$Update_CreateQuestUpdate$createQuestInitialModel,
 			questDetails: _user$project$Update_QuestDetailsUpdate$questDetailsInitialModel
 		};
 	});
 var _user$project$Model$Model = F8(
 	function (a, b, c, d, e, f, g, h) {
-		return {routeData: a, quests: b, myAdventurer: c, sideQuests: d, layout: e, session: f, createQuest: g, questDetails: h};
+		return {routeData: a, quests: b, myAdventurer: c, sideQuests: d, layout: e, taco: f, createQuest: g, questDetails: h};
 	});
 
 var _user$project$Layout$sideNavtransform = function (isOpen) {
@@ -23013,7 +23013,7 @@ var _user$project$Layout$navs = function (model) {
 				{
 					ctor: '::',
 					_0: function () {
-						if (_user$project$Update_SessionUpdate$userIsLoggedIn(model.session)) {
+						if (_user$project$Update_SessionUpdate$userIsLoggedIn(model.taco)) {
 							return A2(
 								_rtfeldman$elm_css$Html_Styled$a,
 								{
@@ -23239,7 +23239,7 @@ var _user$project$Update$update = F2(
 		var _p5 = A4(
 			_user$project$Update$updater,
 			function (model) {
-				return {ctor: '_Tuple2', _0: model.session, _1: model.questDetails};
+				return {ctor: '_Tuple2', _0: model.taco, _1: model.questDetails};
 			},
 			F2(
 				function (model, questDetails) {
@@ -23251,7 +23251,7 @@ var _user$project$Update$update = F2(
 			A4(
 				_user$project$Update$updater,
 				function (model) {
-					return {ctor: '_Tuple2', _0: model.session, _1: model.myAdventurer};
+					return {ctor: '_Tuple2', _0: model.taco, _1: model.myAdventurer};
 				},
 				F2(
 					function (model, myAdventurer) {
@@ -23263,7 +23263,7 @@ var _user$project$Update$update = F2(
 				A4(
 					_user$project$Update$updater,
 					function (model) {
-						return {ctor: '_Tuple2', _0: model.session, _1: model.createQuest};
+						return {ctor: '_Tuple2', _0: model.taco, _1: model.createQuest};
 					},
 					F2(
 						function (model, createQuest) {
@@ -23287,7 +23287,7 @@ var _user$project$Update$update = F2(
 						A4(
 							_user$project$Update$updater,
 							function (model) {
-								return {ctor: '_Tuple2', _0: model.session, _1: model.quests};
+								return {ctor: '_Tuple2', _0: model.taco, _1: model.quests};
 							},
 							F2(
 								function (model, quests) {
@@ -23299,7 +23299,7 @@ var _user$project$Update$update = F2(
 							A4(
 								_user$project$Update$updater,
 								function (model) {
-									return {ctor: '_Tuple2', _0: model.session, _1: model.sideQuests};
+									return {ctor: '_Tuple2', _0: model.taco, _1: model.sideQuests};
 								},
 								F2(
 									function (model, sideQuests) {
@@ -23311,15 +23311,15 @@ var _user$project$Update$update = F2(
 								A4(
 									_user$project$Update$updater,
 									function (model) {
-										return {ctor: '_Tuple2', _0: model.routeData, _1: model.session};
+										return {ctor: '_Tuple2', _0: model.routeData, _1: model.taco};
 									},
 									F2(
-										function (model, session) {
+										function (model, taco) {
 											return _elm_lang$core$Native_Utils.update(
 												model,
-												{session: session});
+												{taco: taco});
 										}),
-									_user$project$Update_SessionUpdate$sessionUpdate,
+									_user$project$Update_SessionUpdate$tacoUpdate,
 									A4(
 										_user$project$Update$updater,
 										function (model) {

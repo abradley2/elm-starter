@@ -12,7 +12,7 @@ import Msg.CreateQuestMsg exposing (CreateQuestMsg, CreateQuestMsg(..))
 import Request.CreateQuestRequest exposing (createQuestRequest)
 import Update.RouteUpdate exposing (parseLocation)
 import Ports exposing (requestQuestStepId, requestQuestId, uploadQuestImage)
-import Types exposing (SessionModel, Route(..))
+import Types exposing (Taco, Route(..))
 import Array
 
 
@@ -55,8 +55,8 @@ onMountCreateQuestView createQuest commands =
     )
 
 
-onCreateQuestMsg : CreateQuestMsg -> ( SessionModel, CreateQuestModel ) -> List (Cmd Msg) -> ( CreateQuestModel, List (Cmd Msg) )
-onCreateQuestMsg createQuestMsg ( session, createQuest ) commands =
+onCreateQuestMsg : CreateQuestMsg -> ( Taco, CreateQuestModel ) -> List (Cmd Msg) -> ( CreateQuestModel, List (Cmd Msg) )
+onCreateQuestMsg createQuestMsg ( taco, createQuest ) commands =
     case createQuestMsg of
         SubmitCreateQuest ->
             ( { createQuest
@@ -66,8 +66,8 @@ onCreateQuestMsg createQuestMsg ( session, createQuest ) commands =
             , (commands
                 ++ [ Cmd.map CreateQuest
                         (createQuestRequest
-                            session.flags.apiEndpoint
-                            (Maybe.withDefault "" session.token)
+                            taco.flags.apiEndpoint
+                            (Maybe.withDefault "" taco.token)
                             { id = createQuest.id
                             , name = createQuest.questName
                             , description = createQuest.questDescription
@@ -145,8 +145,8 @@ onCreateQuestMsg createQuestMsg ( session, createQuest ) commands =
             ( createQuest, commands )
 
 
-createQuestUpdate : Msg -> ( SessionModel, CreateQuestModel ) -> List (Cmd Msg) -> ( CreateQuestModel, List (Cmd Msg) )
-createQuestUpdate msg ( session, createQuest ) commands =
+createQuestUpdate : Msg -> ( Taco, CreateQuestModel ) -> List (Cmd Msg) -> ( CreateQuestModel, List (Cmd Msg) )
+createQuestUpdate msg ( taco, createQuest ) commands =
     case msg of
         UploadQuestImageFinished ( success, questImageUrl ) ->
             if success then
@@ -167,7 +167,7 @@ createQuestUpdate msg ( session, createQuest ) commands =
                 )
 
         CreateQuest createQuestMsg ->
-            onCreateQuestMsg createQuestMsg ( session, createQuest ) commands
+            onCreateQuestMsg createQuestMsg ( taco, createQuest ) commands
 
         LoadQuestId cuid ->
             ( { createQuest | id = cuid }, commands )

@@ -1,14 +1,14 @@
-module Update.SessionUpdate exposing (sessionUpdate, sessionInitialModel, userIsLoggedIn)
+module Update.SessionUpdate exposing (tacoUpdate, tacoInitialModel, userIsLoggedIn)
 
 import Navigation exposing (Location)
 import Msg exposing (Msg, Msg(..))
 import Msg.SessionMsg exposing (SessionMsg, SessionMsg(..))
 import Request.SessionRequest exposing (loadSession)
-import Types exposing (SessionModel, Flags, RouteData, Route, Route(..))
+import Types exposing (Taco, Flags, RouteData, Route, Route(..))
 
 
-sessionInitialModel : Flags -> RouteData -> SessionModel
-sessionInitialModel flags routeData =
+tacoInitialModel : Flags -> RouteData -> Taco
+tacoInitialModel flags routeData =
     { flags = flags
     , token = Nothing
     , username = Nothing
@@ -17,19 +17,19 @@ sessionInitialModel flags routeData =
     }
 
 
-userIsLoggedIn : SessionModel -> Bool
-userIsLoggedIn session =
-    session.token /= Nothing
+userIsLoggedIn : Taco -> Bool
+userIsLoggedIn taco =
+    taco.token /= Nothing
 
 
-onSessionMsg : SessionMsg -> ( RouteData, SessionModel ) -> List (Cmd Msg) -> ( SessionModel, List (Cmd Msg) )
-onSessionMsg userMsg ( routeData, session ) commands =
+onSessionMsg : SessionMsg -> ( RouteData, Taco ) -> List (Cmd Msg) -> ( Taco, List (Cmd Msg) )
+onSessionMsg userMsg ( routeData, taco ) commands =
     case userMsg of
         GetTokenResult (Result.Ok token) ->
-            ( { session | token = Just token }, commands )
+            ( { taco | token = Just token }, commands )
 
         GetTokenResult (Result.Err _) ->
-            ( { session
+            ( { taco
                 | token = Nothing
                 , username = Nothing
                 , userId = Nothing
@@ -37,24 +37,24 @@ onSessionMsg userMsg ( routeData, session ) commands =
             , commands
             )
 
-        LoadSessionResult (Result.Ok sessionInfo) ->
-            ( { session
-                | username = Just sessionInfo.username
-                , userId = Just sessionInfo.userId
+        LoadSessionResult (Result.Ok tacoInfo) ->
+            ( { taco
+                | username = Just tacoInfo.username
+                , userId = Just tacoInfo.userId
               }
             , let
                 ( route, location ) =
                     routeData
               in
                 (commands
-                    {- Refresh the page when we load a session -} ++
+                    {- Refresh the page when we load a taco -} ++
                         [ Navigation.modifyUrl location.hash
                         ]
                 )
             )
 
         LoadSessionResult (Result.Err _) ->
-            ( { session
+            ( { taco
                 | token = Nothing
                 , username = Nothing
                 , userId = Nothing
@@ -63,17 +63,17 @@ onSessionMsg userMsg ( routeData, session ) commands =
             )
 
 
-sessionUpdate : Msg -> ( RouteData, SessionModel ) -> List (Cmd Msg) -> ( SessionModel, List (Cmd Msg) )
-sessionUpdate msg ( routeData, session ) commands =
+tacoUpdate : Msg -> ( RouteData, Taco ) -> List (Cmd Msg) -> ( Taco, List (Cmd Msg) )
+tacoUpdate msg ( routeData, taco ) commands =
     case msg of
         OnLocationChange location ->
-            ( { session | routeData = routeData }, commands )
+            ( { taco | routeData = routeData }, commands )
 
-        Session sessionMsg ->
-            onSessionMsg sessionMsg ( routeData, session ) commands
+        Session tacoMsg ->
+            onSessionMsg tacoMsg ( routeData, taco ) commands
 
         LoadToken token ->
-            ( { session | token = Just token }, commands ++ [ Cmd.map Session (loadSession session.flags.apiEndpoint token) ] )
+            ( { taco | token = Just token }, commands ++ [ Cmd.map Session (loadSession taco.flags.apiEndpoint token) ] )
 
         _ ->
-            ( session, commands )
+            ( taco, commands )

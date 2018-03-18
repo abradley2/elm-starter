@@ -4,7 +4,7 @@ import Msg exposing (Msg, Msg(..))
 import Msg.QuestsMsg exposing (QuestsMsg, QuestsMsg(..))
 import Update.RouteUpdate exposing (parseLocation)
 import Request.QuestsRequest exposing (getQuests)
-import Types exposing (SessionModel, RecentPostedQuest, RouteData, Route, Route(..))
+import Types exposing (Taco, RecentPostedQuest, RouteData, Route, Route(..))
 
 
 type alias QuestsModel =
@@ -18,8 +18,8 @@ questsModel =
     }
 
 
-onRouteChange : RouteData -> ( SessionModel, QuestsModel ) -> List (Cmd Msg) -> ( QuestsModel, List (Cmd Msg) )
-onRouteChange routeData ( session, quests ) commands =
+onRouteChange : RouteData -> ( Taco, QuestsModel ) -> List (Cmd Msg) -> ( QuestsModel, List (Cmd Msg) )
+onRouteChange routeData ( taco, quests ) commands =
     let
         ( route, location ) =
             routeData
@@ -28,10 +28,10 @@ onRouteChange routeData ( session, quests ) commands =
             QuestsRoute ->
                 let
                     token =
-                        Maybe.withDefault "" session.token
+                        Maybe.withDefault "" taco.token
                 in
                     ( quests
-                    , commands ++ [ Cmd.map Quests (getQuests session.flags.apiEndpoint token) ]
+                    , commands ++ [ Cmd.map Quests (getQuests taco.flags.apiEndpoint token) ]
                     )
 
             _ ->
@@ -51,11 +51,11 @@ onQuestsMsg questsMsg quests commands =
             ( quests, commands )
 
 
-questsUpdate : Msg -> ( SessionModel, QuestsModel ) -> List (Cmd Msg) -> ( QuestsModel, List (Cmd Msg) )
-questsUpdate msg ( session, quests ) commands =
+questsUpdate : Msg -> ( Taco, QuestsModel ) -> List (Cmd Msg) -> ( QuestsModel, List (Cmd Msg) )
+questsUpdate msg ( taco, quests ) commands =
     case msg of
         OnLocationChange location ->
-            onRouteChange (parseLocation location) ( session, quests ) commands
+            onRouteChange (parseLocation location) ( taco, quests ) commands
 
         Quests questsMsg ->
             onQuestsMsg questsMsg quests commands

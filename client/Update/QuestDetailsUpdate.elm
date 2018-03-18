@@ -3,7 +3,7 @@ module Update.QuestDetailsUpdate exposing (QuestDetailsModel, questDetailsUpdate
 import Msg exposing (Msg, Msg(..))
 import Msg.QuestDetailsMsg exposing (QuestDetailsMsg, QuestDetailsMsg(..))
 import UrlParser exposing (..)
-import Types exposing (SessionModel, Route, Route(..), SideQuest, RecentPostedQuest)
+import Types exposing (Taco, Route, Route(..), SideQuest, RecentPostedQuest)
 import Request.QuestsRequest exposing (getQuestDetails, decideSideQuest)
 import String
 import Array
@@ -28,21 +28,21 @@ questDetailsInitialModel =
     }
 
 
-decideOnSuggestedSideQuest : SessionModel -> QuestDetailsModel -> Bool -> Cmd Msg
-decideOnSuggestedSideQuest session questDetails isAccepted =
+decideOnSuggestedSideQuest : Taco -> QuestDetailsModel -> Bool -> Cmd Msg
+decideOnSuggestedSideQuest taco questDetails isAccepted =
     let
         isCmd =
             Maybe.map3
                 (\userToken quest sideQuest ->
                     decideSideQuest
-                        { apiEndpoint = session.flags.apiEndpoint
+                        { apiEndpoint = taco.flags.apiEndpoint
                         , userToken = userToken
                         , isAccepted = isAccepted
                         , sideQuestId = sideQuest.id
                         , questId = quest.id
                         }
                 )
-                session.token
+                taco.token
                 questDetails.quest
                 questDetails.decidingSideQuest
     in
@@ -54,8 +54,8 @@ decideOnSuggestedSideQuest session questDetails isAccepted =
                 Cmd.none
 
 
-onQuestDetailsMsg : QuestDetailsMsg -> ( SessionModel, QuestDetailsModel ) -> List (Cmd Msg) -> ( QuestDetailsModel, List (Cmd Msg) )
-onQuestDetailsMsg msg ( session, questDetails ) commands =
+onQuestDetailsMsg : QuestDetailsMsg -> ( Taco, QuestDetailsModel ) -> List (Cmd Msg) -> ( QuestDetailsModel, List (Cmd Msg) )
+onQuestDetailsMsg msg ( taco, questDetails ) commands =
     case msg of
         DecideSideQuestResult (Result.Ok response) ->
             ( { questDetails
@@ -95,7 +95,7 @@ onQuestDetailsMsg msg ( session, questDetails ) commands =
                 , sideQuests = Nothing
                 , suggestedSideQuests = Nothing
               }
-            , commands ++ [ decideOnSuggestedSideQuest session questDetails True ]
+            , commands ++ [ decideOnSuggestedSideQuest taco questDetails True ]
             )
 
         DeclineSuggestedSideQuest ->
@@ -105,7 +105,7 @@ onQuestDetailsMsg msg ( session, questDetails ) commands =
                 , sideQuests = Nothing
                 , suggestedSideQuests = Nothing
               }
-            , commands ++ [ decideOnSuggestedSideQuest session questDetails False ]
+            , commands ++ [ decideOnSuggestedSideQuest taco questDetails False ]
             )
 
         ToggleShowingSideQuestModal ifSideQuest ->
@@ -121,16 +121,16 @@ onQuestDetailsMsg msg ( session, questDetails ) commands =
             ( questDetails, commands )
 
 
-questDetailsUpdate : Msg -> ( SessionModel, QuestDetailsModel ) -> List (Cmd Msg) -> ( QuestDetailsModel, List (Cmd Msg) )
-questDetailsUpdate msg ( session, questDetails ) commands =
+questDetailsUpdate : Msg -> ( Taco, QuestDetailsModel ) -> List (Cmd Msg) -> ( QuestDetailsModel, List (Cmd Msg) )
+questDetailsUpdate msg ( taco, questDetails ) commands =
     case msg of
         QuestDetails questDetailsMsg ->
-            onQuestDetailsMsg questDetailsMsg ( session, questDetails ) commands
+            onQuestDetailsMsg questDetailsMsg ( taco, questDetails ) commands
 
         OnLocationChange newLocation ->
             let
                 ( route, location ) =
-                    session.routeData
+                    taco.routeData
             in
                 case route of
                     QuestDetailsRoute params ->
@@ -143,7 +143,7 @@ questDetailsUpdate msg ( session, questDetails ) commands =
                                     (\userId questId ->
                                         [ Cmd.map QuestDetails
                                             (getQuestDetails
-                                                session.flags.apiEndpoint
+                                                taco.flags.apiEndpoint
                                                 userId
                                                 questId
                                             )

@@ -21,7 +21,7 @@ navs model =
         [ a [ href "#quests" ] [ text "Quests" ]
         ]
     , li []
-        [ if userIsLoggedIn model.session then
+        [ if userIsLoggedIn model.taco then
             a [ href "#profile" ] [ text "My Adventurer" ]
           else
             let

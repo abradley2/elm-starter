@@ -21,7 +21,7 @@ loadSession apiEndpoint userToken =
                 , headers =
                     [ Http.header "Authorization" ("Bearer " ++ userToken)
                     ]
-                , url = (apiEndpoint ++ "session/load")
+                , url = (apiEndpoint ++ "taco/load")
                 , body = Http.emptyBody
                 , expect = Http.expectJson decodeSessionInfo
                 , timeout = Nothing
