@@ -16,20 +16,11 @@ import Types exposing (SessionModel, Route(..))
 import Array
 
 
-type alias QuestStep =
-    { id : String
-    , name : String
-    , description : String
-    , imageUrl : String
-    }
-
-
 type alias CreateQuestModel =
     { id : String
     , questName : String
     , questDescription : String
     , questImageUrl : String
-    , questSteps : Array.Array QuestStep
     , imageUploadModalOpen : Bool
     , imageUploadModalFor : Maybe String
     , imageUploadPath : Maybe String
@@ -46,7 +37,6 @@ createQuestInitialModel =
     , questName = ""
     , questDescription = ""
     , questImageUrl = "/placeholder.png"
-    , questSteps = Array.empty
     , imageUploadModalOpen = False
     , imageUploadModalFor = Nothing
     , imageUploadPath = Nothing
@@ -63,37 +53,6 @@ onMountCreateQuestView createQuest commands =
     ( ({ createQuestInitialModel | token = createQuest.token })
     , commands ++ [ requestQuestId "gimme!" ]
     )
-
-
-getQuestStepById id questSteps =
-    questSteps
-        |> Array.indexedMap (\idx questStep -> ( idx, questStep ))
-        |> Array.foldr
-            (\( idx, questStep ) found ->
-                if questStep.id == id then
-                    idx
-                else
-                    found
-            )
-            -1
-        |> (\idx -> ( idx, Array.get idx questSteps ))
-
-
-questStepEditor : String -> (QuestStep -> QuestStep) -> CreateQuestModel -> CreateQuestModel
-questStepEditor stepId setterFunc createQuest =
-    let
-        ( idx, maybeStep ) =
-            getQuestStepById stepId createQuest.questSteps
-    in
-        case maybeStep of
-            Just targetQuestStep ->
-                { createQuest
-                    | questSteps =
-                        Array.set idx (setterFunc targetQuestStep) createQuest.questSteps
-                }
-
-            Nothing ->
-                createQuest
 
 
 onCreateQuestMsg : CreateQuestMsg -> ( SessionModel, CreateQuestModel ) -> List (Cmd Msg) -> ( CreateQuestModel, List (Cmd Msg) )
@@ -179,38 +138,6 @@ onCreateQuestMsg createQuestMsg ( session, createQuest ) commands =
             , commands
             )
 
-        EditQuestStepName questStepId name ->
-            ( questStepEditor
-                questStepId
-                (\questStep -> { questStep | name = name })
-                createQuest
-            , commands
-            )
-
-        EditQuestStepDescription questStepId description ->
-            ( questStepEditor
-                questStepId
-                (\questStep -> { questStep | description = description })
-                createQuest
-            , commands
-            )
-
-        AddQuestStep ->
-            ( { createQuest
-                | questSteps =
-                    Array.append createQuest.questSteps
-                        (Array.fromList
-                            [ { id = "newquest"
-                              , name = ""
-                              , description = ""
-                              , imageUrl = "/placeholder.png"
-                              }
-                            ]
-                        )
-              }
-            , commands ++ [ requestQuestStepId "newquest" ]
-            )
-
         NoOp ->
             ( createQuest, commands )
 
@@ -244,14 +171,6 @@ createQuestUpdate msg ( session, createQuest ) commands =
 
         LoadQuestId cuid ->
             ( { createQuest | id = cuid }, commands )
-
-        LoadQuestStepId ( prevId, cuid ) ->
-            ( questStepEditor
-                prevId
-                (\questStep -> { questStep | id = cuid })
-                createQuest
-            , commands
-            )
 
         OnLocationChange location ->
             let
