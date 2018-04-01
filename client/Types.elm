@@ -3,8 +3,17 @@ module Types exposing (..)
 import Navigation exposing (Location)
 
 
-type Route
-    = QuestsRoute
+type alias Flags =
+    { apiEndpoint : String
+    }
+
+
+type TacoMsg
+    = TacoNoOp
+    | UserLoggedIn
+    | UserLoggedout
+      -- Routes
+    | QuestsRoute
     | SideQuestsRoute String
     | MyAdventurerRoute
     | CreateQuestRoute
@@ -13,12 +22,7 @@ type Route
 
 
 type alias RouteData =
-    ( Route, Location )
-
-
-type alias Flags =
-    { apiEndpoint : String
-    }
+    ( TacoMsg, Location )
 
 
 type alias Taco =

@@ -35,7 +35,6 @@ module.exports = { // eslint-disable-line no-undef
 },{}],2:[function(require,module,exports){
 const axios = require('axios')
 const cookies = require('js-cookie')
-const cuid = require('cuid')
 const components = require('./components')
 
 const apiEndpoint = "development" === 'production' ?
@@ -91,14 +90,6 @@ if (token) {
   app.ports.loadToken.send(token)
 }
 
-app.ports.requestQuestId.subscribe(() => {
-  app.ports.loadQuestId.send(cuid())
-})
-
-app.ports.requestQuestStepId.subscribe(prevStepId => {
-  app.ports.loadQuestStepId.send(prevStepId, cuid())
-})
-
 app.ports.uploadQuestImage.subscribe(inputId => {
   const fileInput = document.getElementById(inputId)
 
@@ -141,7 +132,7 @@ if (qs && qs.code) {
   }, 0)
 }
 
-},{"./components":1,"axios":3,"cuid":28,"js-cookie":32}],3:[function(require,module,exports){
+},{"./components":1,"axios":3,"js-cookie":29}],3:[function(require,module,exports){
 module.exports = require('./lib/axios');
 },{"./lib/axios":5}],4:[function(require,module,exports){
 (function (process){
@@ -327,7 +318,7 @@ module.exports = function xhrAdapter(config) {
 };
 
 }).call(this,require('_process'))
-},{"../core/createError":11,"./../core/settle":14,"./../helpers/btoa":18,"./../helpers/buildURL":19,"./../helpers/cookies":21,"./../helpers/isURLSameOrigin":23,"./../helpers/parseHeaders":25,"./../utils":27,"_process":33}],5:[function(require,module,exports){
+},{"../core/createError":11,"./../core/settle":14,"./../helpers/btoa":18,"./../helpers/buildURL":19,"./../helpers/cookies":21,"./../helpers/isURLSameOrigin":23,"./../helpers/parseHeaders":25,"./../utils":27,"_process":30}],5:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -880,7 +871,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 module.exports = defaults;
 
 }).call(this,require('_process'))
-},{"./adapters/http":4,"./adapters/xhr":4,"./helpers/normalizeHeaderName":24,"./utils":27,"_process":33}],17:[function(require,module,exports){
+},{"./adapters/http":4,"./adapters/xhr":4,"./helpers/normalizeHeaderName":24,"./utils":27,"_process":30}],17:[function(require,module,exports){
 'use strict';
 
 module.exports = function bind(fn, thisArg) {
@@ -1561,99 +1552,7 @@ module.exports = {
   trim: trim
 };
 
-},{"./helpers/bind":17,"is-buffer":31}],28:[function(require,module,exports){
-/**
- * cuid.js
- * Collision-resistant UID generator for browsers and node.
- * Sequential for fast db lookups and recency sorting.
- * Safe for element IDs and server-side lookups.
- *
- * Extracted from CLCTR
- *
- * Copyright (c) Eric Elliott 2012
- * MIT License
- */
-
-var fingerprint = require('./lib/fingerprint.js');
-var pad = require('./lib/pad.js');
-
-var c = 0,
-  blockSize = 4,
-  base = 36,
-  discreteValues = Math.pow(base, blockSize);
-
-function randomBlock () {
-  return pad((Math.random() *
-    discreteValues << 0)
-    .toString(base), blockSize);
-}
-
-function safeCounter () {
-  c = c < discreteValues ? c : 0;
-  c++; // this is not subliminal
-  return c - 1;
-}
-
-function cuid () {
-  // Starting with a lowercase letter makes
-  // it HTML element ID friendly.
-  var letter = 'c', // hard-coded allows for sequential access
-
-    // timestamp
-    // warning: this exposes the exact date and time
-    // that the uid was created.
-    timestamp = (new Date().getTime()).toString(base),
-
-    // Prevent same-machine collisions.
-    counter = pad(safeCounter().toString(base), blockSize),
-
-    // A few chars to generate distinct ids for different
-    // clients (so different computers are far less
-    // likely to generate the same id)
-    print = fingerprint(),
-
-    // Grab some more chars from Math.random()
-    random = randomBlock() + randomBlock();
-
-  return letter + timestamp + counter + print + random;
-}
-
-cuid.slug = function slug () {
-  var date = new Date().getTime().toString(36),
-    counter = safeCounter().toString(36).slice(-4),
-    print = fingerprint().slice(0, 1) +
-      fingerprint().slice(-1),
-    random = randomBlock().slice(-2);
-
-  return date.slice(-2) +
-    counter + print + random;
-};
-
-cuid.fingerprint = fingerprint;
-
-module.exports = cuid;
-
-},{"./lib/fingerprint.js":29,"./lib/pad.js":30}],29:[function(require,module,exports){
-var pad = require('./pad.js');
-
-var env = typeof window === 'object' ? window : self;
-var globalCount = Object.keys(env);
-var mimeTypesLength = navigator.mimeTypes ? navigator.mimeTypes.length : 0;
-var clientId = pad((mimeTypesLength +
-  navigator.userAgent.length).toString(36) +
-  globalCount.toString(36), 4);
-
-module.exports = function fingerprint () {
-  return clientId;
-};
-
-},{"./pad.js":30}],30:[function(require,module,exports){
-module.exports = function pad (num, size) {
-  var s = '000000000' + num;
-  return s.substr(s.length - size);
-};
-
-},{}],31:[function(require,module,exports){
+},{"./helpers/bind":17,"is-buffer":28}],28:[function(require,module,exports){
 /*!
  * Determine if an object is a Buffer
  *
@@ -1676,7 +1575,7 @@ function isSlowBuffer (obj) {
   return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
 }
 
-},{}],32:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 /*!
  * JavaScript Cookie v2.2.0
  * https://github.com/js-cookie/js-cookie
@@ -1843,7 +1742,7 @@ function isSlowBuffer (obj) {
 	return init(function () {});
 }));
 
-},{}],33:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 

@@ -5,17 +5,17 @@ import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
-import Model exposing (Model)
-import Msg.QuestsMsg exposing (QuestsMsg, QuestsMsg(..))
+import Update.QuestsUpdate exposing (QuestsModel, QuestsMsg, QuestsMsg(..))
 import Theme
+import Types exposing (Taco)
 import View.QuestsView.QuestAction exposing (questAction)
 import Component.TextField exposing (textField)
 import Component.QuestCard exposing (questCardWithActionSection)
 import Component.RaisedButton exposing (raisedButton)
 
 
-questsView : Model -> Html QuestsMsg
-questsView model =
+questsView : Taco -> QuestsModel -> Html QuestsMsg
+questsView taco model =
     div
         [ css
             [ padding4 (px 16) (px 8) (px 0) (px 8) ]
@@ -48,6 +48,6 @@ questsView model =
                                 ]
                         }
                 )
-                model.quests.questList
+                model.questList
             )
         ]

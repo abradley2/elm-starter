@@ -3,17 +3,30 @@ module Update.CreateQuestUpdate
         ( createQuestUpdate
         , createQuestInitialModel
         , CreateQuestModel
+        , CreateQuestMsg
+        , CreateQuestMsg(..)
         )
 
 import Navigation
 import Html.Attributes exposing (name)
-import Msg exposing (Msg, Msg(..))
-import Msg.CreateQuestMsg exposing (CreateQuestMsg, CreateQuestMsg(..))
 import Request.CreateQuestRequest exposing (createQuestRequest)
-import Update.RouteUpdate exposing (parseLocation)
 import Ports exposing (uploadQuestImage)
-import Types exposing (Taco, Route(..))
+import Types exposing (Quest, Taco, TacoMsg(..))
 import Array
+import Http
+
+
+type CreateQuestMsg
+    = NoOp
+    | EditQuestName String
+    | EditQuestDescription String
+    | ShowFileUploadModal
+    | HideFileUploadModal
+    | OnFileChosen String
+    | ConfirmFileUpload String
+    | SubmitCreateQuest
+    | SubmitCreateQuestResult (Result Http.Error Quest)
+    | UploadQuestImageFinished ( Bool, String )
 
 
 type alias CreateQuestModel =
@@ -46,130 +59,114 @@ createQuestInitialModel =
     }
 
 
-onCreateQuestMsg : CreateQuestMsg -> ( Taco, CreateQuestModel ) -> List (Cmd Msg) -> ( CreateQuestModel, List (Cmd Msg) )
-onCreateQuestMsg createQuestMsg ( taco, createQuest ) commands =
-    case createQuestMsg of
-        SubmitCreateQuest ->
-            ( { createQuest
-                | submitPending = True
-                , submitError = False
-              }
-            , (commands
-                ++ [ Cmd.map CreateQuest
-                        (createQuestRequest
-                            taco.flags.apiEndpoint
-                            (Maybe.withDefault "" taco.token)
-                            { id = ""
-                            , name = createQuest.questName
-                            , description = createQuest.questDescription
-                            , imageUrl = createQuest.questImageUrl
-                            }
-                        )
-                   ]
-              )
-            )
-
-        SubmitCreateQuestResult (Result.Ok quest) ->
-            ( createQuest
-            , (commands
-                ++ [ Navigation.modifyUrl "/#profile" ]
-              )
-            )
-
-        SubmitCreateQuestResult (Result.Err _) ->
-            ( { createQuest
-                | submitError = True
-              }
-            , commands
-            )
-
-        OnFileChosen filePath ->
-            ( { createQuest
-                | imageUploadPath = Just filePath
-              }
-            , commands
-            )
-
-        ShowFileUploadModal ->
-            ( { createQuest
-                | imageUploadModalOpen = True
-                , imageUploadPath = Nothing
-              }
-            , commands
-            )
-
-        HideFileUploadModal ->
-            ( { createQuest
-                | imageUploadModalOpen = False
-                , imageUploadPath = Nothing
-              }
-            , commands
-            )
-
-        ConfirmFileUpload fileInputId ->
-            ( { createQuest
-                | questImageUploadPending = True
-                , questImageUploadError = False
-              }
-            , commands ++ [ uploadQuestImage fileInputId ]
-            )
-
-        EditQuestName questName ->
-            ( { createQuest
-                | questName = questName
-              }
-            , commands
-            )
-
-        EditQuestDescription questDescription ->
-            ( { createQuest
-                | questDescription = questDescription
-              }
-            , commands
-            )
-
-        NoOp ->
-            ( createQuest, commands )
+handleTacoMsg : TacoMsg -> CreateQuestModel -> Taco -> ( CreateQuestModel, Cmd CreateQuestMsg )
+handleTacoMsg tacoMsg model taco =
+    case tacoMsg of
+        CreateQuestRoute ->
+            ( createQuestInitialModel, Cmd.none )
 
         _ ->
-            ( createQuest, commands )
+            ( model, Cmd.none )
 
 
-createQuestUpdate : Msg -> ( Taco, CreateQuestModel ) -> List (Cmd Msg) -> ( CreateQuestModel, List (Cmd Msg) )
-createQuestUpdate msg ( taco, createQuest ) commands =
-    case msg of
-        UploadQuestImageFinished ( success, questImageUrl ) ->
-            if success then
+createQuestUpdate : CreateQuestMsg -> TacoMsg -> CreateQuestModel -> Taco -> ( CreateQuestModel, Cmd CreateQuestMsg )
+createQuestUpdate msg tacoMsg model taco =
+    let
+        ( createQuest, commands ) =
+            handleTacoMsg tacoMsg model taco
+    in
+        case msg of
+            UploadQuestImageFinished ( success, questImageUrl ) ->
+                if success then
+                    ( { createQuest
+                        | questImageUploadPending = False
+                        , questImageUploadError = True
+                        , questImageUrl = questImageUrl
+                        , imageUploadModalOpen = False
+                      }
+                    , commands
+                    )
+                else
+                    ( { createQuest
+                        | questImageUploadPending = False
+                        , questImageUploadError = True
+                      }
+                    , commands
+                    )
+
+            SubmitCreateQuest ->
                 ( { createQuest
-                    | questImageUploadPending = False
-                    , questImageUploadError = True
-                    , questImageUrl = questImageUrl
-                    , imageUploadModalOpen = False
+                    | submitPending = True
+                    , submitError = False
                   }
-                , commands
+                , Http.send SubmitCreateQuestResult
+                    (createQuestRequest
+                        taco.flags.apiEndpoint
+                        (Maybe.withDefault "" taco.token)
+                        { id = ""
+                        , name = createQuest.questName
+                        , description = createQuest.questDescription
+                        , imageUrl = createQuest.questImageUrl
+                        }
+                    )
                 )
-            else
+
+            SubmitCreateQuestResult (Result.Ok quest) ->
+                ( createQuest
+                , Navigation.modifyUrl "/#profile"
+                )
+
+            SubmitCreateQuestResult (Result.Err _) ->
                 ( { createQuest
-                    | questImageUploadPending = False
-                    , questImageUploadError = True
+                    | submitError = True
                   }
                 , commands
                 )
 
-        CreateQuest createQuestMsg ->
-            onCreateQuestMsg createQuestMsg ( taco, createQuest ) commands
+            OnFileChosen filePath ->
+                ( { createQuest
+                    | imageUploadPath = Just filePath
+                  }
+                , commands
+                )
 
-        OnLocationChange location ->
-            let
-                ( route, locationData ) =
-                    parseLocation location
-            in
-                case route of
-                    CreateQuestRoute ->
-                        ( createQuestInitialModel, commands )
+            ShowFileUploadModal ->
+                ( { createQuest
+                    | imageUploadModalOpen = True
+                    , imageUploadPath = Nothing
+                  }
+                , commands
+                )
 
-                    _ ->
-                        ( createQuest, commands )
+            HideFileUploadModal ->
+                ( { createQuest
+                    | imageUploadModalOpen = False
+                    , imageUploadPath = Nothing
+                  }
+                , commands
+                )
 
-        _ ->
-            ( createQuest, commands )
+            ConfirmFileUpload fileInputId ->
+                ( { createQuest
+                    | questImageUploadPending = True
+                    , questImageUploadError = False
+                  }
+                , uploadQuestImage fileInputId
+                )
+
+            EditQuestName questName ->
+                ( { createQuest
+                    | questName = questName
+                  }
+                , commands
+                )
+
+            EditQuestDescription questDescription ->
+                ( { createQuest
+                    | questDescription = questDescription
+                  }
+                , commands
+                )
+
+            NoOp ->
+                ( createQuest, commands )

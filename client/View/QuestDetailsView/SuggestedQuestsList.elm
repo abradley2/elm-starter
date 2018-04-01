@@ -7,7 +7,7 @@ import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
-import Msg.QuestDetailsMsg exposing (QuestDetailsMsg, QuestDetailsMsg(..))
+import Update.QuestDetailsUpdate exposing (QuestDetailsMsg, QuestDetailsMsg(..))
 import Types exposing (RecentPostedQuest, SideQuest)
 
 

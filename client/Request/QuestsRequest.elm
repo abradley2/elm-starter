@@ -9,10 +9,6 @@ module Request.QuestsRequest
         )
 
 import Http
-import Msg.SideQuestsMsg exposing (SideQuestsMsg, SideQuestsMsg(..))
-import Msg.QuestsMsg exposing (QuestsMsg(..), QuestsMsg)
-import Msg.MyAdventurerMsg exposing (MyAdventurerMsg(..), MyAdventurerMsg)
-import Msg.QuestDetailsMsg exposing (QuestDetailsMsg(..), QuestDetailsMsg)
 import Json.Decode exposing (..)
 import Json.Encode as Encode
 import Types exposing (RecentPostedQuest, SideQuest, GetSideQuestsResponse, QuestDetailsResponse)
@@ -67,79 +63,63 @@ decodeGetSideQuestsResponse =
         (field "sideQuests" decodeSideQuestsList)
 
 
-getQuests : String -> String -> Cmd QuestsMsg
+getQuests : String -> String -> Http.Request (List RecentPostedQuest)
 getQuests apiEndpoint userToken =
-    let
-        request =
-            Http.request
-                { method = "GET"
-                , headers =
-                    [ Http.header "Authorization" ("Bearer " ++ userToken)
-                    ]
-                , url = apiEndpoint ++ "quests"
-                , body = Http.emptyBody
-                , expect = Http.expectJson decodeQuestsList
-                , timeout = Nothing
-                , withCredentials = False
-                }
-    in
-        Http.send GetQuestsResult request
+    Http.request
+        { method = "GET"
+        , headers =
+            [ Http.header "Authorization" ("Bearer " ++ userToken)
+            ]
+        , url = apiEndpoint ++ "quests"
+        , body = Http.emptyBody
+        , expect = Http.expectJson decodeQuestsList
+        , timeout = Nothing
+        , withCredentials = False
+        }
 
 
-getSideQuests : String -> String -> String -> String -> Cmd SideQuestsMsg
+getSideQuests : String -> String -> String -> String -> Http.Request GetSideQuestsResponse
 getSideQuests apiEndpoint userToken userId questId =
-    let
-        request =
-            Http.request
-                { method = "GET"
-                , headers =
-                    [ Http.header "Authorization" ("Bearer " ++ userToken)
-                    ]
-                , url = (apiEndpoint ++ "sidequests/" ++ userId ++ "?questId=" ++ questId)
-                , body = Http.emptyBody
-                , expect = Http.expectJson decodeGetSideQuestsResponse
-                , timeout = Nothing
-                , withCredentials = False
-                }
-    in
-        Http.send GetSideQuestsResult request
+    Http.request
+        { method = "GET"
+        , headers =
+            [ Http.header "Authorization" ("Bearer " ++ userToken)
+            ]
+        , url = (apiEndpoint ++ "sidequests/" ++ userId ++ "?questId=" ++ questId)
+        , body = Http.emptyBody
+        , expect = Http.expectJson decodeGetSideQuestsResponse
+        , timeout = Nothing
+        , withCredentials = False
+        }
 
 
-getQuestsByUser : String -> String -> String -> Cmd MyAdventurerMsg
+getQuestsByUser : String -> String -> String -> Http.Request (List RecentPostedQuest)
 getQuestsByUser apiEndpoint userToken userId =
-    let
-        request =
-            Http.request
-                { method = "GET"
-                , headers =
-                    [ Http.header "Authorization" ("Bearer " ++ userToken)
-                    ]
-                , url = (apiEndpoint ++ "quests/" ++ userId)
-                , body = Http.emptyBody
-                , expect = Http.expectJson decodeQuestsList
-                , timeout = Nothing
-                , withCredentials = False
-                }
-    in
-        Http.send GetQuestsByUserResult request
+    Http.request
+        { method = "GET"
+        , headers =
+            [ Http.header "Authorization" ("Bearer " ++ userToken)
+            ]
+        , url = (apiEndpoint ++ "quests/" ++ userId)
+        , body = Http.emptyBody
+        , expect = Http.expectJson decodeQuestsList
+        , timeout = Nothing
+        , withCredentials = False
+        }
 
 
-getQuestDetails : String -> String -> String -> Cmd QuestDetailsMsg
+getQuestDetails : String -> String -> String -> Http.Request QuestDetailsResponse
 getQuestDetails apiEndpoint userId questId =
-    let
-        request =
-            Http.request
-                { method = "GET"
-                , headers =
-                    []
-                , url = (apiEndpoint ++ "quests/details/" ++ userId ++ "/" ++ questId)
-                , body = Http.emptyBody
-                , expect = Http.expectJson decodeQuestDetails
-                , timeout = Nothing
-                , withCredentials = False
-                }
-    in
-        Http.send GetQuestDetailsResult request
+    Http.request
+        { method = "GET"
+        , headers =
+            []
+        , url = (apiEndpoint ++ "quests/details/" ++ userId ++ "/" ++ questId)
+        , body = Http.emptyBody
+        , expect = Http.expectJson decodeQuestDetails
+        , timeout = Nothing
+        , withCredentials = False
+        }
 
 
 type alias DecideSideQuestParams =
@@ -151,45 +131,37 @@ type alias DecideSideQuestParams =
     }
 
 
-decideSideQuest : DecideSideQuestParams -> Cmd QuestDetailsMsg
+decideSideQuest : DecideSideQuestParams -> Http.Request QuestDetailsResponse
 decideSideQuest params =
-    let
-        request =
-            Http.request
-                { method = "PUT"
-                , headers =
-                    [ Http.header "Authorization" ("Bearer " ++ params.userToken)
+    Http.request
+        { method = "PUT"
+        , headers =
+            [ Http.header "Authorization" ("Bearer " ++ params.userToken)
+            ]
+        , url = (params.apiEndpoint ++ "quests/" ++ params.questId ++ "/decidesidequest")
+        , body =
+            Http.jsonBody
+                (Encode.object
+                    [ ( "sideQuestId", Encode.string params.sideQuestId )
+                    , ( "isAccepted", Encode.bool params.isAccepted )
                     ]
-                , url = (params.apiEndpoint ++ "quests/" ++ params.questId ++ "/decidesidequest")
-                , body =
-                    Http.jsonBody
-                        (Encode.object
-                            [ ( "sideQuestId", Encode.string params.sideQuestId )
-                            , ( "isAccepted", Encode.bool params.isAccepted )
-                            ]
-                        )
-                , expect = Http.expectJson decodeQuestDetails
-                , timeout = Nothing
-                , withCredentials = False
-                }
-    in
-        Http.send DecideSideQuestResult request
+                )
+        , expect = Http.expectJson decodeQuestDetails
+        , timeout = Nothing
+        , withCredentials = False
+        }
 
 
-suggestSideQuest : String -> String -> RecentPostedQuest -> SideQuest -> Cmd SideQuestsMsg
+suggestSideQuest : String -> String -> RecentPostedQuest -> SideQuest -> Http.Request Bool
 suggestSideQuest apiEndpoint userToken quest sideQuest =
-    let
-        request =
-            Http.request
-                { method = "POST"
-                , headers =
-                    [ Http.header "Authorization" ("Bearer " ++ userToken)
-                    ]
-                , url = (apiEndpoint ++ "sidequests/" ++ quest.userId ++ "/" ++ quest.id)
-                , body = Http.jsonBody (encodeSideQuest sideQuest)
-                , expect = Http.expectJson (Json.Decode.field "success" bool)
-                , timeout = Nothing
-                , withCredentials = False
-                }
-    in
-        Http.send SuggestSideQuestResult request
+    Http.request
+        { method = "POST"
+        , headers =
+            [ Http.header "Authorization" ("Bearer " ++ userToken)
+            ]
+        , url = (apiEndpoint ++ "sidequests/" ++ quest.userId ++ "/" ++ quest.id)
+        , body = Http.jsonBody (encodeSideQuest sideQuest)
+        , expect = Http.expectJson (Json.Decode.field "success" bool)
+        , timeout = Nothing
+        , withCredentials = False
+        }

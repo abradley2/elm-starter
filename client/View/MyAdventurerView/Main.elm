@@ -5,19 +5,19 @@ import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
-import Model exposing (Model)
-import Msg.MyAdventurerMsg exposing (MyAdventurerMsg, MyAdventurerMsg(..))
+import Types exposing (Taco)
+import Update.MyAdventurerUpdate exposing (MyAdventurerModel, MyAdventurerMsg, MyAdventurerMsg(..))
 import Component.TextField exposing (textField)
 import Component.QuestCard exposing (questCardWithActionSection)
 import Component.QuestAction exposing (questAction)
 
 
-noQuests : Model -> Bool
+noQuests : MyAdventurerModel -> Bool
 noQuests model =
-    List.length model.myAdventurer.quests == 0
+    List.length model.quests == 0
 
 
-topCopy : Model -> Html MyAdventurerMsg
+topCopy : MyAdventurerModel -> Html MyAdventurerMsg
 topCopy model =
     if noQuests model then
         p [ class "flow-text" ]
@@ -37,8 +37,8 @@ topCopy model =
             ]
 
 
-myAdventurerView : Model -> Html MyAdventurerMsg
-myAdventurerView model =
+myAdventurerView : Taco -> MyAdventurerModel -> Html MyAdventurerMsg
+myAdventurerView taco model =
     div [ class "container" ]
         [ topCopy model
         , div
@@ -63,6 +63,6 @@ myAdventurerView model =
                                 ]
                         }
                 )
-                model.myAdventurer.quests
+                model.quests
             )
         ]

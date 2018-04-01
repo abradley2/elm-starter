@@ -20743,6 +20743,9 @@ var _user$project$Types$SideQuestsRoute = function (a) {
 	return {ctor: 'SideQuestsRoute', _0: a};
 };
 var _user$project$Types$QuestsRoute = {ctor: 'QuestsRoute'};
+var _user$project$Types$UserLoggedout = {ctor: 'UserLoggedout'};
+var _user$project$Types$UserLoggedIn = {ctor: 'UserLoggedIn'};
+var _user$project$Types$TacoNoOp = {ctor: 'TacoNoOp'};
 
 var _user$project$Component_QuestCard$questCardBase = F2(
 	function (quest, params) {
@@ -21372,236 +21375,359 @@ var _user$project$Component_TextField$textField = function (params) {
 		});
 };
 
-var _user$project$Msg_QuestsMsg$GetQuestsResult = function (a) {
-	return {ctor: 'GetQuestsResult', _0: a};
-};
-var _user$project$Msg_QuestsMsg$NoOp = {ctor: 'NoOp'};
-
-var _user$project$Msg_SideQuestsMsg$NoOp = {ctor: 'NoOp'};
-var _user$project$Msg_SideQuestsMsg$EditSideQuestDescription = function (a) {
-	return {ctor: 'EditSideQuestDescription', _0: a};
-};
-var _user$project$Msg_SideQuestsMsg$EditSideQuestName = function (a) {
-	return {ctor: 'EditSideQuestName', _0: a};
-};
-var _user$project$Msg_SideQuestsMsg$SuggestSideQuestResult = function (a) {
-	return {ctor: 'SuggestSideQuestResult', _0: a};
-};
-var _user$project$Msg_SideQuestsMsg$SubmitSideQuestForm = {ctor: 'SubmitSideQuestForm'};
-var _user$project$Msg_SideQuestsMsg$HideSideQuestForm = {ctor: 'HideSideQuestForm'};
-var _user$project$Msg_SideQuestsMsg$ShowSideQuestForm = {ctor: 'ShowSideQuestForm'};
-var _user$project$Msg_SideQuestsMsg$GetSideQuestsResult = function (a) {
-	return {ctor: 'GetSideQuestsResult', _0: a};
-};
-
-var _user$project$Msg_LayoutMsg$ToggleSidenav = {ctor: 'ToggleSidenav'};
-
-var _user$project$Msg_SessionMsg$LoadSessionResult = function (a) {
-	return {ctor: 'LoadSessionResult', _0: a};
-};
-var _user$project$Msg_SessionMsg$GetTokenResult = function (a) {
-	return {ctor: 'GetTokenResult', _0: a};
-};
-
-var _user$project$Msg_MyAdventurerMsg$GetQuestsByUserResult = function (a) {
-	return {ctor: 'GetQuestsByUserResult', _0: a};
-};
-var _user$project$Msg_MyAdventurerMsg$NoOp = {ctor: 'NoOp'};
-
-var _user$project$Msg_CreateQuestMsg$SubmitCreateQuestResult = function (a) {
-	return {ctor: 'SubmitCreateQuestResult', _0: a};
-};
-var _user$project$Msg_CreateQuestMsg$SubmitCreateQuest = {ctor: 'SubmitCreateQuest'};
-var _user$project$Msg_CreateQuestMsg$ConfirmFileUpload = function (a) {
-	return {ctor: 'ConfirmFileUpload', _0: a};
-};
-var _user$project$Msg_CreateQuestMsg$OnFileChosen = function (a) {
-	return {ctor: 'OnFileChosen', _0: a};
-};
-var _user$project$Msg_CreateQuestMsg$HideFileUploadModal = {ctor: 'HideFileUploadModal'};
-var _user$project$Msg_CreateQuestMsg$ShowFileUploadModal = {ctor: 'ShowFileUploadModal'};
-var _user$project$Msg_CreateQuestMsg$DeleteQuestStepCancel = {ctor: 'DeleteQuestStepCancel'};
-var _user$project$Msg_CreateQuestMsg$DeleteQuestStepConfirm = {ctor: 'DeleteQuestStepConfirm'};
-var _user$project$Msg_CreateQuestMsg$DeleteQuestStepPrompt = function (a) {
-	return {ctor: 'DeleteQuestStepPrompt', _0: a};
-};
-var _user$project$Msg_CreateQuestMsg$EditQuestStepDescription = F2(
-	function (a, b) {
-		return {ctor: 'EditQuestStepDescription', _0: a, _1: b};
+var _user$project$Ports$loadToken = _elm_lang$core$Native_Platform.incomingPort('loadToken', _elm_lang$core$Json_Decode$string);
+var _user$project$Ports$uploadQuestImage = _elm_lang$core$Native_Platform.outgoingPort(
+	'uploadQuestImage',
+	function (v) {
+		return v;
 	});
-var _user$project$Msg_CreateQuestMsg$EditQuestStepName = F2(
-	function (a, b) {
-		return {ctor: 'EditQuestStepName', _0: a, _1: b};
+var _user$project$Ports$uploadQuestImageFinished = _elm_lang$core$Native_Platform.incomingPort(
+	'uploadQuestImageFinished',
+	A2(
+		_elm_lang$core$Json_Decode$andThen,
+		function (x0) {
+			return A2(
+				_elm_lang$core$Json_Decode$andThen,
+				function (x1) {
+					return _elm_lang$core$Json_Decode$succeed(
+						{ctor: '_Tuple2', _0: x0, _1: x1});
+				},
+				A2(_elm_lang$core$Json_Decode$index, 1, _elm_lang$core$Json_Decode$string));
+		},
+		A2(_elm_lang$core$Json_Decode$index, 0, _elm_lang$core$Json_Decode$bool)));
+
+var _user$project$Request_SessionRequest$decodeSessionInfo = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_user$project$Types$SessionInfo,
+	A2(
+		_elm_lang$core$Json_Decode$at,
+		{
+			ctor: '::',
+			_0: 'username',
+			_1: {ctor: '[]'}
+		},
+		_elm_lang$core$Json_Decode$string),
+	A2(
+		_elm_lang$core$Json_Decode$at,
+		{
+			ctor: '::',
+			_0: 'userId',
+			_1: {ctor: '[]'}
+		},
+		_elm_lang$core$Json_Decode$string));
+var _user$project$Request_SessionRequest$loadSession = F2(
+	function (apiEndpoint, userToken) {
+		return _elm_lang$http$Http$request(
+			{
+				method: 'GET',
+				headers: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$http$Http$header,
+						'Authorization',
+						A2(_elm_lang$core$Basics_ops['++'], 'Bearer ', userToken)),
+					_1: {ctor: '[]'}
+				},
+				url: A2(_elm_lang$core$Basics_ops['++'], apiEndpoint, 'session/load'),
+				body: _elm_lang$http$Http$emptyBody,
+				expect: _elm_lang$http$Http$expectJson(_user$project$Request_SessionRequest$decodeSessionInfo),
+				timeout: _elm_lang$core$Maybe$Nothing,
+				withCredentials: false
+			});
 	});
-var _user$project$Msg_CreateQuestMsg$EditQuestDescription = function (a) {
-	return {ctor: 'EditQuestDescription', _0: a};
-};
-var _user$project$Msg_CreateQuestMsg$EditQuestName = function (a) {
-	return {ctor: 'EditQuestName', _0: a};
-};
-var _user$project$Msg_CreateQuestMsg$AddQuestStep = {ctor: 'AddQuestStep'};
-var _user$project$Msg_CreateQuestMsg$NoOp = {ctor: 'NoOp'};
 
-var _user$project$Msg_QuestDetailsMsg$DeclineSideQuest = function (a) {
-	return {ctor: 'DeclineSideQuest', _0: a};
-};
-var _user$project$Msg_QuestDetailsMsg$AcceptSideQuest = function (a) {
-	return {ctor: 'AcceptSideQuest', _0: a};
-};
-var _user$project$Msg_QuestDetailsMsg$ToggleShowingSideQuestModal = function (a) {
-	return {ctor: 'ToggleShowingSideQuestModal', _0: a};
-};
-var _user$project$Msg_QuestDetailsMsg$DeclineSuggestedSideQuest = {ctor: 'DeclineSuggestedSideQuest'};
-var _user$project$Msg_QuestDetailsMsg$AcceptSuggestedSideQuest = {ctor: 'AcceptSuggestedSideQuest'};
-var _user$project$Msg_QuestDetailsMsg$ToggleShowingSuggestedSideQuests = function (a) {
-	return {ctor: 'ToggleShowingSuggestedSideQuests', _0: a};
-};
-var _user$project$Msg_QuestDetailsMsg$DecideSideQuestResult = function (a) {
-	return {ctor: 'DecideSideQuestResult', _0: a};
-};
-var _user$project$Msg_QuestDetailsMsg$GetQuestDetailsResult = function (a) {
-	return {ctor: 'GetQuestDetailsResult', _0: a};
-};
-var _user$project$Msg_QuestDetailsMsg$NoOp = {ctor: 'NoOp'};
-
-var _user$project$Msg$QuestDetails = function (a) {
-	return {ctor: 'QuestDetails', _0: a};
-};
-var _user$project$Msg$CreateQuest = function (a) {
-	return {ctor: 'CreateQuest', _0: a};
-};
-var _user$project$Msg$MyAdventurer = function (a) {
-	return {ctor: 'MyAdventurer', _0: a};
-};
-var _user$project$Msg$Session = function (a) {
-	return {ctor: 'Session', _0: a};
-};
-var _user$project$Msg$Layout = function (a) {
-	return {ctor: 'Layout', _0: a};
-};
-var _user$project$Msg$SideQuests = function (a) {
-	return {ctor: 'SideQuests', _0: a};
-};
-var _user$project$Msg$Quests = function (a) {
-	return {ctor: 'Quests', _0: a};
-};
-var _user$project$Msg$OnLocationChange = function (a) {
-	return {ctor: 'OnLocationChange', _0: a};
-};
-var _user$project$Msg$LoadToken = function (a) {
-	return {ctor: 'LoadToken', _0: a};
-};
-var _user$project$Msg$UploadQuestImageFinished = function (a) {
-	return {ctor: 'UploadQuestImageFinished', _0: a};
-};
-var _user$project$Msg$LoadQuestId = function (a) {
-	return {ctor: 'LoadQuestId', _0: a};
-};
-var _user$project$Msg$Unmount = function (a) {
-	return {ctor: 'Unmount', _0: a};
-};
-var _user$project$Msg$Mount = function (a) {
-	return {ctor: 'Mount', _0: a};
-};
-var _user$project$Msg$List = function (a) {
-	return {ctor: 'List', _0: a};
-};
-
-var _user$project$Update_LayoutUpdate$onLayoutMsg = F3(
-	function (layoutMsg, layoutModel, commands) {
-		var _p0 = layoutMsg;
+var _user$project$Update_LayoutUpdate$layoutUpdate = F4(
+	function (msg, tacoMsg, layoutModel, taco) {
+		var _p0 = msg;
 		return {
 			ctor: '_Tuple2',
 			_0: _elm_lang$core$Native_Utils.update(
 				layoutModel,
 				{sidenavOpen: !layoutModel.sidenavOpen}),
-			_1: commands
+			_1: _elm_lang$core$Platform_Cmd$none
 		};
-	});
-var _user$project$Update_LayoutUpdate$layoutUpdate = F3(
-	function (msg, layoutModel, commands) {
-		var _p1 = msg;
-		if (_p1.ctor === 'Layout') {
-			return A3(_user$project$Update_LayoutUpdate$onLayoutMsg, _p1._0, layoutModel, commands);
-		} else {
-			return {ctor: '_Tuple2', _0: layoutModel, _1: commands};
-		}
 	});
 var _user$project$Update_LayoutUpdate$layoutModel = {sidenavOpen: false};
 var _user$project$Update_LayoutUpdate$LayoutModel = function (a) {
 	return {sidenavOpen: a};
 };
+var _user$project$Update_LayoutUpdate$ToggleSidenav = {ctor: 'ToggleSidenav'};
 
-var _user$project$Update_RouteUpdate$matchers = _evancz$url_parser$UrlParser$oneOf(
+var _user$project$View_Layout$sideNavtransform = function (isOpen) {
+	return isOpen ? 'translateX(0%)' : 'translateX(-105%)';
+};
+var _user$project$View_Layout$toggleSidenavButton = A2(
+	_rtfeldman$elm_css$Html_Styled$a,
 	{
 		ctor: '::',
-		_0: A2(_evancz$url_parser$UrlParser$map, _user$project$Types$QuestsRoute, _evancz$url_parser$UrlParser$top),
+		_0: _rtfeldman$elm_css$Html_Styled_Attributes$href('javascript:void(0);'),
 		_1: {
 			ctor: '::',
-			_0: A2(
-				_evancz$url_parser$UrlParser$map,
-				_user$project$Types$QuestsRoute,
-				_evancz$url_parser$UrlParser$s('quests')),
+			_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('left sidenav-trigger hide-on-med-and-up'),
 			_1: {
 				ctor: '::',
-				_0: A2(
-					_evancz$url_parser$UrlParser$map,
-					_user$project$Types$QuestDetailsRoute,
-					A2(
-						_evancz$url_parser$UrlParser_ops['</>'],
-						_evancz$url_parser$UrlParser$s('details'),
-						_evancz$url_parser$UrlParser$string)),
+				_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_user$project$Update_LayoutUpdate$ToggleSidenav),
 				_1: {
 					ctor: '::',
-					_0: A2(
-						_evancz$url_parser$UrlParser$map,
-						_user$project$Types$SideQuestsRoute,
-						A2(
-							_evancz$url_parser$UrlParser_ops['</>'],
-							_evancz$url_parser$UrlParser$s('sidequests'),
-							_evancz$url_parser$UrlParser$string)),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_evancz$url_parser$UrlParser$map,
-							_user$project$Types$MyAdventurerRoute,
-							_evancz$url_parser$UrlParser$s('profile')),
-						_1: {
+					_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+						{
 							ctor: '::',
-							_0: A2(
-								_evancz$url_parser$UrlParser$map,
-								_user$project$Types$CreateQuestRoute,
-								_evancz$url_parser$UrlParser$s('newquest')),
+							_0: _rtfeldman$elm_css$Css$cursor(_rtfeldman$elm_css$Css$pointer),
 							_1: {ctor: '[]'}
-						}
-					}
+						}),
+					_1: {ctor: '[]'}
 				}
 			}
 		}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_rtfeldman$elm_css$Html_Styled$i,
+			{
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('material-icons'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Html_Styled$text('menu'),
+				_1: {ctor: '[]'}
+			}),
+		_1: {ctor: '[]'}
 	});
-var _user$project$Update_RouteUpdate$parseLocation = function (location) {
-	var _p0 = A2(_evancz$url_parser$UrlParser$parseHash, _user$project$Update_RouteUpdate$matchers, location);
-	if (_p0.ctor === 'Just') {
-		return {ctor: '_Tuple2', _0: _p0._0, _1: location};
-	} else {
-		return {ctor: '_Tuple2', _0: _user$project$Types$QuestsRoute, _1: location};
-	}
-};
-var _user$project$Update_RouteUpdate$routeData = function (location) {
-	return _user$project$Update_RouteUpdate$parseLocation(location);
-};
-var _user$project$Update_RouteUpdate$routeUpdate = F3(
-	function (msg, routeData, commands) {
-		var _p1 = msg;
-		if (_p1.ctor === 'OnLocationChange') {
-			return {
-				ctor: '_Tuple2',
-				_0: _user$project$Update_RouteUpdate$parseLocation(_p1._0),
-				_1: commands
-			};
-		} else {
-			return {ctor: '_Tuple2', _0: routeData, _1: commands};
-		}
+var _user$project$View_Layout$navs = F2(
+	function (model, taco) {
+		return {
+			ctor: '::',
+			_0: A2(
+				_rtfeldman$elm_css$Html_Styled$li,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A2(
+						_rtfeldman$elm_css$Html_Styled$a,
+						{
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Html_Styled_Attributes$href('#quests'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Html_Styled$text('Quests'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Html_Styled$li,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: function () {
+							if (!_elm_lang$core$Native_Utils.eq(taco.token, _elm_lang$core$Maybe$Nothing)) {
+								return A2(
+									_rtfeldman$elm_css$Html_Styled$a,
+									{
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Html_Styled_Attributes$href('#profile'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Html_Styled$text('My Adventurer'),
+										_1: {ctor: '[]'}
+									});
+							} else {
+								var _p0 = taco.routeData;
+								var route = _p0._0;
+								var location = _p0._1;
+								return A2(
+									_rtfeldman$elm_css$Html_Styled$a,
+									{
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Html_Styled_Attributes$href(
+											A2(
+												_elm_lang$core$Basics_ops['++'],
+												'https://www.facebook.com/v2.11/dialog/oauth?client_id=169926423737270&redirect_uri=',
+												A2(_elm_lang$core$Basics_ops['++'], location.origin, '&state=success'))),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: A2(
+											_rtfeldman$elm_css$Html_Styled$i,
+											{
+												ctor: '::',
+												_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+													{
+														ctor: '::',
+														_0: _rtfeldman$elm_css$Css$transform(
+															_rtfeldman$elm_css$Css$translateY(
+																_rtfeldman$elm_css$Css$pct(25))),
+														_1: {
+															ctor: '::',
+															_0: _rtfeldman$elm_css$Css$paddingRight(
+																_rtfeldman$elm_css$Css$px(8)),
+															_1: {ctor: '[]'}
+														}
+													}),
+												_1: {
+													ctor: '::',
+													_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('fab fa-2x fa-facebook'),
+													_1: {ctor: '[]'}
+												}
+											},
+											{ctor: '[]'}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_rtfeldman$elm_css$Html_Styled$span,
+												{ctor: '[]'},
+												{
+													ctor: '::',
+													_0: _rtfeldman$elm_css$Html_Styled$text('Login'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {ctor: '[]'}
+										}
+									});
+							}
+						}(),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		};
+	});
+var _user$project$View_Layout$navbar = F2(
+	function (model, taco) {
+		return A2(
+			_rtfeldman$elm_css$Html_Styled$nav,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Html_Styled$div,
+					{
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('nav-wrapper'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _user$project$View_Layout$toggleSidenavButton,
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_rtfeldman$elm_css$Html_Styled$a,
+								{
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('brand-logo center'),
+									_1: {
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Html_Styled_Attributes$href('#quests'),
+										_1: {ctor: '[]'}
+									}
+								},
+								{
+									ctor: '::',
+									_0: A2(
+										_rtfeldman$elm_css$Html_Styled$i,
+										{
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('fa fa-shield-alt'),
+											_1: {ctor: '[]'}
+										},
+										{ctor: '[]'}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_rtfeldman$elm_css$Html_Styled$span,
+											{ctor: '[]'},
+											{
+												ctor: '::',
+												_0: _rtfeldman$elm_css$Html_Styled$text('QUEST'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_rtfeldman$elm_css$Html_Styled$ul,
+									{
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('hide-on-small-only'),
+										_1: {ctor: '[]'}
+									},
+									A2(_user$project$View_Layout$navs, model, taco)),
+								_1: {ctor: '[]'}
+							}
+						}
+					}),
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$View_Layout$layout = F4(
+	function (messageMap, model, taco, view) {
+		return A2(
+			_rtfeldman$elm_css$Html_Styled$div,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Html_Styled$map,
+					messageMap,
+					A2(_user$project$View_Layout$navbar, model, taco)),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_rtfeldman$elm_css$Html_Styled$map,
+						messageMap,
+						A2(
+							_rtfeldman$elm_css$Html_Styled$ul,
+							{
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Html_Styled_Attributes$id('slide-out'),
+								_1: {
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('sidenav'),
+									_1: {
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_user$project$Update_LayoutUpdate$ToggleSidenav),
+										_1: {
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Html_Styled_Attributes$style(
+												{
+													ctor: '::',
+													_0: {
+														ctor: '_Tuple2',
+														_0: 'transform',
+														_1: _user$project$View_Layout$sideNavtransform(model.sidenavOpen)
+													},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: 'transition', _1: '.25s'},
+														_1: {ctor: '[]'}
+													}
+												}),
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							},
+							A2(_user$project$View_Layout$navs, model, taco))),
+					_1: {
+						ctor: '::',
+						_0: view,
+						_1: {ctor: '[]'}
+					}
+				}
+			});
 	});
 
 var _user$project$Request_QuestsRequest$encodeSideQuest = function (sideQuest) {
@@ -21626,7 +21752,7 @@ var _user$project$Request_QuestsRequest$encodeSideQuest = function (sideQuest) {
 };
 var _user$project$Request_QuestsRequest$suggestSideQuest = F4(
 	function (apiEndpoint, userToken, quest, sideQuest) {
-		var request = _elm_lang$http$Http$request(
+		return _elm_lang$http$Http$request(
 			{
 				method: 'POST',
 				headers: {
@@ -21654,7 +21780,6 @@ var _user$project$Request_QuestsRequest$suggestSideQuest = F4(
 				timeout: _elm_lang$core$Maybe$Nothing,
 				withCredentials: false
 			});
-		return A2(_elm_lang$http$Http$send, _user$project$Msg_SideQuestsMsg$SuggestSideQuestResult, request);
 	});
 var _user$project$Request_QuestsRequest$decodeQuest = A9(
 	_elm_lang$core$Json_Decode$map8,
@@ -21683,7 +21808,7 @@ var _user$project$Request_QuestsRequest$decodeGetSideQuestsResponse = A3(
 	A2(_elm_lang$core$Json_Decode$field, 'sideQuests', _user$project$Request_QuestsRequest$decodeSideQuestsList));
 var _user$project$Request_QuestsRequest$getSideQuests = F4(
 	function (apiEndpoint, userToken, userId, questId) {
-		var request = _elm_lang$http$Http$request(
+		return _elm_lang$http$Http$request(
 			{
 				method: 'GET',
 				headers: {
@@ -21709,7 +21834,6 @@ var _user$project$Request_QuestsRequest$getSideQuests = F4(
 				timeout: _elm_lang$core$Maybe$Nothing,
 				withCredentials: false
 			});
-		return A2(_elm_lang$http$Http$send, _user$project$Msg_SideQuestsMsg$GetSideQuestsResult, request);
 	});
 var _user$project$Request_QuestsRequest$decodeQuestDetails = A4(
 	_elm_lang$core$Json_Decode$map3,
@@ -21725,7 +21849,7 @@ var _user$project$Request_QuestsRequest$decodeQuestDetails = A4(
 		_elm_lang$core$Json_Decode$list(_user$project$Request_QuestsRequest$decodeSideQuest)));
 var _user$project$Request_QuestsRequest$getQuestDetails = F3(
 	function (apiEndpoint, userId, questId) {
-		var request = _elm_lang$http$Http$request(
+		return _elm_lang$http$Http$request(
 			{
 				method: 'GET',
 				headers: {ctor: '[]'},
@@ -21744,10 +21868,9 @@ var _user$project$Request_QuestsRequest$getQuestDetails = F3(
 				timeout: _elm_lang$core$Maybe$Nothing,
 				withCredentials: false
 			});
-		return A2(_elm_lang$http$Http$send, _user$project$Msg_QuestDetailsMsg$GetQuestDetailsResult, request);
 	});
 var _user$project$Request_QuestsRequest$decideSideQuest = function (params) {
-	var request = _elm_lang$http$Http$request(
+	return _elm_lang$http$Http$request(
 		{
 			method: 'PUT',
 			headers: {
@@ -21788,12 +21911,11 @@ var _user$project$Request_QuestsRequest$decideSideQuest = function (params) {
 			timeout: _elm_lang$core$Maybe$Nothing,
 			withCredentials: false
 		});
-	return A2(_elm_lang$http$Http$send, _user$project$Msg_QuestDetailsMsg$DecideSideQuestResult, request);
 };
 var _user$project$Request_QuestsRequest$decodeQuestsList = _elm_lang$core$Json_Decode$list(_user$project$Request_QuestsRequest$decodeQuest);
 var _user$project$Request_QuestsRequest$getQuests = F2(
 	function (apiEndpoint, userToken) {
-		var request = _elm_lang$http$Http$request(
+		return _elm_lang$http$Http$request(
 			{
 				method: 'GET',
 				headers: {
@@ -21810,11 +21932,10 @@ var _user$project$Request_QuestsRequest$getQuests = F2(
 				timeout: _elm_lang$core$Maybe$Nothing,
 				withCredentials: false
 			});
-		return A2(_elm_lang$http$Http$send, _user$project$Msg_QuestsMsg$GetQuestsResult, request);
 	});
 var _user$project$Request_QuestsRequest$getQuestsByUser = F3(
 	function (apiEndpoint, userToken, userId) {
-		var request = _elm_lang$http$Http$request(
+		return _elm_lang$http$Http$request(
 			{
 				method: 'GET',
 				headers: {
@@ -21834,1429 +21955,72 @@ var _user$project$Request_QuestsRequest$getQuestsByUser = F3(
 				timeout: _elm_lang$core$Maybe$Nothing,
 				withCredentials: false
 			});
-		return A2(_elm_lang$http$Http$send, _user$project$Msg_MyAdventurerMsg$GetQuestsByUserResult, request);
 	});
 var _user$project$Request_QuestsRequest$DecideSideQuestParams = F5(
 	function (a, b, c, d, e) {
 		return {apiEndpoint: a, userToken: b, questId: c, sideQuestId: d, isAccepted: e};
 	});
 
-var _user$project$Update_MyAdventurerUpdate$onMyAdventurerMsg = F3(
-	function (myAdventurerMsg, myAdventurer, commands) {
-		var _p0 = myAdventurerMsg;
-		if (_p0.ctor === 'GetQuestsByUserResult') {
-			if (_p0._0.ctor === 'Ok') {
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						myAdventurer,
-						{quests: _p0._0._0}),
-					_1: commands
-				};
-			} else {
-				return {ctor: '_Tuple2', _0: myAdventurer, _1: commands};
-			}
-		} else {
-			return {ctor: '_Tuple2', _0: myAdventurer, _1: commands};
-		}
-	});
-var _user$project$Update_MyAdventurerUpdate$fetchQuests = F3(
-	function (apiEndpoint, token, userId) {
-		return A2(
-			_elm_lang$core$Platform_Cmd$map,
-			_user$project$Msg$MyAdventurer,
-			A3(_user$project$Request_QuestsRequest$getQuestsByUser, apiEndpoint, token, userId));
-	});
-var _user$project$Update_MyAdventurerUpdate$onRouteChange = F3(
-	function (routeData, _p1, commands) {
-		var _p2 = _p1;
-		var _p7 = _p2._0;
-		var _p6 = _p2._1;
-		var _p3 = routeData;
-		var route = _p3._0;
-		var location = _p3._1;
-		var _p4 = route;
-		if (_p4.ctor === 'MyAdventurerRoute') {
-			var _p5 = _p7.userId;
-			if (_p5.ctor === 'Just') {
-				return {
-					ctor: '_Tuple2',
-					_0: _p6,
-					_1: A2(
-						_elm_lang$core$Basics_ops['++'],
-						commands,
-						{
-							ctor: '::',
-							_0: A3(
-								_user$project$Update_MyAdventurerUpdate$fetchQuests,
-								_p7.flags.apiEndpoint,
-								A2(_elm_lang$core$Maybe$withDefault, '', _p7.token),
-								_p5._0),
-							_1: {ctor: '[]'}
-						})
-				};
-			} else {
-				return {ctor: '_Tuple2', _0: _p6, _1: commands};
-			}
-		} else {
-			return {ctor: '_Tuple2', _0: _p6, _1: commands};
-		}
-	});
-var _user$project$Update_MyAdventurerUpdate$myAdventurerUpdate = F3(
-	function (msg, _p8, commands) {
-		var _p9 = _p8;
-		var _p11 = _p9._1;
-		var _p10 = msg;
-		switch (_p10.ctor) {
-			case 'OnLocationChange':
-				return A3(
-					_user$project$Update_MyAdventurerUpdate$onRouteChange,
-					_user$project$Update_RouteUpdate$parseLocation(_p10._0),
-					{ctor: '_Tuple2', _0: _p9._0, _1: _p11},
-					commands);
-			case 'MyAdventurer':
-				return A3(_user$project$Update_MyAdventurerUpdate$onMyAdventurerMsg, _p10._0, _p11, commands);
-			default:
-				return {ctor: '_Tuple2', _0: _p11, _1: commands};
-		}
-	});
 var _user$project$Update_MyAdventurerUpdate$myAdventurerInitialModel = {
 	quests: {ctor: '[]'}
 };
 var _user$project$Update_MyAdventurerUpdate$MyAdventurerModel = function (a) {
 	return {quests: a};
 };
-
-var _user$project$Request_CreateQuestRequest$encodeQuest = function (quest) {
-	return _elm_lang$core$Json_Encode$object(
-		{
-			ctor: '::',
-			_0: {
-				ctor: '_Tuple2',
-				_0: 'id',
-				_1: _elm_lang$core$Json_Encode$string(quest.id)
-			},
-			_1: {
-				ctor: '::',
-				_0: {
-					ctor: '_Tuple2',
-					_0: 'name',
-					_1: _elm_lang$core$Json_Encode$string(quest.name)
-				},
-				_1: {
-					ctor: '::',
-					_0: {
-						ctor: '_Tuple2',
-						_0: 'description',
-						_1: _elm_lang$core$Json_Encode$string(quest.description)
-					},
-					_1: {
-						ctor: '::',
-						_0: {
-							ctor: '_Tuple2',
-							_0: 'imageUrl',
-							_1: _elm_lang$core$Json_Encode$string(quest.imageUrl)
-						},
-						_1: {ctor: '[]'}
-					}
-				}
-			}
-		});
+var _user$project$Update_MyAdventurerUpdate$GetQuestsByUserResult = function (a) {
+	return {ctor: 'GetQuestsByUserResult', _0: a};
 };
-var _user$project$Request_CreateQuestRequest$decodeQuest = A5(
-	_elm_lang$core$Json_Decode$map4,
-	_user$project$Types$Quest,
-	A2(
-		_elm_lang$core$Json_Decode$at,
-		{
-			ctor: '::',
-			_0: 'id',
-			_1: {ctor: '[]'}
-		},
-		_elm_lang$core$Json_Decode$string),
-	A2(
-		_elm_lang$core$Json_Decode$at,
-		{
-			ctor: '::',
-			_0: 'name',
-			_1: {ctor: '[]'}
-		},
-		_elm_lang$core$Json_Decode$string),
-	A2(
-		_elm_lang$core$Json_Decode$at,
-		{
-			ctor: '::',
-			_0: 'description',
-			_1: {ctor: '[]'}
-		},
-		_elm_lang$core$Json_Decode$string),
-	A2(
-		_elm_lang$core$Json_Decode$at,
-		{
-			ctor: '::',
-			_0: 'imageUrl',
-			_1: {ctor: '[]'}
-		},
-		_elm_lang$core$Json_Decode$string));
-var _user$project$Request_CreateQuestRequest$createQuestRequest = F3(
-	function (apiEndpoint, userToken, quest) {
-		var request = _elm_lang$http$Http$request(
-			{
-				method: 'POST',
-				headers: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$http$Http$header,
-						'Authorization',
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							'Bearer ',
-							A2(_elm_lang$core$Debug$log, 'sending user token = ', userToken))),
-					_1: {ctor: '[]'}
-				},
-				url: A2(_elm_lang$core$Basics_ops['++'], apiEndpoint, 'quests'),
-				body: _elm_lang$http$Http$jsonBody(
-					_user$project$Request_CreateQuestRequest$encodeQuest(quest)),
-				expect: _elm_lang$http$Http$expectJson(_user$project$Request_CreateQuestRequest$decodeQuest),
-				timeout: _elm_lang$core$Maybe$Nothing,
-				withCredentials: false
-			});
-		return A2(_elm_lang$http$Http$send, _user$project$Msg_CreateQuestMsg$SubmitCreateQuestResult, request);
-	});
-
-var _user$project$Ports$loadToken = _elm_lang$core$Native_Platform.incomingPort('loadToken', _elm_lang$core$Json_Decode$string);
-var _user$project$Ports$uploadQuestImage = _elm_lang$core$Native_Platform.outgoingPort(
-	'uploadQuestImage',
-	function (v) {
-		return v;
-	});
-var _user$project$Ports$uploadQuestImageFinished = _elm_lang$core$Native_Platform.incomingPort(
-	'uploadQuestImageFinished',
-	A2(
-		_elm_lang$core$Json_Decode$andThen,
-		function (x0) {
-			return A2(
-				_elm_lang$core$Json_Decode$andThen,
-				function (x1) {
-					return _elm_lang$core$Json_Decode$succeed(
-						{ctor: '_Tuple2', _0: x0, _1: x1});
-				},
-				A2(_elm_lang$core$Json_Decode$index, 1, _elm_lang$core$Json_Decode$string));
-		},
-		A2(_elm_lang$core$Json_Decode$index, 0, _elm_lang$core$Json_Decode$bool)));
-
-var _user$project$Update_CreateQuestUpdate$onCreateQuestMsg = F3(
-	function (createQuestMsg, _p0, commands) {
-		var _p1 = _p0;
-		var _p4 = _p1._0;
-		var _p3 = _p1._1;
-		var _p2 = createQuestMsg;
-		switch (_p2.ctor) {
-			case 'SubmitCreateQuest':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						_p3,
-						{submitPending: true, submitError: false}),
-					_1: A2(
-						_elm_lang$core$Basics_ops['++'],
-						commands,
-						{
-							ctor: '::',
-							_0: A2(
-								_elm_lang$core$Platform_Cmd$map,
-								_user$project$Msg$CreateQuest,
-								A3(
-									_user$project$Request_CreateQuestRequest$createQuestRequest,
-									_p4.flags.apiEndpoint,
-									A2(_elm_lang$core$Maybe$withDefault, '', _p4.token),
-									{id: '', name: _p3.questName, description: _p3.questDescription, imageUrl: _p3.questImageUrl})),
-							_1: {ctor: '[]'}
-						})
-				};
-			case 'SubmitCreateQuestResult':
-				if (_p2._0.ctor === 'Ok') {
-					return {
-						ctor: '_Tuple2',
-						_0: _p3,
-						_1: A2(
-							_elm_lang$core$Basics_ops['++'],
-							commands,
-							{
-								ctor: '::',
-								_0: _elm_lang$navigation$Navigation$modifyUrl('/#profile'),
-								_1: {ctor: '[]'}
-							})
-					};
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							_p3,
-							{submitError: true}),
-						_1: commands
-					};
-				}
-			case 'OnFileChosen':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						_p3,
-						{
-							imageUploadPath: _elm_lang$core$Maybe$Just(_p2._0)
-						}),
-					_1: commands
-				};
-			case 'ShowFileUploadModal':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						_p3,
-						{imageUploadModalOpen: true, imageUploadPath: _elm_lang$core$Maybe$Nothing}),
-					_1: commands
-				};
-			case 'HideFileUploadModal':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						_p3,
-						{imageUploadModalOpen: false, imageUploadPath: _elm_lang$core$Maybe$Nothing}),
-					_1: commands
-				};
-			case 'ConfirmFileUpload':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						_p3,
-						{questImageUploadPending: true, questImageUploadError: false}),
-					_1: A2(
-						_elm_lang$core$Basics_ops['++'],
-						commands,
-						{
-							ctor: '::',
-							_0: _user$project$Ports$uploadQuestImage(_p2._0),
-							_1: {ctor: '[]'}
-						})
-				};
-			case 'EditQuestName':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						_p3,
-						{questName: _p2._0}),
-					_1: commands
-				};
-			case 'EditQuestDescription':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						_p3,
-						{questDescription: _p2._0}),
-					_1: commands
-				};
-			case 'NoOp':
-				return {ctor: '_Tuple2', _0: _p3, _1: commands};
-			default:
-				return {ctor: '_Tuple2', _0: _p3, _1: commands};
-		}
-	});
-var _user$project$Update_CreateQuestUpdate$createQuestInitialModel = {questName: '', questDescription: '', questImageUrl: '/placeholder.png', imageUploadModalOpen: false, imageUploadModalFor: _elm_lang$core$Maybe$Nothing, imageUploadPath: _elm_lang$core$Maybe$Nothing, questImageUploadPending: false, questImageUploadError: false, submitPending: false, submitError: false, token: _elm_lang$core$Maybe$Nothing};
-var _user$project$Update_CreateQuestUpdate$createQuestUpdate = F3(
-	function (msg, _p5, commands) {
-		var _p6 = _p5;
-		var _p10 = _p6._1;
-		var _p7 = msg;
-		_v3_3:
-		do {
-			switch (_p7.ctor) {
-				case 'UploadQuestImageFinished':
-					if (_p7._0.ctor === '_Tuple2') {
-						return _p7._0._0 ? {
-							ctor: '_Tuple2',
-							_0: _elm_lang$core$Native_Utils.update(
-								_p10,
-								{questImageUploadPending: false, questImageUploadError: true, questImageUrl: _p7._0._1, imageUploadModalOpen: false}),
-							_1: commands
-						} : {
-							ctor: '_Tuple2',
-							_0: _elm_lang$core$Native_Utils.update(
-								_p10,
-								{questImageUploadPending: false, questImageUploadError: true}),
-							_1: commands
-						};
-					} else {
-						break _v3_3;
-					}
-				case 'CreateQuest':
-					return A3(
-						_user$project$Update_CreateQuestUpdate$onCreateQuestMsg,
-						_p7._0,
-						{ctor: '_Tuple2', _0: _p6._0, _1: _p10},
-						commands);
-				case 'OnLocationChange':
-					var _p8 = _user$project$Update_RouteUpdate$parseLocation(_p7._0);
-					var route = _p8._0;
-					var locationData = _p8._1;
-					var _p9 = route;
-					if (_p9.ctor === 'CreateQuestRoute') {
-						return {ctor: '_Tuple2', _0: _user$project$Update_CreateQuestUpdate$createQuestInitialModel, _1: commands};
-					} else {
-						return {ctor: '_Tuple2', _0: _p10, _1: commands};
-					}
-				default:
-					break _v3_3;
-			}
-		} while(false);
-		return {ctor: '_Tuple2', _0: _p10, _1: commands};
-	});
-var _user$project$Update_CreateQuestUpdate$CreateQuestModel = function (a) {
-	return function (b) {
-		return function (c) {
-			return function (d) {
-				return function (e) {
-					return function (f) {
-						return function (g) {
-							return function (h) {
-								return function (i) {
-									return function (j) {
-										return function (k) {
-											return {questName: a, questDescription: b, questImageUrl: c, imageUploadModalOpen: d, imageUploadModalFor: e, imageUploadPath: f, questImageUploadPending: g, questImageUploadError: h, submitPending: i, submitError: j, token: k};
-										};
-									};
-								};
-							};
-						};
-					};
-				};
-			};
-		};
-	};
-};
-
-var _user$project$Update_QuestsUpdate$onQuestsMsg = F3(
-	function (questsMsg, quests, commands) {
-		var _p0 = questsMsg;
-		if (_p0.ctor === 'GetQuestsResult') {
-			if (_p0._0.ctor === 'Ok') {
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						quests,
-						{questList: _p0._0._0}),
-					_1: commands
-				};
-			} else {
-				return {ctor: '_Tuple2', _0: quests, _1: commands};
-			}
-		} else {
-			return {ctor: '_Tuple2', _0: quests, _1: commands};
-		}
-	});
-var _user$project$Update_QuestsUpdate$onRouteChange = F3(
-	function (routeData, _p1, commands) {
-		var _p2 = _p1;
-		var _p6 = _p2._0;
-		var _p5 = _p2._1;
-		var _p3 = routeData;
-		var route = _p3._0;
-		var location = _p3._1;
-		var _p4 = route;
-		if (_p4.ctor === 'QuestsRoute') {
-			var token = A2(_elm_lang$core$Maybe$withDefault, '', _p6.token);
-			return {
-				ctor: '_Tuple2',
-				_0: _p5,
-				_1: A2(
-					_elm_lang$core$Basics_ops['++'],
-					commands,
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$core$Platform_Cmd$map,
-							_user$project$Msg$Quests,
-							A2(_user$project$Request_QuestsRequest$getQuests, _p6.flags.apiEndpoint, token)),
-						_1: {ctor: '[]'}
-					})
-			};
-		} else {
-			return {ctor: '_Tuple2', _0: _p5, _1: commands};
-		}
-	});
-var _user$project$Update_QuestsUpdate$questsUpdate = F3(
-	function (msg, _p7, commands) {
-		var _p8 = _p7;
-		var _p10 = _p8._1;
-		var _p9 = msg;
-		switch (_p9.ctor) {
-			case 'OnLocationChange':
-				return A3(
-					_user$project$Update_QuestsUpdate$onRouteChange,
-					_user$project$Update_RouteUpdate$parseLocation(_p9._0),
-					{ctor: '_Tuple2', _0: _p8._0, _1: _p10},
-					commands);
-			case 'Quests':
-				return A3(_user$project$Update_QuestsUpdate$onQuestsMsg, _p9._0, _p10, commands);
-			default:
-				return {ctor: '_Tuple2', _0: _p10, _1: commands};
-		}
-	});
-var _user$project$Update_QuestsUpdate$questsModel = {
-	questList: {ctor: '[]'}
-};
-var _user$project$Update_QuestsUpdate$QuestsModel = function (a) {
-	return {questList: a};
-};
-
-var _user$project$Update_SideQuestsUpdate$onSideQuestsMsg = F3(
-	function (sideQuestsMsg, _p0, commands) {
-		var _p1 = _p0;
-		var _p5 = _p1._0;
-		var _p4 = _p1._1;
-		var _p2 = sideQuestsMsg;
-		switch (_p2.ctor) {
-			case 'SuggestSideQuestResult':
-				if (_p2._0.ctor === 'Err') {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							_p4,
-							{
-								suggestingSideQuest: false,
-								suggestSideQuestSuccess: _elm_lang$core$Maybe$Just(false)
-							}),
-						_1: commands
-					};
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							_p4,
-							{
-								suggestingSideQuest: false,
-								suggestSideQuestSuccess: _elm_lang$core$Maybe$Just(true)
-							}),
-						_1: commands
-					};
-				}
-			case 'GetSideQuestsResult':
-				if (_p2._0.ctor === 'Err') {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							_p4,
-							{loading: false}),
-						_1: commands
-					};
-				} else {
-					var _p3 = _p2._0._0;
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							_p4,
-							{
-								sideQuestList: _elm_lang$core$Maybe$Just(_p3.sideQuests),
-								questInfo: _elm_lang$core$Maybe$Just(_p3.quest),
-								loading: false
-							}),
-						_1: commands
-					};
-				}
-			case 'ShowSideQuestForm':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						_p4,
-						{questFormOpen: true, sideQuestName: '', sideQuestDescription: ''}),
-					_1: commands
-				};
-			case 'HideSideQuestForm':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						_p4,
-						{questFormOpen: false}),
-					_1: commands
-				};
-			case 'SubmitSideQuestForm':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						_p4,
-						{questFormOpen: false, suggestingSideQuest: true}),
-					_1: A2(
-						_elm_lang$core$Basics_ops['++'],
-						commands,
-						function () {
-							var result = A3(
-								_elm_lang$core$Maybe$map2,
-								F2(
-									function (quest, userId) {
-										return {
-											ctor: '::',
-											_0: A2(
-												_elm_lang$core$Platform_Cmd$map,
-												_user$project$Msg$SideQuests,
-												A4(
-													_user$project$Request_QuestsRequest$suggestSideQuest,
-													_p5.flags.apiEndpoint,
-													userId,
-													quest,
-													{guid: '', name: _p4.sideQuestName, description: _p4.sideQuestDescription, suggestedBy: '', id: ''})),
-											_1: {ctor: '[]'}
-										};
-									}),
-								_p4.questInfo,
-								_p5.token);
-							return A2(
-								_elm_lang$core$Maybe$withDefault,
-								{ctor: '[]'},
-								result);
-						}())
-				};
-			case 'EditSideQuestName':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						_p4,
-						{sideQuestName: _p2._0}),
-					_1: commands
-				};
-			case 'EditSideQuestDescription':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						_p4,
-						{sideQuestDescription: _p2._0}),
-					_1: commands
-				};
-			default:
-				return {ctor: '_Tuple2', _0: _p4, _1: commands};
-		}
-	});
-var _user$project$Update_SideQuestsUpdate$sideQuestsModel = {questFormOpen: false, questInfo: _elm_lang$core$Maybe$Nothing, loading: false, sideQuestList: _elm_lang$core$Maybe$Nothing, sideQuestName: '', sideQuestDescription: '', suggestingSideQuest: false, suggestSideQuestSuccess: _elm_lang$core$Maybe$Nothing};
-var _user$project$Update_SideQuestsUpdate$sideQuestsUpdate = F3(
-	function (msg, _p6, commands) {
-		var _p7 = _p6;
-		var _p11 = _p7._0;
-		var _p10 = _p7._1;
-		var _p8 = msg;
-		switch (_p8.ctor) {
-			case 'SideQuests':
-				return A3(
-					_user$project$Update_SideQuestsUpdate$onSideQuestsMsg,
-					_p8._0,
-					{ctor: '_Tuple2', _0: _p11, _1: _p10},
-					commands);
-			case 'OnLocationChange':
-				var _p9 = A2(
-					_evancz$url_parser$UrlParser$parseHash,
-					A2(
-						_evancz$url_parser$UrlParser_ops['</>'],
-						_evancz$url_parser$UrlParser$s('sidequests'),
-						_evancz$url_parser$UrlParser$string),
-					_p8._0);
-				if (_p9.ctor === 'Just') {
-					var params = _elm_lang$core$Array$fromList(
-						A2(_elm_lang$core$String$split, ':', _p9._0));
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							_user$project$Update_SideQuestsUpdate$sideQuestsModel,
-							{loading: true, questInfo: _elm_lang$core$Maybe$Nothing, sideQuestList: _elm_lang$core$Maybe$Nothing}),
-						_1: A2(
-							_elm_lang$core$Basics_ops['++'],
-							commands,
-							{
-								ctor: '::',
-								_0: A2(
-									_elm_lang$core$Platform_Cmd$map,
-									_user$project$Msg$SideQuests,
-									A4(
-										_user$project$Request_QuestsRequest$getSideQuests,
-										_p11.flags.apiEndpoint,
-										A2(_elm_lang$core$Maybe$withDefault, '', _p11.token),
-										A2(
-											_elm_lang$core$Maybe$withDefault,
-											'',
-											A2(_elm_lang$core$Array$get, 0, params)),
-										A2(
-											_elm_lang$core$Maybe$withDefault,
-											'',
-											A2(_elm_lang$core$Array$get, 1, params)))),
-								_1: {ctor: '[]'}
-							})
-					};
-				} else {
-					return {ctor: '_Tuple2', _0: _p10, _1: commands};
-				}
-			default:
-				return {ctor: '_Tuple2', _0: _p10, _1: commands};
-		}
-	});
-var _user$project$Update_SideQuestsUpdate$SideQuestsModel = F8(
-	function (a, b, c, d, e, f, g, h) {
-		return {questInfo: a, loading: b, sideQuestList: c, questFormOpen: d, sideQuestName: e, sideQuestDescription: f, suggestingSideQuest: g, suggestSideQuestSuccess: h};
-	});
-
-var _user$project$Update_QuestDetailsUpdate$decideOnSuggestedSideQuest = F3(
-	function (taco, questDetails, isAccepted) {
-		var isCmd = A4(
-			_elm_lang$core$Maybe$map3,
-			F3(
-				function (userToken, quest, sideQuest) {
-					return _user$project$Request_QuestsRequest$decideSideQuest(
-						{apiEndpoint: taco.flags.apiEndpoint, userToken: userToken, isAccepted: isAccepted, sideQuestId: sideQuest.id, questId: quest.id});
-				}),
-			taco.token,
-			questDetails.quest,
-			questDetails.decidingSideQuest);
-		var _p0 = isCmd;
-		if (_p0.ctor === 'Just') {
-			return A2(_elm_lang$core$Platform_Cmd$map, _user$project$Msg$QuestDetails, _p0._0);
-		} else {
-			return _elm_lang$core$Platform_Cmd$none;
-		}
-	});
-var _user$project$Update_QuestDetailsUpdate$onQuestDetailsMsg = F3(
-	function (msg, _p1, commands) {
-		var _p2 = _p1;
-		var _p7 = _p2._0;
-		var _p6 = _p2._1;
-		var _p3 = msg;
-		switch (_p3.ctor) {
-			case 'DecideSideQuestResult':
-				if (_p3._0.ctor === 'Ok') {
-					var _p4 = _p3._0._0;
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							_p6,
-							{
-								quest: _elm_lang$core$Maybe$Just(_p4.quest),
-								sideQuests: _elm_lang$core$Maybe$Just(_p4.sideQuests),
-								suggestedSideQuests: _elm_lang$core$Maybe$Just(_p4.suggestedSideQuests)
-							}),
-						_1: commands
-					};
-				} else {
-					return {ctor: '_Tuple2', _0: _p6, _1: commands};
-				}
-			case 'GetQuestDetailsResult':
-				if (_p3._0.ctor === 'Ok') {
-					var _p5 = _p3._0._0;
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							_p6,
-							{
-								quest: _elm_lang$core$Maybe$Just(_p5.quest),
-								sideQuests: _elm_lang$core$Maybe$Just(_p5.sideQuests),
-								suggestedSideQuests: _elm_lang$core$Maybe$Just(_p5.suggestedSideQuests)
-							}),
-						_1: commands
-					};
-				} else {
-					return {ctor: '_Tuple2', _0: _p6, _1: commands};
-				}
-			case 'ToggleShowingSuggestedSideQuests':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						_p6,
-						{showingSuggestedSideQuests: _p3._0}),
-					_1: commands
-				};
-			case 'AcceptSuggestedSideQuest':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						_p6,
-						{decidingSideQuest: _elm_lang$core$Maybe$Nothing, quest: _elm_lang$core$Maybe$Nothing, sideQuests: _elm_lang$core$Maybe$Nothing, suggestedSideQuests: _elm_lang$core$Maybe$Nothing}),
-					_1: A2(
-						_elm_lang$core$Basics_ops['++'],
-						commands,
-						{
-							ctor: '::',
-							_0: A3(_user$project$Update_QuestDetailsUpdate$decideOnSuggestedSideQuest, _p7, _p6, true),
-							_1: {ctor: '[]'}
-						})
-				};
-			case 'DeclineSuggestedSideQuest':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						_p6,
-						{decidingSideQuest: _elm_lang$core$Maybe$Nothing, quest: _elm_lang$core$Maybe$Nothing, sideQuests: _elm_lang$core$Maybe$Nothing, suggestedSideQuests: _elm_lang$core$Maybe$Nothing}),
-					_1: A2(
-						_elm_lang$core$Basics_ops['++'],
-						commands,
-						{
-							ctor: '::',
-							_0: A3(_user$project$Update_QuestDetailsUpdate$decideOnSuggestedSideQuest, _p7, _p6, false),
-							_1: {ctor: '[]'}
-						})
-				};
-			case 'ToggleShowingSideQuestModal':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						_p6,
-						{decidingSideQuest: _p3._0}),
-					_1: commands
-				};
-			case 'AcceptSideQuest':
-				return {ctor: '_Tuple2', _0: _p6, _1: commands};
-			case 'DeclineSideQuest':
-				return {ctor: '_Tuple2', _0: _p6, _1: commands};
-			default:
-				return {ctor: '_Tuple2', _0: _p6, _1: commands};
-		}
-	});
-var _user$project$Update_QuestDetailsUpdate$questDetailsInitialModel = {quest: _elm_lang$core$Maybe$Nothing, sideQuests: _elm_lang$core$Maybe$Nothing, suggestedSideQuests: _elm_lang$core$Maybe$Nothing, showingSuggestedSideQuests: false, decidingSideQuest: _elm_lang$core$Maybe$Nothing};
-var _user$project$Update_QuestDetailsUpdate$questDetailsUpdate = F3(
-	function (msg, _p8, commands) {
-		var _p9 = _p8;
-		var _p14 = _p9._0;
-		var _p13 = _p9._1;
-		var _p10 = msg;
-		switch (_p10.ctor) {
-			case 'QuestDetails':
-				return A3(
-					_user$project$Update_QuestDetailsUpdate$onQuestDetailsMsg,
-					_p10._0,
-					{ctor: '_Tuple2', _0: _p14, _1: _p13},
-					commands);
-			case 'OnLocationChange':
-				var _p11 = _p14.routeData;
-				var route = _p11._0;
-				var location = _p11._1;
-				var _p12 = route;
-				if (_p12.ctor === 'QuestDetailsRoute') {
-					var paramArray = _elm_lang$core$Array$fromList(
-						A2(_elm_lang$core$String$split, ':', _p12._0));
-					var request = A3(
-						_elm_lang$core$Maybe$map2,
-						F2(
-							function (userId, questId) {
-								return {
-									ctor: '::',
-									_0: A2(
-										_elm_lang$core$Platform_Cmd$map,
-										_user$project$Msg$QuestDetails,
-										A3(_user$project$Request_QuestsRequest$getQuestDetails, _p14.flags.apiEndpoint, userId, questId)),
-									_1: {ctor: '[]'}
-								};
-							}),
-						A2(_elm_lang$core$Array$get, 0, paramArray),
-						A2(_elm_lang$core$Array$get, 1, paramArray));
-					return {
-						ctor: '_Tuple2',
-						_0: _user$project$Update_QuestDetailsUpdate$questDetailsInitialModel,
-						_1: A2(
-							_elm_lang$core$Basics_ops['++'],
-							commands,
-							A2(
-								_elm_lang$core$Maybe$withDefault,
-								{ctor: '[]'},
-								request))
-					};
-				} else {
-					return {ctor: '_Tuple2', _0: _p13, _1: commands};
-				}
-			default:
-				return {ctor: '_Tuple2', _0: _p13, _1: commands};
-		}
-	});
-var _user$project$Update_QuestDetailsUpdate$QuestDetailsModel = F5(
-	function (a, b, c, d, e) {
-		return {quest: a, sideQuests: b, suggestedSideQuests: c, showingSuggestedSideQuests: d, decidingSideQuest: e};
-	});
-
-var _user$project$Request_SessionRequest$decodeSessionInfo = A3(
-	_elm_lang$core$Json_Decode$map2,
-	_user$project$Types$SessionInfo,
-	A2(
-		_elm_lang$core$Json_Decode$at,
-		{
-			ctor: '::',
-			_0: 'username',
-			_1: {ctor: '[]'}
-		},
-		_elm_lang$core$Json_Decode$string),
-	A2(
-		_elm_lang$core$Json_Decode$at,
-		{
-			ctor: '::',
-			_0: 'userId',
-			_1: {ctor: '[]'}
-		},
-		_elm_lang$core$Json_Decode$string));
-var _user$project$Request_SessionRequest$loadSession = F2(
-	function (apiEndpoint, userToken) {
-		var request = _elm_lang$http$Http$request(
-			{
-				method: 'GET',
-				headers: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$http$Http$header,
-						'Authorization',
-						A2(_elm_lang$core$Basics_ops['++'], 'Bearer ', userToken)),
-					_1: {ctor: '[]'}
-				},
-				url: A2(_elm_lang$core$Basics_ops['++'], apiEndpoint, 'taco/load'),
-				body: _elm_lang$http$Http$emptyBody,
-				expect: _elm_lang$http$Http$expectJson(_user$project$Request_SessionRequest$decodeSessionInfo),
-				timeout: _elm_lang$core$Maybe$Nothing,
-				withCredentials: false
-			});
-		return A2(_elm_lang$http$Http$send, _user$project$Msg_SessionMsg$LoadSessionResult, request);
-	});
-
-var _user$project$Update_SessionUpdate$onSessionMsg = F3(
-	function (userMsg, _p0, commands) {
-		var _p1 = _p0;
-		var _p5 = _p1._1;
-		var _p2 = userMsg;
-		if (_p2.ctor === 'GetTokenResult') {
-			if (_p2._0.ctor === 'Ok') {
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						_p5,
-						{
-							token: _elm_lang$core$Maybe$Just(_p2._0._0)
-						}),
-					_1: commands
-				};
-			} else {
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						_p5,
-						{token: _elm_lang$core$Maybe$Nothing, username: _elm_lang$core$Maybe$Nothing, userId: _elm_lang$core$Maybe$Nothing}),
-					_1: commands
-				};
-			}
-		} else {
-			if (_p2._0.ctor === 'Ok') {
-				var _p4 = _p2._0._0;
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						_p5,
-						{
-							username: _elm_lang$core$Maybe$Just(_p4.username),
-							userId: _elm_lang$core$Maybe$Just(_p4.userId)
-						}),
-					_1: function () {
-						var _p3 = _p1._0;
-						var route = _p3._0;
-						var location = _p3._1;
-						return A2(
-							_elm_lang$core$Basics_ops['++'],
-							commands,
-							{
-								ctor: '::',
-								_0: _elm_lang$navigation$Navigation$modifyUrl(location.hash),
-								_1: {ctor: '[]'}
-							});
-					}()
-				};
-			} else {
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						_p5,
-						{token: _elm_lang$core$Maybe$Nothing, username: _elm_lang$core$Maybe$Nothing, userId: _elm_lang$core$Maybe$Nothing}),
-					_1: commands
-				};
-			}
-		}
-	});
-var _user$project$Update_SessionUpdate$tacoUpdate = F3(
-	function (msg, _p6, commands) {
-		var _p7 = _p6;
-		var _p11 = _p7._1;
-		var _p10 = _p7._0;
-		var _p8 = msg;
-		switch (_p8.ctor) {
-			case 'OnLocationChange':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						_p11,
-						{routeData: _p10}),
-					_1: commands
-				};
-			case 'Session':
-				return A3(
-					_user$project$Update_SessionUpdate$onSessionMsg,
-					_p8._0,
-					{ctor: '_Tuple2', _0: _p10, _1: _p11},
-					commands);
-			case 'LoadToken':
-				var _p9 = _p8._0;
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						_p11,
-						{
-							token: _elm_lang$core$Maybe$Just(_p9)
-						}),
-					_1: A2(
-						_elm_lang$core$Basics_ops['++'],
-						commands,
-						{
-							ctor: '::',
-							_0: A2(
-								_elm_lang$core$Platform_Cmd$map,
-								_user$project$Msg$Session,
-								A2(_user$project$Request_SessionRequest$loadSession, _p11.flags.apiEndpoint, _p9)),
-							_1: {ctor: '[]'}
-						})
-				};
-			default:
-				return {ctor: '_Tuple2', _0: _p11, _1: commands};
-		}
-	});
-var _user$project$Update_SessionUpdate$userIsLoggedIn = function (taco) {
-	return !_elm_lang$core$Native_Utils.eq(taco.token, _elm_lang$core$Maybe$Nothing);
-};
-var _user$project$Update_SessionUpdate$tacoInitialModel = F2(
-	function (flags, routeData) {
-		return {flags: flags, token: _elm_lang$core$Maybe$Nothing, username: _elm_lang$core$Maybe$Nothing, userId: _elm_lang$core$Maybe$Nothing, routeData: routeData};
-	});
-
-var _user$project$Model$model = F2(
-	function (flags, initialLocation) {
-		return {
-			routeData: initialLocation,
-			quests: _user$project$Update_QuestsUpdate$questsModel,
-			myAdventurer: _user$project$Update_MyAdventurerUpdate$myAdventurerInitialModel,
-			sideQuests: _user$project$Update_SideQuestsUpdate$sideQuestsModel,
-			layout: _user$project$Update_LayoutUpdate$layoutModel,
-			taco: A2(_user$project$Update_SessionUpdate$tacoInitialModel, flags, initialLocation),
-			createQuest: _user$project$Update_CreateQuestUpdate$createQuestInitialModel,
-			questDetails: _user$project$Update_QuestDetailsUpdate$questDetailsInitialModel
-		};
-	});
-var _user$project$Model$Model = F8(
-	function (a, b, c, d, e, f, g, h) {
-		return {routeData: a, quests: b, myAdventurer: c, sideQuests: d, layout: e, taco: f, createQuest: g, questDetails: h};
-	});
-
-var _user$project$Update$updater = F4(
-	function (getter, setter, reducer, _p0) {
-		var _p1 = _p0;
-		var _p4 = _p1._1;
-		var _p3 = _p1._0;
-		var _p2 = A3(
-			reducer,
-			_p3,
-			getter(_p4),
-			_p1._2);
-		var newModel = _p2._0;
-		var newCommands = _p2._1;
-		return {
-			ctor: '_Tuple3',
-			_0: _p3,
-			_1: A2(setter, _p4, newModel),
-			_2: newCommands
-		};
-	});
-var _user$project$Update$update = F2(
-	function (message, model) {
-		var _p5 = A4(
-			_user$project$Update$updater,
-			function (model) {
-				return {ctor: '_Tuple2', _0: model.taco, _1: model.questDetails};
-			},
-			F2(
-				function (model, questDetails) {
-					return _elm_lang$core$Native_Utils.update(
-						model,
-						{questDetails: questDetails});
-				}),
-			_user$project$Update_QuestDetailsUpdate$questDetailsUpdate,
-			A4(
-				_user$project$Update$updater,
-				function (model) {
-					return {ctor: '_Tuple2', _0: model.taco, _1: model.myAdventurer};
-				},
-				F2(
-					function (model, myAdventurer) {
-						return _elm_lang$core$Native_Utils.update(
-							model,
-							{myAdventurer: myAdventurer});
-					}),
-				_user$project$Update_MyAdventurerUpdate$myAdventurerUpdate,
-				A4(
-					_user$project$Update$updater,
-					function (model) {
-						return {ctor: '_Tuple2', _0: model.taco, _1: model.createQuest};
-					},
+var _user$project$Update_MyAdventurerUpdate$myAdventurerUpdate = F4(
+	function (msg, tacoMsg, model, taco) {
+		var _p0 = function () {
+			var _p1 = tacoMsg;
+			if (_p1.ctor === 'MyAdventurerRoute') {
+				var result = A3(
+					_elm_lang$core$Maybe$map2,
 					F2(
-						function (model, createQuest) {
-							return _elm_lang$core$Native_Utils.update(
-								model,
-								{createQuest: createQuest});
+						function (userId, token) {
+							return A3(_user$project$Request_QuestsRequest$getQuestsByUser, taco.flags.apiEndpoint, token, userId);
 						}),
-					_user$project$Update_CreateQuestUpdate$createQuestUpdate,
-					A4(
-						_user$project$Update$updater,
-						function (model) {
-							return model.layout;
-						},
-						F2(
-							function (model, layout) {
-								return _elm_lang$core$Native_Utils.update(
-									model,
-									{layout: layout});
-							}),
-						_user$project$Update_LayoutUpdate$layoutUpdate,
-						A4(
-							_user$project$Update$updater,
-							function (model) {
-								return {ctor: '_Tuple2', _0: model.taco, _1: model.quests};
-							},
-							F2(
-								function (model, quests) {
-									return _elm_lang$core$Native_Utils.update(
-										model,
-										{quests: quests});
-								}),
-							_user$project$Update_QuestsUpdate$questsUpdate,
-							A4(
-								_user$project$Update$updater,
-								function (model) {
-									return {ctor: '_Tuple2', _0: model.taco, _1: model.sideQuests};
-								},
-								F2(
-									function (model, sideQuests) {
-										return _elm_lang$core$Native_Utils.update(
-											model,
-											{sideQuests: sideQuests});
-									}),
-								_user$project$Update_SideQuestsUpdate$sideQuestsUpdate,
-								A4(
-									_user$project$Update$updater,
-									function (model) {
-										return {ctor: '_Tuple2', _0: model.routeData, _1: model.taco};
-									},
-									F2(
-										function (model, taco) {
-											return _elm_lang$core$Native_Utils.update(
-												model,
-												{taco: taco});
-										}),
-									_user$project$Update_SessionUpdate$tacoUpdate,
-									A4(
-										_user$project$Update$updater,
-										function (model) {
-											return model.routeData;
-										},
-										F2(
-											function (model, routeData) {
-												return _elm_lang$core$Native_Utils.update(
-													model,
-													{routeData: routeData});
-											}),
-										_user$project$Update_RouteUpdate$routeUpdate,
-										{
-											ctor: '_Tuple3',
-											_0: A2(_elm_lang$core$Debug$log, 'message', message),
-											_1: model,
-											_2: {ctor: '[]'}
-										}))))))));
-		var passMessage = _p5._0;
-		var updatedModel = _p5._1;
-		var commands = _p5._2;
-		return {
-			ctor: '_Tuple2',
-			_0: updatedModel,
-			_1: _elm_lang$core$Platform_Cmd$batch(commands)
-		};
-	});
-
-var _user$project$View_Layout$sideNavtransform = function (isOpen) {
-	return isOpen ? 'translateX(0%)' : 'translateX(-105%)';
-};
-var _user$project$View_Layout$toggleSidenavButton = A2(
-	_rtfeldman$elm_css$Html_Styled$a,
-	{
-		ctor: '::',
-		_0: _rtfeldman$elm_css$Html_Styled_Attributes$href('javascript:void(0);'),
-		_1: {
-			ctor: '::',
-			_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('left sidenav-trigger hide-on-med-and-up'),
-			_1: {
-				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_user$project$Msg_LayoutMsg$ToggleSidenav),
-				_1: {
-					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
-						{
-							ctor: '::',
-							_0: _rtfeldman$elm_css$Css$cursor(_rtfeldman$elm_css$Css$pointer),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
+					taco.userId,
+					taco.token);
+				var _p2 = result;
+				if (_p2.ctor === 'Just') {
+					return {
+						ctor: '_Tuple2',
+						_0: model,
+						_1: A2(_elm_lang$http$Http$send, _user$project$Update_MyAdventurerUpdate$GetQuestsByUserResult, _p2._0)
+					};
+				} else {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				}
+			} else {
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			}
+		}();
+		var myAdventurer = _p0._0;
+		var command = _p0._1;
+		var _p3 = msg;
+		if (_p3.ctor === 'GetQuestsByUserResult') {
+			if (_p3._0.ctor === 'Ok') {
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						myAdventurer,
+						{quests: _p3._0._0}),
+					_1: command
+				};
+			} else {
+				return {ctor: '_Tuple2', _0: myAdventurer, _1: command};
+			}
+		} else {
+			return {ctor: '_Tuple2', _0: myAdventurer, _1: command};
 		}
-	},
-	{
-		ctor: '::',
-		_0: A2(
-			_rtfeldman$elm_css$Html_Styled$i,
-			{
-				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('material-icons'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled$text('menu'),
-				_1: {ctor: '[]'}
-			}),
-		_1: {ctor: '[]'}
 	});
-var _user$project$View_Layout$navs = function (model) {
-	return {
-		ctor: '::',
-		_0: A2(
-			_rtfeldman$elm_css$Html_Styled$li,
-			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: A2(
-					_rtfeldman$elm_css$Html_Styled$a,
-					{
-						ctor: '::',
-						_0: _rtfeldman$elm_css$Html_Styled_Attributes$href('#quests'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _rtfeldman$elm_css$Html_Styled$text('Quests'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}),
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_rtfeldman$elm_css$Html_Styled$li,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: function () {
-						if (_user$project$Update_SessionUpdate$userIsLoggedIn(model.taco)) {
-							return A2(
-								_rtfeldman$elm_css$Html_Styled$a,
-								{
-									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Attributes$href('#profile'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled$text('My Adventurer'),
-									_1: {ctor: '[]'}
-								});
-						} else {
-							var _p0 = model.routeData;
-							var route = _p0._0;
-							var location = _p0._1;
-							return A2(
-								_rtfeldman$elm_css$Html_Styled$a,
-								{
-									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Attributes$href(
-										A2(
-											_elm_lang$core$Basics_ops['++'],
-											'https://www.facebook.com/v2.11/dialog/oauth?client_id=169926423737270&redirect_uri=',
-											A2(_elm_lang$core$Basics_ops['++'], location.origin, '&state=success'))),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: A2(
-										_rtfeldman$elm_css$Html_Styled$i,
-										{
-											ctor: '::',
-											_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
-												{
-													ctor: '::',
-													_0: _rtfeldman$elm_css$Css$transform(
-														_rtfeldman$elm_css$Css$translateY(
-															_rtfeldman$elm_css$Css$pct(25))),
-													_1: {
-														ctor: '::',
-														_0: _rtfeldman$elm_css$Css$paddingRight(
-															_rtfeldman$elm_css$Css$px(8)),
-														_1: {ctor: '[]'}
-													}
-												}),
-											_1: {
-												ctor: '::',
-												_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('fab fa-2x fa-facebook'),
-												_1: {ctor: '[]'}
-											}
-										},
-										{ctor: '[]'}),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_rtfeldman$elm_css$Html_Styled$span,
-											{ctor: '[]'},
-											{
-												ctor: '::',
-												_0: _rtfeldman$elm_css$Html_Styled$text('Login'),
-												_1: {ctor: '[]'}
-											}),
-										_1: {ctor: '[]'}
-									}
-								});
-						}
-					}(),
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		}
-	};
-};
-var _user$project$View_Layout$navbar = function (model) {
-	return A2(
-		_rtfeldman$elm_css$Html_Styled$nav,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: A2(
-				_rtfeldman$elm_css$Html_Styled$div,
-				{
-					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('nav-wrapper'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: _user$project$View_Layout$toggleSidenavButton,
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_rtfeldman$elm_css$Html_Styled$a,
-							{
-								ctor: '::',
-								_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('brand-logo center'),
-								_1: {
-									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Attributes$href('#quests'),
-									_1: {ctor: '[]'}
-								}
-							},
-							{
-								ctor: '::',
-								_0: A2(
-									_rtfeldman$elm_css$Html_Styled$i,
-									{
-										ctor: '::',
-										_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('fa fa-shield-alt'),
-										_1: {ctor: '[]'}
-									},
-									{ctor: '[]'}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_rtfeldman$elm_css$Html_Styled$span,
-										{ctor: '[]'},
-										{
-											ctor: '::',
-											_0: _rtfeldman$elm_css$Html_Styled$text('QUEST'),
-											_1: {ctor: '[]'}
-										}),
-									_1: {ctor: '[]'}
-								}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_rtfeldman$elm_css$Html_Styled$ul,
-								{
-									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('hide-on-small-only'),
-									_1: {ctor: '[]'}
-								},
-								_user$project$View_Layout$navs(model)),
-							_1: {ctor: '[]'}
-						}
-					}
-				}),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$View_Layout$layout = F2(
-	function (model, view) {
-		return A2(
-			_rtfeldman$elm_css$Html_Styled$div,
-			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: A2(
-					_rtfeldman$elm_css$Html_Styled$map,
-					_user$project$Msg$Layout,
-					_user$project$View_Layout$navbar(model)),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_rtfeldman$elm_css$Html_Styled$map,
-						_user$project$Msg$Layout,
-						A2(
-							_rtfeldman$elm_css$Html_Styled$ul,
-							{
-								ctor: '::',
-								_0: _rtfeldman$elm_css$Html_Styled_Attributes$id('slide-out'),
-								_1: {
-									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('sidenav'),
-									_1: {
-										ctor: '::',
-										_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_user$project$Msg_LayoutMsg$ToggleSidenav),
-										_1: {
-											ctor: '::',
-											_0: _rtfeldman$elm_css$Html_Styled_Attributes$style(
-												{
-													ctor: '::',
-													_0: {
-														ctor: '_Tuple2',
-														_0: 'transform',
-														_1: _user$project$View_Layout$sideNavtransform(model.layout.sidenavOpen)
-													},
-													_1: {
-														ctor: '::',
-														_0: {ctor: '_Tuple2', _0: 'transition', _1: '.25s'},
-														_1: {ctor: '[]'}
-													}
-												}),
-											_1: {ctor: '[]'}
-										}
-									}
-								}
-							},
-							_user$project$View_Layout$navs(model))),
-					_1: {
-						ctor: '::',
-						_0: view,
-						_1: {ctor: '[]'}
-					}
-				}
-			});
-	});
+var _user$project$Update_MyAdventurerUpdate$NoOp = {ctor: 'NoOp'};
 
 var _user$project$View_MyAdventurerView_Main$noQuests = function (model) {
 	return _elm_lang$core$Native_Utils.eq(
-		_elm_lang$core$List$length(model.myAdventurer.quests),
+		_elm_lang$core$List$length(model.quests),
 		0);
 };
 var _user$project$View_MyAdventurerView_Main$topCopy = function (model) {
@@ -23328,73 +22092,128 @@ var _user$project$View_MyAdventurerView_Main$topCopy = function (model) {
 			}
 		});
 };
-var _user$project$View_MyAdventurerView_Main$myAdventurerView = function (model) {
-	return A2(
-		_rtfeldman$elm_css$Html_Styled$div,
-		{
-			ctor: '::',
-			_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('container'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _user$project$View_MyAdventurerView_Main$topCopy(model),
-			_1: {
+var _user$project$View_MyAdventurerView_Main$myAdventurerView = F2(
+	function (taco, model) {
+		return A2(
+			_rtfeldman$elm_css$Html_Styled$div,
+			{
 				ctor: '::',
-				_0: A2(
-					_rtfeldman$elm_css$Html_Styled$div,
-					{
-						ctor: '::',
-						_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
-							{
-								ctor: '::',
-								_0: _rtfeldman$elm_css$Css$displayFlex,
-								_1: {
+				_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('container'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _user$project$View_MyAdventurerView_Main$topCopy(model),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_rtfeldman$elm_css$Html_Styled$div,
+						{
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+								{
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Css$flexWrap(_rtfeldman$elm_css$Css$wrap),
+									_0: _rtfeldman$elm_css$Css$displayFlex,
 									_1: {
 										ctor: '::',
-										_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
-										_1: {ctor: '[]'}
-									}
-								}
-							}),
-						_1: {ctor: '[]'}
-					},
-					A2(
-						_elm_lang$core$List$map,
-						function (quest) {
-							return A2(
-								_user$project$Component_QuestCard$questCardWithActionSection,
-								quest,
-								{
-									showUserImage: false,
-									actionSection: A2(
-										_rtfeldman$elm_css$Html_Styled$div,
-										{ctor: '[]'},
-										{
+										_0: _rtfeldman$elm_css$Css$flexWrap(_rtfeldman$elm_css$Css$wrap),
+										_1: {
 											ctor: '::',
-											_0: _user$project$Component_QuestAction$questAction(
-												{
-													icon: 'list',
-													text: 'Details',
-													href: A2(
-														_elm_lang$core$Basics_ops['++'],
-														'#details/',
-														A2(
-															_elm_lang$core$Basics_ops['++'],
-															quest.userId,
-															A2(_elm_lang$core$Basics_ops['++'], ':', quest.id)))
-												}),
+											_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
 											_1: {ctor: '[]'}
-										})
-								});
+										}
+									}
+								}),
+							_1: {ctor: '[]'}
 						},
-						model.myAdventurer.quests)),
-				_1: {ctor: '[]'}
-			}
-		});
+						A2(
+							_elm_lang$core$List$map,
+							function (quest) {
+								return A2(
+									_user$project$Component_QuestCard$questCardWithActionSection,
+									quest,
+									{
+										showUserImage: false,
+										actionSection: A2(
+											_rtfeldman$elm_css$Html_Styled$div,
+											{ctor: '[]'},
+											{
+												ctor: '::',
+												_0: _user$project$Component_QuestAction$questAction(
+													{
+														icon: 'list',
+														text: 'Details',
+														href: A2(
+															_elm_lang$core$Basics_ops['++'],
+															'#details/',
+															A2(
+																_elm_lang$core$Basics_ops['++'],
+																quest.userId,
+																A2(_elm_lang$core$Basics_ops['++'], ':', quest.id)))
+													}),
+												_1: {ctor: '[]'}
+											})
+									});
+							},
+							model.quests)),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
+
+var _user$project$Update_QuestsUpdate$questsModel = {
+	questList: {ctor: '[]'}
 };
+var _user$project$Update_QuestsUpdate$QuestsModel = function (a) {
+	return {questList: a};
+};
+var _user$project$Update_QuestsUpdate$GetQuestsResult = function (a) {
+	return {ctor: 'GetQuestsResult', _0: a};
+};
+var _user$project$Update_QuestsUpdate$handleTacoMsg = F3(
+	function (tacoMsg, quests, taco) {
+		var _p0 = tacoMsg;
+		if (_p0.ctor === 'QuestsRoute') {
+			var token = A2(_elm_lang$core$Maybe$withDefault, '', taco.token);
+			return {
+				ctor: '_Tuple2',
+				_0: quests,
+				_1: A2(
+					_elm_lang$http$Http$send,
+					_user$project$Update_QuestsUpdate$GetQuestsResult,
+					A2(_user$project$Request_QuestsRequest$getQuests, taco.flags.apiEndpoint, token))
+			};
+		} else {
+			return {ctor: '_Tuple2', _0: quests, _1: _elm_lang$core$Platform_Cmd$none};
+		}
+	});
+var _user$project$Update_QuestsUpdate$questsUpdate = F4(
+	function (msg, tacoMsg, model, taco) {
+		var _p1 = A3(
+			_user$project$Update_QuestsUpdate$handleTacoMsg,
+			A2(_elm_lang$core$Debug$log, 'got taco msg', tacoMsg),
+			model,
+			taco);
+		var quests = _p1._0;
+		var commands = _p1._1;
+		var _p2 = msg;
+		if (_p2.ctor === 'GetQuestsResult') {
+			if (_p2._0.ctor === 'Ok') {
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						quests,
+						{questList: _p2._0._0}),
+					_1: commands
+				};
+			} else {
+				return {ctor: '_Tuple2', _0: quests, _1: commands};
+			}
+		} else {
+			return {ctor: '_Tuple2', _0: quests, _1: commands};
+		}
+	});
+var _user$project$Update_QuestsUpdate$NoOp = {ctor: 'NoOp'};
 
 var _user$project$View_QuestsView_QuestAction$questAction = function (params) {
 	return A2(
@@ -23555,94 +22374,264 @@ var _user$project$View_QuestsView_QuestAction$questAction = function (params) {
 		});
 };
 
-var _user$project$View_QuestsView_Main$questsView = function (model) {
-	return A2(
-		_rtfeldman$elm_css$Html_Styled$div,
-		{
-			ctor: '::',
-			_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
-				{
-					ctor: '::',
-					_0: A4(
-						_rtfeldman$elm_css$Css$padding4,
-						_rtfeldman$elm_css$Css$px(16),
-						_rtfeldman$elm_css$Css$px(8),
-						_rtfeldman$elm_css$Css$px(0),
-						_rtfeldman$elm_css$Css$px(8)),
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_rtfeldman$elm_css$Html_Styled$div,
-				{
-					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
-						{
-							ctor: '::',
-							_0: _rtfeldman$elm_css$Css$displayFlex,
-							_1: {
+var _user$project$View_QuestsView_Main$questsView = F2(
+	function (taco, model) {
+		return A2(
+			_rtfeldman$elm_css$Html_Styled$div,
+			{
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+					{
+						ctor: '::',
+						_0: A4(
+							_rtfeldman$elm_css$Css$padding4,
+							_rtfeldman$elm_css$Css$px(16),
+							_rtfeldman$elm_css$Css$px(8),
+							_rtfeldman$elm_css$Css$px(0),
+							_rtfeldman$elm_css$Css$px(8)),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Html_Styled$div,
+					{
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+							{
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Css$flexWrap(_rtfeldman$elm_css$Css$wrap),
+								_0: _rtfeldman$elm_css$Css$displayFlex,
 								_1: {
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
-									_1: {ctor: '[]'}
-								}
-							}
-						}),
-					_1: {ctor: '[]'}
-				},
-				A2(
-					_elm_lang$core$List$map,
-					function (quest) {
-						return A2(
-							_user$project$Component_QuestCard$questCardWithActionSection,
-							quest,
-							{
-								showUserImage: true,
-								actionSection: A2(
-									_rtfeldman$elm_css$Html_Styled$div,
-									{ctor: '[]'},
-									{
+									_0: _rtfeldman$elm_css$Css$flexWrap(_rtfeldman$elm_css$Css$wrap),
+									_1: {
 										ctor: '::',
-										_0: _user$project$View_QuestsView_QuestAction$questAction(
-											{
-												icon: 'list',
-												text: 'Details',
-												href: A2(
-													_elm_lang$core$Basics_ops['++'],
-													'#details/',
-													A2(
-														_elm_lang$core$Basics_ops['++'],
-														quest.userId,
-														A2(_elm_lang$core$Basics_ops['++'], ':', quest.id)))
-											}),
-										_1: {
+										_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
+										_1: {ctor: '[]'}
+									}
+								}
+							}),
+						_1: {ctor: '[]'}
+					},
+					A2(
+						_elm_lang$core$List$map,
+						function (quest) {
+							return A2(
+								_user$project$Component_QuestCard$questCardWithActionSection,
+								quest,
+								{
+									showUserImage: true,
+									actionSection: A2(
+										_rtfeldman$elm_css$Html_Styled$div,
+										{ctor: '[]'},
+										{
 											ctor: '::',
 											_0: _user$project$View_QuestsView_QuestAction$questAction(
 												{
-													icon: 'map-signs',
-													text: 'Side Quests',
+													icon: 'list',
+													text: 'Details',
 													href: A2(
 														_elm_lang$core$Basics_ops['++'],
-														'#sidequests/',
+														'#details/',
 														A2(
 															_elm_lang$core$Basics_ops['++'],
 															quest.userId,
 															A2(_elm_lang$core$Basics_ops['++'], ':', quest.id)))
 												}),
-											_1: {ctor: '[]'}
-										}
-									})
-							});
-					},
-					model.quests.questList)),
-			_1: {ctor: '[]'}
-		});
+											_1: {
+												ctor: '::',
+												_0: _user$project$View_QuestsView_QuestAction$questAction(
+													{
+														icon: 'map-signs',
+														text: 'Side Quests',
+														href: A2(
+															_elm_lang$core$Basics_ops['++'],
+															'#sidequests/',
+															A2(
+																_elm_lang$core$Basics_ops['++'],
+																quest.userId,
+																A2(_elm_lang$core$Basics_ops['++'], ':', quest.id)))
+													}),
+												_1: {ctor: '[]'}
+											}
+										})
+								});
+						},
+						model.questList)),
+				_1: {ctor: '[]'}
+			});
+	});
+
+var _user$project$Update_SideQuestsUpdate$sideQuestsModel = {questFormOpen: false, questInfo: _elm_lang$core$Maybe$Nothing, loading: false, sideQuestList: _elm_lang$core$Maybe$Nothing, sideQuestName: '', sideQuestDescription: '', suggestingSideQuest: false, suggestSideQuestSuccess: _elm_lang$core$Maybe$Nothing};
+var _user$project$Update_SideQuestsUpdate$SideQuestsModel = F8(
+	function (a, b, c, d, e, f, g, h) {
+		return {questInfo: a, loading: b, sideQuestList: c, questFormOpen: d, sideQuestName: e, sideQuestDescription: f, suggestingSideQuest: g, suggestSideQuestSuccess: h};
+	});
+var _user$project$Update_SideQuestsUpdate$NoOp = {ctor: 'NoOp'};
+var _user$project$Update_SideQuestsUpdate$EditSideQuestDescription = function (a) {
+	return {ctor: 'EditSideQuestDescription', _0: a};
 };
+var _user$project$Update_SideQuestsUpdate$EditSideQuestName = function (a) {
+	return {ctor: 'EditSideQuestName', _0: a};
+};
+var _user$project$Update_SideQuestsUpdate$SuggestSideQuestResult = function (a) {
+	return {ctor: 'SuggestSideQuestResult', _0: a};
+};
+var _user$project$Update_SideQuestsUpdate$SubmitSideQuestForm = {ctor: 'SubmitSideQuestForm'};
+var _user$project$Update_SideQuestsUpdate$HideSideQuestForm = {ctor: 'HideSideQuestForm'};
+var _user$project$Update_SideQuestsUpdate$ShowSideQuestForm = {ctor: 'ShowSideQuestForm'};
+var _user$project$Update_SideQuestsUpdate$GetSideQuestsResult = function (a) {
+	return {ctor: 'GetSideQuestsResult', _0: a};
+};
+var _user$project$Update_SideQuestsUpdate$handleTacoMsg = F3(
+	function (tacoMsg, sideQuests, taco) {
+		var _p0 = tacoMsg;
+		if (_p0.ctor === 'SideQuestsRoute') {
+			var params = _elm_lang$core$Array$fromList(
+				A2(_elm_lang$core$String$split, ':', _p0._0));
+			return {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Native_Utils.update(
+					_user$project$Update_SideQuestsUpdate$sideQuestsModel,
+					{loading: true, questInfo: _elm_lang$core$Maybe$Nothing, sideQuestList: _elm_lang$core$Maybe$Nothing}),
+				_1: A2(
+					_elm_lang$http$Http$send,
+					_user$project$Update_SideQuestsUpdate$GetSideQuestsResult,
+					A4(
+						_user$project$Request_QuestsRequest$getSideQuests,
+						taco.flags.apiEndpoint,
+						A2(_elm_lang$core$Maybe$withDefault, '', taco.token),
+						A2(
+							_elm_lang$core$Maybe$withDefault,
+							'',
+							A2(_elm_lang$core$Array$get, 0, params)),
+						A2(
+							_elm_lang$core$Maybe$withDefault,
+							'',
+							A2(_elm_lang$core$Array$get, 1, params))))
+			};
+		} else {
+			return {ctor: '_Tuple2', _0: sideQuests, _1: _elm_lang$core$Platform_Cmd$none};
+		}
+	});
+var _user$project$Update_SideQuestsUpdate$sideQuestsUpdate = F4(
+	function (message, tacoMsg, model, taco) {
+		var _p1 = A3(_user$project$Update_SideQuestsUpdate$handleTacoMsg, tacoMsg, model, taco);
+		var sideQuests = _p1._0;
+		var commands = _p1._1;
+		var _p2 = message;
+		switch (_p2.ctor) {
+			case 'SuggestSideQuestResult':
+				if (_p2._0.ctor === 'Err') {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							sideQuests,
+							{
+								suggestingSideQuest: false,
+								suggestSideQuestSuccess: _elm_lang$core$Maybe$Just(false)
+							}),
+						_1: commands
+					};
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							sideQuests,
+							{
+								suggestingSideQuest: false,
+								suggestSideQuestSuccess: _elm_lang$core$Maybe$Just(true)
+							}),
+						_1: commands
+					};
+				}
+			case 'GetSideQuestsResult':
+				if (_p2._0.ctor === 'Err') {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							sideQuests,
+							{loading: false}),
+						_1: commands
+					};
+				} else {
+					var _p3 = _p2._0._0;
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							sideQuests,
+							{
+								sideQuestList: _elm_lang$core$Maybe$Just(_p3.sideQuests),
+								questInfo: _elm_lang$core$Maybe$Just(_p3.quest),
+								loading: false
+							}),
+						_1: commands
+					};
+				}
+			case 'ShowSideQuestForm':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						sideQuests,
+						{questFormOpen: true, sideQuestName: '', sideQuestDescription: ''}),
+					_1: commands
+				};
+			case 'HideSideQuestForm':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						sideQuests,
+						{questFormOpen: false}),
+					_1: commands
+				};
+			case 'SubmitSideQuestForm':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						sideQuests,
+						{questFormOpen: false, suggestingSideQuest: true}),
+					_1: A2(
+						_elm_lang$core$Maybe$withDefault,
+						_elm_lang$core$Platform_Cmd$none,
+						A3(
+							_elm_lang$core$Maybe$map2,
+							F2(
+								function (quest, userId) {
+									return A2(
+										_elm_lang$http$Http$send,
+										_user$project$Update_SideQuestsUpdate$SuggestSideQuestResult,
+										A4(
+											_user$project$Request_QuestsRequest$suggestSideQuest,
+											taco.flags.apiEndpoint,
+											userId,
+											quest,
+											{guid: '', name: sideQuests.sideQuestName, description: sideQuests.sideQuestDescription, suggestedBy: '', id: ''}));
+								}),
+							sideQuests.questInfo,
+							taco.token))
+				};
+			case 'EditSideQuestName':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						sideQuests,
+						{sideQuestName: _p2._0}),
+					_1: commands
+				};
+			case 'EditSideQuestDescription':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						sideQuests,
+						{sideQuestDescription: _p2._0}),
+					_1: commands
+				};
+			default:
+				return {ctor: '_Tuple2', _0: sideQuests, _1: commands};
+		}
+	});
 
 var _user$project$View_SideQuestsView_SideQuestForm$sideQuestForm = function (formParams) {
 	return A2(
@@ -23733,11 +22722,11 @@ var _user$project$View_SideQuestsView_SideQuestForm$sideQuestForm = function (fo
 					_1: {
 						ctor: '::',
 						_0: _user$project$Component_TextField$textField(
-							{id: 'sidequestform-textfield', value: formParams.name, onInput: _user$project$Msg_SideQuestsMsg$EditSideQuestName, label: 'Side Quest Name', $class: _elm_lang$core$Maybe$Nothing}),
+							{id: 'sidequestform-textfield', value: formParams.name, onInput: _user$project$Update_SideQuestsUpdate$EditSideQuestName, label: 'Side Quest Name', $class: _elm_lang$core$Maybe$Nothing}),
 						_1: {
 							ctor: '::',
 							_0: _user$project$Component_TextArea$textArea(
-								{id: 'sidequestform-textarea', value: formParams.description, label: 'Side Quest Description', $class: _elm_lang$core$Maybe$Nothing, onInput: _user$project$Msg_SideQuestsMsg$EditSideQuestDescription}),
+								{id: 'sidequestform-textarea', value: formParams.description, label: 'Side Quest Description', $class: _elm_lang$core$Maybe$Nothing, onInput: _user$project$Update_SideQuestsUpdate$EditSideQuestDescription}),
 							_1: {
 								ctor: '::',
 								_0: A2(
@@ -23759,7 +22748,7 @@ var _user$project$View_SideQuestsView_SideQuestForm$sideQuestForm = function (fo
 									{
 										ctor: '::',
 										_0: _user$project$Component_FlatButton$flatButton(
-											{onClick: _user$project$Msg_SideQuestsMsg$HideSideQuestForm, label: 'Close'}),
+											{onClick: _user$project$Update_SideQuestsUpdate$HideSideQuestForm, label: 'Close'}),
 										_1: {
 											ctor: '::',
 											_0: function () {
@@ -23794,7 +22783,7 @@ var _user$project$View_SideQuestsView_SideQuestForm$sideQuestForm = function (fo
 																}
 															}),
 														label: canSubmit ? (formParams.submitting ? 'Loading' : 'Submit!') : 'Add details',
-														onClick: _user$project$Msg_SideQuestsMsg$SubmitSideQuestForm,
+														onClick: _user$project$Update_SideQuestsUpdate$SubmitSideQuestForm,
 														icon: _elm_lang$core$Maybe$Nothing
 													});
 											}(),
@@ -23814,7 +22803,7 @@ var _user$project$View_SideQuestsView_SideQuestForm$FormParams = F4(
 		return {name: a, description: b, open: c, submitting: d};
 	});
 
-var _user$project$View_SideQuestsView_Main$loading = A2(
+var _user$project$View_SideQuestsView_Main$loadingIndicator = A2(
 	_rtfeldman$elm_css$Html_Styled$div,
 	{
 		ctor: '::',
@@ -23884,7 +22873,7 @@ var _user$project$View_SideQuestsView_Main$ready = F3(
 									_1: {
 										ctor: '::',
 										_0: _user$project$View_SideQuestsView_SideQuestForm$sideQuestForm(
-											{name: model.sideQuests.sideQuestName, description: model.sideQuests.sideQuestDescription, open: model.sideQuests.questFormOpen, submitting: model.sideQuests.suggestingSideQuest}),
+											{name: model.sideQuestName, description: model.sideQuestDescription, open: model.questFormOpen, submitting: model.suggestingSideQuest}),
 										_1: {
 											ctor: '::',
 											_0: A2(
@@ -23917,7 +22906,7 @@ var _user$project$View_SideQuestsView_Main$ready = F3(
 															_1: {
 																ctor: '::',
 																_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(
-																	model.sideQuests.questFormOpen ? _user$project$Msg_SideQuestsMsg$HideSideQuestForm : _user$project$Msg_SideQuestsMsg$ShowSideQuestForm),
+																	model.questFormOpen ? _user$project$Update_SideQuestsUpdate$HideSideQuestForm : _user$project$Update_SideQuestsUpdate$ShowSideQuestForm),
 																_1: {ctor: '[]'}
 															}
 														}
@@ -23953,22 +22942,281 @@ var _user$project$View_SideQuestsView_Main$ready = F3(
 				_1: {ctor: '[]'}
 			});
 	});
-var _user$project$View_SideQuestsView_Main$sideQuestsView = function (model) {
-	var isLoaded = A3(
-		_elm_lang$core$Maybe$map2,
-		_user$project$View_SideQuestsView_Main$ready(model),
-		model.sideQuests.questInfo,
-		model.sideQuests.sideQuestList);
-	var _p0 = isLoaded;
-	if (_p0.ctor === 'Nothing') {
-		return _user$project$View_SideQuestsView_Main$loading;
-	} else {
-		return _p0._0;
-	}
+var _user$project$View_SideQuestsView_Main$sideQuestsView = F2(
+	function (taco, model) {
+		var isLoaded = A3(
+			_elm_lang$core$Maybe$map2,
+			_user$project$View_SideQuestsView_Main$ready(model),
+			model.questInfo,
+			model.sideQuestList);
+		var _p0 = isLoaded;
+		if (_p0.ctor === 'Nothing') {
+			return _user$project$View_SideQuestsView_Main$loadingIndicator;
+		} else {
+			return _p0._0;
+		}
+	});
+
+var _user$project$Request_CreateQuestRequest$encodeQuest = function (quest) {
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'id',
+				_1: _elm_lang$core$Json_Encode$string(quest.id)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'name',
+					_1: _elm_lang$core$Json_Encode$string(quest.name)
+				},
+				_1: {
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'description',
+						_1: _elm_lang$core$Json_Encode$string(quest.description)
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'imageUrl',
+							_1: _elm_lang$core$Json_Encode$string(quest.imageUrl)
+						},
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
 };
+var _user$project$Request_CreateQuestRequest$decodeQuest = A5(
+	_elm_lang$core$Json_Decode$map4,
+	_user$project$Types$Quest,
+	A2(
+		_elm_lang$core$Json_Decode$at,
+		{
+			ctor: '::',
+			_0: 'id',
+			_1: {ctor: '[]'}
+		},
+		_elm_lang$core$Json_Decode$string),
+	A2(
+		_elm_lang$core$Json_Decode$at,
+		{
+			ctor: '::',
+			_0: 'name',
+			_1: {ctor: '[]'}
+		},
+		_elm_lang$core$Json_Decode$string),
+	A2(
+		_elm_lang$core$Json_Decode$at,
+		{
+			ctor: '::',
+			_0: 'description',
+			_1: {ctor: '[]'}
+		},
+		_elm_lang$core$Json_Decode$string),
+	A2(
+		_elm_lang$core$Json_Decode$at,
+		{
+			ctor: '::',
+			_0: 'imageUrl',
+			_1: {ctor: '[]'}
+		},
+		_elm_lang$core$Json_Decode$string));
+var _user$project$Request_CreateQuestRequest$createQuestRequest = F3(
+	function (apiEndpoint, userToken, quest) {
+		return _elm_lang$http$Http$request(
+			{
+				method: 'POST',
+				headers: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$http$Http$header,
+						'Authorization',
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'Bearer ',
+							A2(_elm_lang$core$Debug$log, 'sending user token = ', userToken))),
+					_1: {ctor: '[]'}
+				},
+				url: A2(_elm_lang$core$Basics_ops['++'], apiEndpoint, 'quests'),
+				body: _elm_lang$http$Http$jsonBody(
+					_user$project$Request_CreateQuestRequest$encodeQuest(quest)),
+				expect: _elm_lang$http$Http$expectJson(_user$project$Request_CreateQuestRequest$decodeQuest),
+				timeout: _elm_lang$core$Maybe$Nothing,
+				withCredentials: false
+			});
+	});
+
+var _user$project$Update_CreateQuestUpdate$createQuestInitialModel = {questName: '', questDescription: '', questImageUrl: '/placeholder.png', imageUploadModalOpen: false, imageUploadModalFor: _elm_lang$core$Maybe$Nothing, imageUploadPath: _elm_lang$core$Maybe$Nothing, questImageUploadPending: false, questImageUploadError: false, submitPending: false, submitError: false, token: _elm_lang$core$Maybe$Nothing};
+var _user$project$Update_CreateQuestUpdate$handleTacoMsg = F3(
+	function (tacoMsg, model, taco) {
+		var _p0 = tacoMsg;
+		if (_p0.ctor === 'CreateQuestRoute') {
+			return {ctor: '_Tuple2', _0: _user$project$Update_CreateQuestUpdate$createQuestInitialModel, _1: _elm_lang$core$Platform_Cmd$none};
+		} else {
+			return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+		}
+	});
+var _user$project$Update_CreateQuestUpdate$CreateQuestModel = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return function (k) {
+											return {questName: a, questDescription: b, questImageUrl: c, imageUploadModalOpen: d, imageUploadModalFor: e, imageUploadPath: f, questImageUploadPending: g, questImageUploadError: h, submitPending: i, submitError: j, token: k};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var _user$project$Update_CreateQuestUpdate$UploadQuestImageFinished = function (a) {
+	return {ctor: 'UploadQuestImageFinished', _0: a};
+};
+var _user$project$Update_CreateQuestUpdate$SubmitCreateQuestResult = function (a) {
+	return {ctor: 'SubmitCreateQuestResult', _0: a};
+};
+var _user$project$Update_CreateQuestUpdate$createQuestUpdate = F4(
+	function (msg, tacoMsg, model, taco) {
+		var _p1 = A3(_user$project$Update_CreateQuestUpdate$handleTacoMsg, tacoMsg, model, taco);
+		var createQuest = _p1._0;
+		var commands = _p1._1;
+		var _p2 = msg;
+		switch (_p2.ctor) {
+			case 'UploadQuestImageFinished':
+				return _p2._0._0 ? {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						createQuest,
+						{questImageUploadPending: false, questImageUploadError: true, questImageUrl: _p2._0._1, imageUploadModalOpen: false}),
+					_1: commands
+				} : {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						createQuest,
+						{questImageUploadPending: false, questImageUploadError: true}),
+					_1: commands
+				};
+			case 'SubmitCreateQuest':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						createQuest,
+						{submitPending: true, submitError: false}),
+					_1: A2(
+						_elm_lang$http$Http$send,
+						_user$project$Update_CreateQuestUpdate$SubmitCreateQuestResult,
+						A3(
+							_user$project$Request_CreateQuestRequest$createQuestRequest,
+							taco.flags.apiEndpoint,
+							A2(_elm_lang$core$Maybe$withDefault, '', taco.token),
+							{id: '', name: createQuest.questName, description: createQuest.questDescription, imageUrl: createQuest.questImageUrl}))
+				};
+			case 'SubmitCreateQuestResult':
+				if (_p2._0.ctor === 'Ok') {
+					return {
+						ctor: '_Tuple2',
+						_0: createQuest,
+						_1: _elm_lang$navigation$Navigation$modifyUrl('/#profile')
+					};
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							createQuest,
+							{submitError: true}),
+						_1: commands
+					};
+				}
+			case 'OnFileChosen':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						createQuest,
+						{
+							imageUploadPath: _elm_lang$core$Maybe$Just(_p2._0)
+						}),
+					_1: commands
+				};
+			case 'ShowFileUploadModal':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						createQuest,
+						{imageUploadModalOpen: true, imageUploadPath: _elm_lang$core$Maybe$Nothing}),
+					_1: commands
+				};
+			case 'HideFileUploadModal':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						createQuest,
+						{imageUploadModalOpen: false, imageUploadPath: _elm_lang$core$Maybe$Nothing}),
+					_1: commands
+				};
+			case 'ConfirmFileUpload':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						createQuest,
+						{questImageUploadPending: true, questImageUploadError: false}),
+					_1: _user$project$Ports$uploadQuestImage(_p2._0)
+				};
+			case 'EditQuestName':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						createQuest,
+						{questName: _p2._0}),
+					_1: commands
+				};
+			case 'EditQuestDescription':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						createQuest,
+						{questDescription: _p2._0}),
+					_1: commands
+				};
+			default:
+				return {ctor: '_Tuple2', _0: createQuest, _1: commands};
+		}
+	});
+var _user$project$Update_CreateQuestUpdate$SubmitCreateQuest = {ctor: 'SubmitCreateQuest'};
+var _user$project$Update_CreateQuestUpdate$ConfirmFileUpload = function (a) {
+	return {ctor: 'ConfirmFileUpload', _0: a};
+};
+var _user$project$Update_CreateQuestUpdate$OnFileChosen = function (a) {
+	return {ctor: 'OnFileChosen', _0: a};
+};
+var _user$project$Update_CreateQuestUpdate$HideFileUploadModal = {ctor: 'HideFileUploadModal'};
+var _user$project$Update_CreateQuestUpdate$ShowFileUploadModal = {ctor: 'ShowFileUploadModal'};
+var _user$project$Update_CreateQuestUpdate$EditQuestDescription = function (a) {
+	return {ctor: 'EditQuestDescription', _0: a};
+};
+var _user$project$Update_CreateQuestUpdate$EditQuestName = function (a) {
+	return {ctor: 'EditQuestName', _0: a};
+};
+var _user$project$Update_CreateQuestUpdate$NoOp = {ctor: 'NoOp'};
 
 var _user$project$View_CreateQuestView_Main$fileInputId = 'create-quest-image-upload';
-var _user$project$View_CreateQuestView_Main$validQuest = function (model) {
+var _user$project$View_CreateQuestView_Main$validQuest = function (createQuest) {
 	return A2(
 		_elm_lang$core$List$all,
 		function (val) {
@@ -23976,61 +23224,42 @@ var _user$project$View_CreateQuestView_Main$validQuest = function (model) {
 		},
 		{
 			ctor: '::',
-			_0: !_elm_lang$core$Native_Utils.eq(model.createQuest.questName, ''),
+			_0: !_elm_lang$core$Native_Utils.eq(createQuest.questName, ''),
 			_1: {ctor: '[]'}
 		});
 };
 var _user$project$View_CreateQuestView_Main$helperText = '\nTHY QUEST (if you choose to accept it) IS\n';
-var _user$project$View_CreateQuestView_Main$createQuestView = function (model) {
-	return A2(
-		_rtfeldman$elm_css$Html_Styled$div,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: A2(
-				_rtfeldman$elm_css$Html_Styled$div,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _user$project$Component_Modal$modal(
-						{
-							open: model.createQuest.imageUploadModalOpen,
-							id: A2(_elm_lang$core$Maybe$withDefault, '', model.createQuest.imageUploadModalFor),
-							content: A2(
-								_rtfeldman$elm_css$Html_Styled$div,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: A2(
-										_rtfeldman$elm_css$Html_Styled$p,
-										{
-											ctor: '::',
-											_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('float-text'),
-											_1: {ctor: '[]'}
-										},
-										{
-											ctor: '::',
-											_0: _rtfeldman$elm_css$Html_Styled$text('Upload a picture that describes this adventure'),
-											_1: {ctor: '[]'}
-										}),
-									_1: {
+var _user$project$View_CreateQuestView_Main$createQuestView = F2(
+	function (taco, createQuest) {
+		return A2(
+			_rtfeldman$elm_css$Html_Styled$div,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Html_Styled$div,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _user$project$Component_Modal$modal(
+							{
+								open: createQuest.imageUploadModalOpen,
+								id: A2(_elm_lang$core$Maybe$withDefault, '', createQuest.imageUploadModalFor),
+								content: A2(
+									_rtfeldman$elm_css$Html_Styled$div,
+									{ctor: '[]'},
+									{
 										ctor: '::',
 										_0: A2(
-											_rtfeldman$elm_css$Html_Styled$div,
+											_rtfeldman$elm_css$Html_Styled$p,
 											{
 												ctor: '::',
-												_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('row'),
+												_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('float-text'),
 												_1: {ctor: '[]'}
 											},
 											{
 												ctor: '::',
-												_0: _user$project$Component_FileInput$fileInput(
-													{
-														id: _user$project$View_CreateQuestView_Main$fileInputId,
-														label: 'Image (max size 2mb)',
-														onChange: _user$project$Msg_CreateQuestMsg$OnFileChosen,
-														value: A2(_elm_lang$core$Maybe$withDefault, '', model.createQuest.imageUploadPath)
-													}),
+												_0: _rtfeldman$elm_css$Html_Styled$text('Upload a picture that describes this adventure'),
 												_1: {ctor: '[]'}
 											}),
 										_1: {
@@ -24044,31 +23273,152 @@ var _user$project$View_CreateQuestView_Main$createQuestView = function (model) {
 												},
 												{
 													ctor: '::',
-													_0: _user$project$Component_FlatButton$flatButton(
-														{label: 'Cancel', onClick: _user$project$Msg_CreateQuestMsg$HideFileUploadModal}),
-													_1: {
-														ctor: '::',
-														_0: function () {
-															var _p0 = model.createQuest.imageUploadPath;
-															if (_p0.ctor === 'Just') {
-																return _user$project$Component_RaisedButton$raisedButton(
-																	{
-																		disabled: model.createQuest.questImageUploadPending,
-																		label: 'Upload',
-																		icon: _elm_lang$core$Maybe$Just('file_upload'),
-																		onClick: _user$project$Msg_CreateQuestMsg$ConfirmFileUpload(_user$project$View_CreateQuestView_Main$fileInputId)
-																	});
-															} else {
-																return A2(
-																	_rtfeldman$elm_css$Html_Styled$div,
-																	{ctor: '[]'},
-																	{ctor: '[]'});
-															}
-														}(),
-														_1: {ctor: '[]'}
-													}
+													_0: _user$project$Component_FileInput$fileInput(
+														{
+															id: _user$project$View_CreateQuestView_Main$fileInputId,
+															label: 'Image (max size 2mb)',
+															onChange: _user$project$Update_CreateQuestUpdate$OnFileChosen,
+															value: A2(_elm_lang$core$Maybe$withDefault, '', createQuest.imageUploadPath)
+														}),
+													_1: {ctor: '[]'}
 												}),
 											_1: {
+												ctor: '::',
+												_0: A2(
+													_rtfeldman$elm_css$Html_Styled$div,
+													{
+														ctor: '::',
+														_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('row'),
+														_1: {ctor: '[]'}
+													},
+													{
+														ctor: '::',
+														_0: _user$project$Component_FlatButton$flatButton(
+															{label: 'Cancel', onClick: _user$project$Update_CreateQuestUpdate$HideFileUploadModal}),
+														_1: {
+															ctor: '::',
+															_0: function () {
+																var _p0 = createQuest.imageUploadPath;
+																if (_p0.ctor === 'Just') {
+																	return _user$project$Component_RaisedButton$raisedButton(
+																		{
+																			disabled: createQuest.questImageUploadPending,
+																			label: 'Upload',
+																			icon: _elm_lang$core$Maybe$Just('file_upload'),
+																			onClick: _user$project$Update_CreateQuestUpdate$ConfirmFileUpload(_user$project$View_CreateQuestView_Main$fileInputId)
+																		});
+																} else {
+																	return A2(
+																		_rtfeldman$elm_css$Html_Styled$div,
+																		{ctor: '[]'},
+																		{ctor: '[]'});
+																}
+															}(),
+															_1: {ctor: '[]'}
+														}
+													}),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_rtfeldman$elm_css$Html_Styled$div,
+														{
+															ctor: '::',
+															_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+																{
+																	ctor: '::',
+																	_0: _rtfeldman$elm_css$Css$color(_user$project$Theme$errorTextColor),
+																	_1: {ctor: '[]'}
+																}),
+															_1: {ctor: '[]'}
+														},
+														{
+															ctor: '::',
+															_0: _rtfeldman$elm_css$Html_Styled$text(
+																createQuest.questImageUploadError ? 'There was an error uploading your image. Please ensure images are less than 2mb' : ''),
+															_1: {ctor: '[]'}
+														}),
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									}),
+								footer: A2(
+									_rtfeldman$elm_css$Html_Styled$div,
+									{ctor: '[]'},
+									{ctor: '[]'}),
+								noop: _user$project$Update_CreateQuestUpdate$NoOp,
+								onRequestClose: _user$project$Update_CreateQuestUpdate$HideFileUploadModal
+							}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_rtfeldman$elm_css$Html_Styled$div,
+						{
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('container'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_rtfeldman$elm_css$Html_Styled$div,
+								{
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+										{
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Css$textAlign(_rtfeldman$elm_css$Css$center),
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: A2(
+										_rtfeldman$elm_css$Html_Styled$p,
+										{
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('flow-text'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Html_Styled$text(_user$project$View_CreateQuestView_Main$helperText),
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_rtfeldman$elm_css$Html_Styled$div,
+									{
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('row'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: A2(
+											_rtfeldman$elm_css$Html_Styled$div,
+											{
+												ctor: '::',
+												_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+													{
+														ctor: '::',
+														_0: _rtfeldman$elm_css$Css$margin(_rtfeldman$elm_css$Css$auto),
+														_1: {
+															ctor: '::',
+															_0: _rtfeldman$elm_css$Css$maxWidth(
+																_rtfeldman$elm_css$Css$px(320)),
+															_1: {ctor: '[]'}
+														}
+													}),
+												_1: {ctor: '[]'}
+											},
+											{
 												ctor: '::',
 												_0: A2(
 													_rtfeldman$elm_css$Html_Styled$div,
@@ -24077,355 +23427,405 @@ var _user$project$View_CreateQuestView_Main$createQuestView = function (model) {
 														_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
 															{
 																ctor: '::',
-																_0: _rtfeldman$elm_css$Css$color(_user$project$Theme$errorTextColor),
+																_0: _rtfeldman$elm_css$Css$maxWidth(
+																	_rtfeldman$elm_css$Css$px(320)),
 																_1: {ctor: '[]'}
 															}),
 														_1: {ctor: '[]'}
 													},
 													{
 														ctor: '::',
-														_0: _rtfeldman$elm_css$Html_Styled$text(
-															model.createQuest.questImageUploadError ? 'There was an error uploading your image. Please ensure images are less than 2mb' : ''),
-														_1: {ctor: '[]'}
-													}),
-												_1: {ctor: '[]'}
-											}
-										}
-									}
-								}),
-							footer: A2(
-								_rtfeldman$elm_css$Html_Styled$div,
-								{ctor: '[]'},
-								{ctor: '[]'}),
-							noop: _user$project$Msg_CreateQuestMsg$NoOp,
-							onRequestClose: _user$project$Msg_CreateQuestMsg$HideFileUploadModal
-						}),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_rtfeldman$elm_css$Html_Styled$div,
-					{
-						ctor: '::',
-						_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('container'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: A2(
-							_rtfeldman$elm_css$Html_Styled$div,
-							{
-								ctor: '::',
-								_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
-									{
-										ctor: '::',
-										_0: _rtfeldman$elm_css$Css$textAlign(_rtfeldman$elm_css$Css$center),
-										_1: {ctor: '[]'}
-									}),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: A2(
-									_rtfeldman$elm_css$Html_Styled$p,
-									{
-										ctor: '::',
-										_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('flow-text'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: _rtfeldman$elm_css$Html_Styled$text(_user$project$View_CreateQuestView_Main$helperText),
-										_1: {ctor: '[]'}
-									}),
-								_1: {ctor: '[]'}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_rtfeldman$elm_css$Html_Styled$div,
-								{
-									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('row'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: A2(
-										_rtfeldman$elm_css$Html_Styled$div,
-										{
-											ctor: '::',
-											_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
-												{
-													ctor: '::',
-													_0: _rtfeldman$elm_css$Css$margin(_rtfeldman$elm_css$Css$auto),
-													_1: {
-														ctor: '::',
-														_0: _rtfeldman$elm_css$Css$maxWidth(
-															_rtfeldman$elm_css$Css$px(320)),
-														_1: {ctor: '[]'}
-													}
-												}),
-											_1: {ctor: '[]'}
-										},
-										{
-											ctor: '::',
-											_0: A2(
-												_rtfeldman$elm_css$Html_Styled$div,
-												{
-													ctor: '::',
-													_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
-														{
-															ctor: '::',
-															_0: _rtfeldman$elm_css$Css$maxWidth(
-																_rtfeldman$elm_css$Css$px(320)),
-															_1: {ctor: '[]'}
-														}),
-													_1: {ctor: '[]'}
-												},
-												{
-													ctor: '::',
-													_0: A2(
-														_rtfeldman$elm_css$Html_Styled$div,
-														{
-															ctor: '::',
-															_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('card'),
-															_1: {ctor: '[]'}
-														},
-														{
-															ctor: '::',
-															_0: A2(
-																_rtfeldman$elm_css$Html_Styled$div,
-																{
-																	ctor: '::',
-																	_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('card-image'),
-																	_1: {ctor: '[]'}
-																},
-																{
-																	ctor: '::',
-																	_0: A2(
-																		_rtfeldman$elm_css$Html_Styled$img,
-																		{
-																			ctor: '::',
-																			_0: _rtfeldman$elm_css$Html_Styled_Attributes$src(model.createQuest.questImageUrl),
-																			_1: {ctor: '[]'}
-																		},
-																		{ctor: '[]'}),
-																	_1: {
-																		ctor: '::',
-																		_0: A2(
-																			_rtfeldman$elm_css$Html_Styled$div,
-																			{
-																				ctor: '::',
-																				_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('card-title'),
-																				_1: {
-																					ctor: '::',
-																					_0: _rtfeldman$elm_css$Html_Styled_Attributes$style(
-																						{
-																							ctor: '::',
-																							_0: {ctor: '_Tuple2', _0: 'padding', _1: '8px 8px 24px 8px'},
-																							_1: {ctor: '[]'}
-																						}),
-																					_1: {
-																						ctor: '::',
-																						_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
-																							{
-																								ctor: '::',
-																								_0: _rtfeldman$elm_css$Css$backgroundColor(
-																									A4(_rtfeldman$elm_css$Css$rgba, 255, 255, 255, 0.7)),
-																								_1: {
-																									ctor: '::',
-																									_0: _rtfeldman$elm_css$Css$left(
-																										_rtfeldman$elm_css$Css$px(0)),
-																									_1: {
-																										ctor: '::',
-																										_0: _rtfeldman$elm_css$Css$right(
-																											_rtfeldman$elm_css$Css$px(0)),
-																										_1: {
-																											ctor: '::',
-																											_0: _rtfeldman$elm_css$Css$bottom(
-																												_rtfeldman$elm_css$Css$px(0)),
-																											_1: {ctor: '[]'}
-																										}
-																									}
-																								}
-																							}),
-																						_1: {ctor: '[]'}
-																					}
-																				}
-																			},
-																			{
-																				ctor: '::',
-																				_0: A2(
-																					_rtfeldman$elm_css$Html_Styled$h5,
-																					{
-																						ctor: '::',
-																						_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
-																							{
-																								ctor: '::',
-																								_0: _rtfeldman$elm_css$Css$color(_user$project$Theme$baseTextColor),
-																								_1: {
-																									ctor: '::',
-																									_0: _rtfeldman$elm_css$Css$margin(
-																										_rtfeldman$elm_css$Css$px(0)),
-																									_1: {ctor: '[]'}
-																								}
-																							}),
-																						_1: {ctor: '[]'}
-																					},
-																					{
-																						ctor: '::',
-																						_0: _rtfeldman$elm_css$Html_Styled$text(model.createQuest.questName),
-																						_1: {ctor: '[]'}
-																					}),
-																				_1: {ctor: '[]'}
-																			}),
-																		_1: {
-																			ctor: '::',
-																			_0: A2(
-																				_rtfeldman$elm_css$Html_Styled$a,
-																				{
-																					ctor: '::',
-																					_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('btn-floating halfway-fab waves-effect waves-light red'),
-																					_1: {
-																						ctor: '::',
-																						_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_user$project$Msg_CreateQuestMsg$ShowFileUploadModal),
-																						_1: {ctor: '[]'}
-																					}
-																				},
-																				{
-																					ctor: '::',
-																					_0: A2(
-																						_rtfeldman$elm_css$Html_Styled$i,
-																						{
-																							ctor: '::',
-																							_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('material-icons'),
-																							_1: {ctor: '[]'}
-																						},
-																						{
-																							ctor: '::',
-																							_0: _rtfeldman$elm_css$Html_Styled$text('add_a_photo'),
-																							_1: {ctor: '[]'}
-																						}),
-																					_1: {ctor: '[]'}
-																				}),
-																			_1: {ctor: '[]'}
-																		}
-																	}
-																}),
-															_1: {
+														_0: A2(
+															_rtfeldman$elm_css$Html_Styled$div,
+															{
+																ctor: '::',
+																_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('card'),
+																_1: {ctor: '[]'}
+															},
+															{
 																ctor: '::',
 																_0: A2(
 																	_rtfeldman$elm_css$Html_Styled$div,
 																	{
 																		ctor: '::',
-																		_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('card-content'),
+																		_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('card-image'),
 																		_1: {ctor: '[]'}
 																	},
 																	{
 																		ctor: '::',
-																		_0: _user$project$Component_TextField$textField(
-																			{id: 'name-textfield-createquest', value: model.createQuest.questName, onInput: _user$project$Msg_CreateQuestMsg$EditQuestName, label: 'Quest Name', $class: _elm_lang$core$Maybe$Nothing}),
+																		_0: A2(
+																			_rtfeldman$elm_css$Html_Styled$img,
+																			{
+																				ctor: '::',
+																				_0: _rtfeldman$elm_css$Html_Styled_Attributes$src(createQuest.questImageUrl),
+																				_1: {ctor: '[]'}
+																			},
+																			{ctor: '[]'}),
 																		_1: {
 																			ctor: '::',
-																			_0: _user$project$Component_TextArea$textArea(
-																				{id: 'description-textarea-createquest', value: model.createQuest.questDescription, label: 'Quest Description', $class: _elm_lang$core$Maybe$Nothing, onInput: _user$project$Msg_CreateQuestMsg$EditQuestDescription}),
-																			_1: {
-																				ctor: '::',
-																				_0: _user$project$Component_RaisedButton$raisedButton(
-																					{
-																						label: _user$project$View_CreateQuestView_Main$validQuest(model) ? 'embark' : 'fill in details',
-																						onClick: A2(
-																							_elm_lang$core$List$all,
-																							function (v) {
-																								return _elm_lang$core$Native_Utils.eq(v, true);
-																							},
+																			_0: A2(
+																				_rtfeldman$elm_css$Html_Styled$div,
+																				{
+																					ctor: '::',
+																					_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('card-title'),
+																					_1: {
+																						ctor: '::',
+																						_0: _rtfeldman$elm_css$Html_Styled_Attributes$style(
 																							{
 																								ctor: '::',
-																								_0: _user$project$View_CreateQuestView_Main$validQuest(model),
-																								_1: {
+																								_0: {ctor: '_Tuple2', _0: 'padding', _1: '8px 8px 24px 8px'},
+																								_1: {ctor: '[]'}
+																							}),
+																						_1: {
+																							ctor: '::',
+																							_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+																								{
 																									ctor: '::',
-																									_0: _elm_lang$core$Native_Utils.eq(model.createQuest.submitPending, false),
-																									_1: {ctor: '[]'}
-																								}
-																							}) ? _user$project$Msg_CreateQuestMsg$SubmitCreateQuest : _user$project$Msg_CreateQuestMsg$NoOp,
-																						icon: _elm_lang$core$Maybe$Nothing,
-																						disabled: A2(
-																							_elm_lang$core$List$any,
-																							function (v) {
-																								return _elm_lang$core$Native_Utils.eq(v, true);
-																							},
-																							{
-																								ctor: '::',
-																								_0: _elm_lang$core$Native_Utils.eq(
-																									_user$project$View_CreateQuestView_Main$validQuest(model),
-																									false),
-																								_1: {
-																									ctor: '::',
-																									_0: model.createQuest.submitPending,
-																									_1: {ctor: '[]'}
-																								}
-																							})
-																					}),
-																				_1: {
+																									_0: _rtfeldman$elm_css$Css$backgroundColor(
+																										A4(_rtfeldman$elm_css$Css$rgba, 255, 255, 255, 0.7)),
+																									_1: {
+																										ctor: '::',
+																										_0: _rtfeldman$elm_css$Css$left(
+																											_rtfeldman$elm_css$Css$px(0)),
+																										_1: {
+																											ctor: '::',
+																											_0: _rtfeldman$elm_css$Css$right(
+																												_rtfeldman$elm_css$Css$px(0)),
+																											_1: {
+																												ctor: '::',
+																												_0: _rtfeldman$elm_css$Css$bottom(
+																													_rtfeldman$elm_css$Css$px(0)),
+																												_1: {ctor: '[]'}
+																											}
+																										}
+																									}
+																								}),
+																							_1: {ctor: '[]'}
+																						}
+																					}
+																				},
+																				{
 																					ctor: '::',
 																					_0: A2(
-																						_rtfeldman$elm_css$Html_Styled$div,
+																						_rtfeldman$elm_css$Html_Styled$h5,
 																						{
 																							ctor: '::',
 																							_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
 																								{
 																									ctor: '::',
-																									_0: _rtfeldman$elm_css$Css$paddingTop(
-																										_rtfeldman$elm_css$Css$px(8)),
-																									_1: {ctor: '[]'}
+																									_0: _rtfeldman$elm_css$Css$color(_user$project$Theme$baseTextColor),
+																									_1: {
+																										ctor: '::',
+																										_0: _rtfeldman$elm_css$Css$margin(
+																											_rtfeldman$elm_css$Css$px(0)),
+																										_1: {ctor: '[]'}
+																									}
 																								}),
 																							_1: {ctor: '[]'}
 																						},
 																						{
 																							ctor: '::',
-																							_0: A2(
-																								_rtfeldman$elm_css$Html_Styled$span,
-																								{
-																									ctor: '::',
-																									_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
-																										{
-																											ctor: '::',
-																											_0: _rtfeldman$elm_css$Css$color(_user$project$Theme$errorTextColor),
-																											_1: {ctor: '[]'}
-																										}),
-																									_1: {ctor: '[]'}
-																								},
-																								{
-																									ctor: '::',
-																									_0: _rtfeldman$elm_css$Html_Styled$text(
-																										model.createQuest.submitError ? 'Oops! was an error creating this quest' : ''),
-																									_1: {ctor: '[]'}
-																								}),
+																							_0: _rtfeldman$elm_css$Html_Styled$text(createQuest.questName),
 																							_1: {ctor: '[]'}
 																						}),
 																					_1: {ctor: '[]'}
-																				}
+																				}),
+																			_1: {
+																				ctor: '::',
+																				_0: A2(
+																					_rtfeldman$elm_css$Html_Styled$a,
+																					{
+																						ctor: '::',
+																						_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('btn-floating halfway-fab waves-effect waves-light red'),
+																						_1: {
+																							ctor: '::',
+																							_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_user$project$Update_CreateQuestUpdate$ShowFileUploadModal),
+																							_1: {ctor: '[]'}
+																						}
+																					},
+																					{
+																						ctor: '::',
+																						_0: A2(
+																							_rtfeldman$elm_css$Html_Styled$i,
+																							{
+																								ctor: '::',
+																								_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('material-icons'),
+																								_1: {ctor: '[]'}
+																							},
+																							{
+																								ctor: '::',
+																								_0: _rtfeldman$elm_css$Html_Styled$text('add_a_photo'),
+																								_1: {ctor: '[]'}
+																							}),
+																						_1: {ctor: '[]'}
+																					}),
+																				_1: {ctor: '[]'}
 																			}
 																		}
 																	}),
-																_1: {ctor: '[]'}
-															}
-														}),
-													_1: {ctor: '[]'}
-												}),
-											_1: {ctor: '[]'}
-										}),
-									_1: {ctor: '[]'}
-								}),
-							_1: {ctor: '[]'}
-						}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
+																_1: {
+																	ctor: '::',
+																	_0: A2(
+																		_rtfeldman$elm_css$Html_Styled$div,
+																		{
+																			ctor: '::',
+																			_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('card-content'),
+																			_1: {ctor: '[]'}
+																		},
+																		{
+																			ctor: '::',
+																			_0: _user$project$Component_TextField$textField(
+																				{id: 'name-textfield-createquest', value: createQuest.questName, onInput: _user$project$Update_CreateQuestUpdate$EditQuestName, label: 'Quest Name', $class: _elm_lang$core$Maybe$Nothing}),
+																			_1: {
+																				ctor: '::',
+																				_0: _user$project$Component_TextArea$textArea(
+																					{id: 'description-textarea-createquest', value: createQuest.questDescription, label: 'Quest Description', $class: _elm_lang$core$Maybe$Nothing, onInput: _user$project$Update_CreateQuestUpdate$EditQuestDescription}),
+																				_1: {
+																					ctor: '::',
+																					_0: _user$project$Component_RaisedButton$raisedButton(
+																						{
+																							label: _user$project$View_CreateQuestView_Main$validQuest(createQuest) ? 'embark' : 'fill in details',
+																							onClick: A2(
+																								_elm_lang$core$List$all,
+																								function (v) {
+																									return _elm_lang$core$Native_Utils.eq(v, true);
+																								},
+																								{
+																									ctor: '::',
+																									_0: _user$project$View_CreateQuestView_Main$validQuest(createQuest),
+																									_1: {
+																										ctor: '::',
+																										_0: _elm_lang$core$Native_Utils.eq(createQuest.submitPending, false),
+																										_1: {ctor: '[]'}
+																									}
+																								}) ? _user$project$Update_CreateQuestUpdate$SubmitCreateQuest : _user$project$Update_CreateQuestUpdate$NoOp,
+																							icon: _elm_lang$core$Maybe$Nothing,
+																							disabled: A2(
+																								_elm_lang$core$List$any,
+																								function (v) {
+																									return _elm_lang$core$Native_Utils.eq(v, true);
+																								},
+																								{
+																									ctor: '::',
+																									_0: _elm_lang$core$Native_Utils.eq(
+																										_user$project$View_CreateQuestView_Main$validQuest(createQuest),
+																										false),
+																									_1: {
+																										ctor: '::',
+																										_0: createQuest.submitPending,
+																										_1: {ctor: '[]'}
+																									}
+																								})
+																						}),
+																					_1: {
+																						ctor: '::',
+																						_0: A2(
+																							_rtfeldman$elm_css$Html_Styled$div,
+																							{
+																								ctor: '::',
+																								_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+																									{
+																										ctor: '::',
+																										_0: _rtfeldman$elm_css$Css$paddingTop(
+																											_rtfeldman$elm_css$Css$px(8)),
+																										_1: {ctor: '[]'}
+																									}),
+																								_1: {ctor: '[]'}
+																							},
+																							{
+																								ctor: '::',
+																								_0: A2(
+																									_rtfeldman$elm_css$Html_Styled$span,
+																									{
+																										ctor: '::',
+																										_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+																											{
+																												ctor: '::',
+																												_0: _rtfeldman$elm_css$Css$color(_user$project$Theme$errorTextColor),
+																												_1: {ctor: '[]'}
+																											}),
+																										_1: {ctor: '[]'}
+																									},
+																									{
+																										ctor: '::',
+																										_0: _rtfeldman$elm_css$Html_Styled$text(
+																											createQuest.submitError ? 'Oops! was an error creating this quest' : ''),
+																										_1: {ctor: '[]'}
+																									}),
+																								_1: {ctor: '[]'}
+																							}),
+																						_1: {ctor: '[]'}
+																					}
+																				}
+																			}
+																		}),
+																	_1: {ctor: '[]'}
+																}
+															}),
+														_1: {ctor: '[]'}
+													}),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
+
+var _user$project$Update_QuestDetailsUpdate$questDetailsInitialModel = {quest: _elm_lang$core$Maybe$Nothing, sideQuests: _elm_lang$core$Maybe$Nothing, suggestedSideQuests: _elm_lang$core$Maybe$Nothing, showingSuggestedSideQuests: false, decidingSideQuest: _elm_lang$core$Maybe$Nothing};
+var _user$project$Update_QuestDetailsUpdate$QuestDetailsModel = F5(
+	function (a, b, c, d, e) {
+		return {quest: a, sideQuests: b, suggestedSideQuests: c, showingSuggestedSideQuests: d, decidingSideQuest: e};
+	});
+var _user$project$Update_QuestDetailsUpdate$DeclineSideQuest = function (a) {
+	return {ctor: 'DeclineSideQuest', _0: a};
 };
+var _user$project$Update_QuestDetailsUpdate$AcceptSideQuest = function (a) {
+	return {ctor: 'AcceptSideQuest', _0: a};
+};
+var _user$project$Update_QuestDetailsUpdate$ToggleShowingSideQuestModal = function (a) {
+	return {ctor: 'ToggleShowingSideQuestModal', _0: a};
+};
+var _user$project$Update_QuestDetailsUpdate$DeclineSuggestedSideQuest = {ctor: 'DeclineSuggestedSideQuest'};
+var _user$project$Update_QuestDetailsUpdate$AcceptSuggestedSideQuest = {ctor: 'AcceptSuggestedSideQuest'};
+var _user$project$Update_QuestDetailsUpdate$ToggleShowingSuggestedSideQuests = function (a) {
+	return {ctor: 'ToggleShowingSuggestedSideQuests', _0: a};
+};
+var _user$project$Update_QuestDetailsUpdate$DecideSideQuestResult = function (a) {
+	return {ctor: 'DecideSideQuestResult', _0: a};
+};
+var _user$project$Update_QuestDetailsUpdate$decideOnSuggestedSideQuest = F3(
+	function (taco, model, isAccepted) {
+		var request = A4(
+			_elm_lang$core$Maybe$map3,
+			F3(
+				function (userToken, quest, sideQuest) {
+					return A2(
+						_elm_lang$http$Http$send,
+						_user$project$Update_QuestDetailsUpdate$DecideSideQuestResult,
+						_user$project$Request_QuestsRequest$decideSideQuest(
+							{apiEndpoint: taco.flags.apiEndpoint, userToken: userToken, isAccepted: isAccepted, sideQuestId: sideQuest.id, questId: quest.id}));
+				}),
+			taco.token,
+			model.quest,
+			model.decidingSideQuest);
+		return A2(_elm_lang$core$Maybe$withDefault, _elm_lang$core$Platform_Cmd$none, request);
+	});
+var _user$project$Update_QuestDetailsUpdate$GetQuestDetailsResult = function (a) {
+	return {ctor: 'GetQuestDetailsResult', _0: a};
+};
+var _user$project$Update_QuestDetailsUpdate$handleTacoMsg = F3(
+	function (tacoMsg, model, taco) {
+		var _p0 = tacoMsg;
+		if (_p0.ctor === 'QuestDetailsRoute') {
+			var paramArray = _elm_lang$core$Array$fromList(
+				A2(_elm_lang$core$String$split, ':', _p0._0));
+			var request = A3(
+				_elm_lang$core$Maybe$map2,
+				F2(
+					function (userId, questId) {
+						return A2(
+							_elm_lang$http$Http$send,
+							_user$project$Update_QuestDetailsUpdate$GetQuestDetailsResult,
+							A3(_user$project$Request_QuestsRequest$getQuestDetails, taco.flags.apiEndpoint, userId, questId));
+					}),
+				A2(_elm_lang$core$Array$get, 0, paramArray),
+				A2(_elm_lang$core$Array$get, 1, paramArray));
+			return {
+				ctor: '_Tuple2',
+				_0: _user$project$Update_QuestDetailsUpdate$questDetailsInitialModel,
+				_1: A2(_elm_lang$core$Maybe$withDefault, _elm_lang$core$Platform_Cmd$none, request)
+			};
+		} else {
+			return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+		}
+	});
+var _user$project$Update_QuestDetailsUpdate$questDetailsUpdate = F4(
+	function (msg, tacoMsg, model, taco) {
+		var _p1 = A3(_user$project$Update_QuestDetailsUpdate$handleTacoMsg, tacoMsg, model, taco);
+		var questDetails = _p1._0;
+		var commands = _p1._1;
+		var _p2 = msg;
+		switch (_p2.ctor) {
+			case 'DecideSideQuestResult':
+				if (_p2._0.ctor === 'Ok') {
+					var _p3 = _p2._0._0;
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							questDetails,
+							{
+								quest: _elm_lang$core$Maybe$Just(_p3.quest),
+								sideQuests: _elm_lang$core$Maybe$Just(_p3.sideQuests),
+								suggestedSideQuests: _elm_lang$core$Maybe$Just(_p3.suggestedSideQuests)
+							}),
+						_1: commands
+					};
+				} else {
+					return {ctor: '_Tuple2', _0: questDetails, _1: commands};
+				}
+			case 'GetQuestDetailsResult':
+				if (_p2._0.ctor === 'Ok') {
+					var _p4 = _p2._0._0;
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							questDetails,
+							{
+								quest: _elm_lang$core$Maybe$Just(_p4.quest),
+								sideQuests: _elm_lang$core$Maybe$Just(_p4.sideQuests),
+								suggestedSideQuests: _elm_lang$core$Maybe$Just(_p4.suggestedSideQuests)
+							}),
+						_1: commands
+					};
+				} else {
+					return {ctor: '_Tuple2', _0: questDetails, _1: commands};
+				}
+			case 'ToggleShowingSuggestedSideQuests':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						questDetails,
+						{showingSuggestedSideQuests: _p2._0}),
+					_1: commands
+				};
+			case 'AcceptSuggestedSideQuest':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						questDetails,
+						{decidingSideQuest: _elm_lang$core$Maybe$Nothing, quest: _elm_lang$core$Maybe$Nothing, sideQuests: _elm_lang$core$Maybe$Nothing, suggestedSideQuests: _elm_lang$core$Maybe$Nothing}),
+					_1: A3(_user$project$Update_QuestDetailsUpdate$decideOnSuggestedSideQuest, taco, questDetails, true)
+				};
+			case 'DeclineSuggestedSideQuest':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						questDetails,
+						{decidingSideQuest: _elm_lang$core$Maybe$Nothing, quest: _elm_lang$core$Maybe$Nothing, sideQuests: _elm_lang$core$Maybe$Nothing, suggestedSideQuests: _elm_lang$core$Maybe$Nothing}),
+					_1: A3(_user$project$Update_QuestDetailsUpdate$decideOnSuggestedSideQuest, taco, questDetails, false)
+				};
+			case 'ToggleShowingSideQuestModal':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						questDetails,
+						{decidingSideQuest: _p2._0}),
+					_1: commands
+				};
+			case 'AcceptSideQuest':
+				return {ctor: '_Tuple2', _0: questDetails, _1: commands};
+			case 'DeclineSideQuest':
+				return {ctor: '_Tuple2', _0: questDetails, _1: commands};
+			default:
+				return {ctor: '_Tuple2', _0: questDetails, _1: commands};
+		}
+	});
+var _user$project$Update_QuestDetailsUpdate$NoOp = {ctor: 'NoOp'};
 
 var _user$project$View_QuestDetailsView_SuggestedQuestsList$suggestedQuestsList = F2(
 	function (isOpen, sideQuests) {
@@ -24442,7 +23842,7 @@ var _user$project$View_QuestDetailsView_SuggestedQuestsList$suggestedQuestsList 
 						_1: {
 							ctor: '::',
 							_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(
-								_user$project$Msg_QuestDetailsMsg$ToggleShowingSuggestedSideQuests(!isOpen)),
+								_user$project$Update_QuestDetailsUpdate$ToggleShowingSuggestedSideQuests(!isOpen)),
 							_1: {
 								ctor: '::',
 								_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
@@ -24649,7 +24049,7 @@ var _user$project$View_QuestDetailsView_SuggestedQuestsList$suggestedQuestsList 
 														_1: {
 															ctor: '::',
 															_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(
-																_user$project$Msg_QuestDetailsMsg$ToggleShowingSideQuestModal(
+																_user$project$Update_QuestDetailsUpdate$ToggleShowingSideQuestModal(
 																	_elm_lang$core$Maybe$Just(sideQuest))),
 															_1: {
 																ctor: '::',
@@ -24769,7 +24169,7 @@ var _user$project$View_QuestDetailsView_SuggestedQuestsList$suggestedQuestsList 
 var _user$project$View_QuestDetailsView_SideQuestDetails$sideQuestDetails = function (sideQuest) {
 	return _user$project$Component_Modal$modal(
 		{
-			noop: _user$project$Msg_QuestDetailsMsg$NoOp,
+			noop: _user$project$Update_QuestDetailsUpdate$NoOp,
 			content: A2(
 				_rtfeldman$elm_css$Html_Styled$div,
 				{ctor: '[]'},
@@ -24795,17 +24195,17 @@ var _user$project$View_QuestDetailsView_SideQuestDetails$sideQuestDetails = func
 				{
 					ctor: '::',
 					_0: _user$project$Component_FlatButton$flatButton(
-						{onClick: _user$project$Msg_QuestDetailsMsg$DeclineSuggestedSideQuest, label: 'NAY'}),
+						{onClick: _user$project$Update_QuestDetailsUpdate$DeclineSuggestedSideQuest, label: 'NAY'}),
 					_1: {
 						ctor: '::',
 						_0: _user$project$Component_RaisedButton$raisedButton(
-							{onClick: _user$project$Msg_QuestDetailsMsg$AcceptSuggestedSideQuest, label: 'YAY', icon: _elm_lang$core$Maybe$Nothing, disabled: false}),
+							{onClick: _user$project$Update_QuestDetailsUpdate$AcceptSuggestedSideQuest, label: 'YAY', icon: _elm_lang$core$Maybe$Nothing, disabled: false}),
 						_1: {ctor: '[]'}
 					}
 				}),
 			id: 'side-quest-details-modal',
 			open: true,
-			onRequestClose: _user$project$Msg_QuestDetailsMsg$ToggleShowingSideQuestModal(_elm_lang$core$Maybe$Nothing)
+			onRequestClose: _user$project$Update_QuestDetailsUpdate$ToggleShowingSideQuestModal(_elm_lang$core$Maybe$Nothing)
 		});
 };
 
@@ -24840,7 +24240,7 @@ var _user$project$View_QuestDetailsView_Main$view = F4(
 					},
 					{
 						ctor: '::',
-						_0: A2(_user$project$View_QuestDetailsView_SuggestedQuestsList$suggestedQuestsList, model.questDetails.showingSuggestedSideQuests, suggestedSideQuests),
+						_0: A2(_user$project$View_QuestDetailsView_SuggestedQuestsList$suggestedQuestsList, model.showingSuggestedSideQuests, suggestedSideQuests),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -24872,7 +24272,7 @@ var _user$project$View_QuestDetailsView_Main$view = F4(
 								_1: {
 									ctor: '::',
 									_0: function () {
-										var _p0 = model.questDetails.decidingSideQuest;
+										var _p0 = model.decidingSideQuest;
 										if (_p0.ctor === 'Just') {
 											return _user$project$View_QuestDetailsView_SideQuestDetails$sideQuestDetails(_p0._0);
 										} else {
@@ -24890,117 +24290,435 @@ var _user$project$View_QuestDetailsView_Main$view = F4(
 				}
 			});
 	});
-var _user$project$View_QuestDetailsView_Main$questDetailsView = function (model) {
-	var viewReady = A4(
-		_elm_lang$core$Maybe$map3,
-		F3(
-			function (quest, sideQuests, suggestedSideQuests) {
-				return A4(_user$project$View_QuestDetailsView_Main$view, quest, sideQuests, suggestedSideQuests, model);
-			}),
-		model.questDetails.quest,
-		model.questDetails.sideQuests,
-		model.questDetails.suggestedSideQuests);
-	var _p1 = viewReady;
-	if (_p1.ctor === 'Just') {
-		return _p1._0;
-	} else {
-		return A2(
-			_rtfeldman$elm_css$Html_Styled$div,
-			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: A2(
-					_rtfeldman$elm_css$Html_Styled$h3,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _rtfeldman$elm_css$Html_Styled$text('loading..'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			});
-	}
-};
-
-var _user$project$Main$init = F2(
-	function (flags, location) {
-		var initialLocation = _user$project$Update_RouteUpdate$parseLocation(location);
-		return {
-			ctor: '_Tuple2',
-			_0: A2(_user$project$Model$model, flags, initialLocation),
-			_1: _elm_lang$core$Platform_Cmd$batch(
+var _user$project$View_QuestDetailsView_Main$questDetailsView = F2(
+	function (taco, questDetails) {
+		var viewReady = A4(
+			_elm_lang$core$Maybe$map3,
+			F3(
+				function (quest, sideQuests, suggestedSideQuests) {
+					return A4(_user$project$View_QuestDetailsView_Main$view, quest, sideQuests, suggestedSideQuests, questDetails);
+				}),
+			questDetails.quest,
+			questDetails.sideQuests,
+			questDetails.suggestedSideQuests);
+		var _p1 = viewReady;
+		if (_p1.ctor === 'Just') {
+			return _p1._0;
+		} else {
+			return A2(
+				_rtfeldman$elm_css$Html_Styled$div,
+				{ctor: '[]'},
 				{
 					ctor: '::',
-					_0: _elm_lang$navigation$Navigation$modifyUrl(location.href),
+					_0: A2(
+						_rtfeldman$elm_css$Html_Styled$h3,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Html_Styled$text('loading..'),
+							_1: {ctor: '[]'}
+						}),
 					_1: {ctor: '[]'}
-				})
+				});
+		}
+	});
+
+var _user$project$Main$matchers = _evancz$url_parser$UrlParser$oneOf(
+	{
+		ctor: '::',
+		_0: A2(_evancz$url_parser$UrlParser$map, _user$project$Types$QuestsRoute, _evancz$url_parser$UrlParser$top),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_evancz$url_parser$UrlParser$map,
+				_user$project$Types$QuestsRoute,
+				_evancz$url_parser$UrlParser$s('quests')),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_evancz$url_parser$UrlParser$map,
+					_user$project$Types$QuestDetailsRoute,
+					A2(
+						_evancz$url_parser$UrlParser_ops['</>'],
+						_evancz$url_parser$UrlParser$s('details'),
+						_evancz$url_parser$UrlParser$string)),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_evancz$url_parser$UrlParser$map,
+						_user$project$Types$SideQuestsRoute,
+						A2(
+							_evancz$url_parser$UrlParser_ops['</>'],
+							_evancz$url_parser$UrlParser$s('sidequests'),
+							_evancz$url_parser$UrlParser$string)),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_evancz$url_parser$UrlParser$map,
+							_user$project$Types$MyAdventurerRoute,
+							_evancz$url_parser$UrlParser$s('profile')),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_evancz$url_parser$UrlParser$map,
+								_user$project$Types$CreateQuestRoute,
+								_evancz$url_parser$UrlParser$s('newquest')),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		}
+	});
+var _user$project$Main$parseLocation = function (location) {
+	var _p0 = A2(_evancz$url_parser$UrlParser$parseHash, _user$project$Main$matchers, location);
+	if (_p0.ctor === 'Just') {
+		return {ctor: '_Tuple2', _0: _p0._0, _1: location};
+	} else {
+		return {ctor: '_Tuple2', _0: _user$project$Types$QuestsRoute, _1: location};
+	}
+};
+var _user$project$Main$model = F2(
+	function (flags, routeData) {
+		return {
+			taco: {flags: flags, token: _elm_lang$core$Maybe$Nothing, username: _elm_lang$core$Maybe$Nothing, userId: _elm_lang$core$Maybe$Nothing, routeData: routeData},
+			quests: _user$project$Update_QuestsUpdate$questsModel,
+			myAdventurer: _user$project$Update_MyAdventurerUpdate$myAdventurerInitialModel,
+			sideQuests: _user$project$Update_SideQuestsUpdate$sideQuestsModel,
+			layout: _user$project$Update_LayoutUpdate$layoutModel,
+			createQuest: _user$project$Update_CreateQuestUpdate$createQuestInitialModel,
+			questDetails: _user$project$Update_QuestDetailsUpdate$questDetailsInitialModel
 		};
 	});
+var _user$project$Main$Model = F7(
+	function (a, b, c, d, e, f, g) {
+		return {taco: a, quests: b, myAdventurer: c, sideQuests: d, layout: e, createQuest: f, questDetails: g};
+	});
+var _user$project$Main$QuestDetailsMsg = function (a) {
+	return {ctor: 'QuestDetailsMsg', _0: a};
+};
+var _user$project$Main$CreateQuestMsg = function (a) {
+	return {ctor: 'CreateQuestMsg', _0: a};
+};
+var _user$project$Main$MyAdventurerMsg = function (a) {
+	return {ctor: 'MyAdventurerMsg', _0: a};
+};
+var _user$project$Main$LayoutMsg = function (a) {
+	return {ctor: 'LayoutMsg', _0: a};
+};
+var _user$project$Main$SideQuestsMsg = function (a) {
+	return {ctor: 'SideQuestsMsg', _0: a};
+};
+var _user$project$Main$QuestsMsg = function (a) {
+	return {ctor: 'QuestsMsg', _0: a};
+};
+var _user$project$Main$view = function (model) {
+	var _p1 = model.taco.routeData;
+	var route = _p1._0;
+	var location = _p1._1;
+	return A4(
+		_user$project$View_Layout$layout,
+		_user$project$Main$LayoutMsg,
+		model.layout,
+		model.taco,
+		function () {
+			var _p2 = route;
+			switch (_p2.ctor) {
+				case 'QuestsRoute':
+					return A2(
+						_rtfeldman$elm_css$Html_Styled$map,
+						_user$project$Main$QuestsMsg,
+						A2(_user$project$View_QuestsView_Main$questsView, model.taco, model.quests));
+				case 'QuestDetailsRoute':
+					return A2(
+						_rtfeldman$elm_css$Html_Styled$map,
+						_user$project$Main$QuestDetailsMsg,
+						A2(_user$project$View_QuestDetailsView_Main$questDetailsView, model.taco, model.questDetails));
+				case 'SideQuestsRoute':
+					return A2(
+						_rtfeldman$elm_css$Html_Styled$map,
+						_user$project$Main$SideQuestsMsg,
+						A2(_user$project$View_SideQuestsView_Main$sideQuestsView, model.taco, model.sideQuests));
+				case 'MyAdventurerRoute':
+					return A2(
+						_rtfeldman$elm_css$Html_Styled$map,
+						_user$project$Main$MyAdventurerMsg,
+						A2(_user$project$View_MyAdventurerView_Main$myAdventurerView, model.taco, model.myAdventurer));
+				case 'CreateQuestRoute':
+					return A2(
+						_rtfeldman$elm_css$Html_Styled$map,
+						_user$project$Main$CreateQuestMsg,
+						A2(_user$project$View_CreateQuestView_Main$createQuestView, model.taco, model.createQuest));
+				default:
+					return A2(
+						_rtfeldman$elm_css$Html_Styled$map,
+						_user$project$Main$QuestsMsg,
+						A2(_user$project$View_QuestsView_Main$questsView, model.taco, model.quests));
+			}
+		}());
+};
+var _user$project$Main$OnLocationChange = function (a) {
+	return {ctor: 'OnLocationChange', _0: a};
+};
+var _user$project$Main$LoadSessionResult = function (a) {
+	return {ctor: 'LoadSessionResult', _0: a};
+};
+var _user$project$Main$tacoUpdate = F2(
+	function (msg, taco) {
+		var _p3 = msg;
+		switch (_p3.ctor) {
+			case 'Init':
+				var _p4 = taco.routeData;
+				var route = _p4._0;
+				var location = _p4._1;
+				return {ctor: '_Tuple3', _0: taco, _1: route, _2: _elm_lang$core$Platform_Cmd$none};
+			case 'OnLocationChange':
+				var _p6 = _p3._0;
+				var _p5 = _user$project$Main$parseLocation(_p6);
+				var route = _p5._0;
+				return {
+					ctor: '_Tuple3',
+					_0: _elm_lang$core$Native_Utils.update(
+						taco,
+						{
+							routeData: {ctor: '_Tuple2', _0: route, _1: _p6}
+						}),
+					_1: route,
+					_2: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'LoadToken':
+				var _p7 = _p3._0;
+				return {
+					ctor: '_Tuple3',
+					_0: _elm_lang$core$Native_Utils.update(
+						taco,
+						{
+							token: _elm_lang$core$Maybe$Just(_p7)
+						}),
+					_1: _user$project$Types$TacoNoOp,
+					_2: A2(
+						_elm_lang$http$Http$send,
+						_user$project$Main$LoadSessionResult,
+						A2(_user$project$Request_SessionRequest$loadSession, taco.flags.apiEndpoint, _p7))
+				};
+			case 'GetTokenResult':
+				if (_p3._0.ctor === 'Ok') {
+					return {
+						ctor: '_Tuple3',
+						_0: _elm_lang$core$Native_Utils.update(
+							taco,
+							{
+								token: _elm_lang$core$Maybe$Just(_p3._0._0)
+							}),
+						_1: _user$project$Types$TacoNoOp,
+						_2: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					return {
+						ctor: '_Tuple3',
+						_0: _elm_lang$core$Native_Utils.update(
+							taco,
+							{token: _elm_lang$core$Maybe$Nothing, username: _elm_lang$core$Maybe$Nothing, userId: _elm_lang$core$Maybe$Nothing}),
+						_1: _user$project$Types$TacoNoOp,
+						_2: _elm_lang$core$Platform_Cmd$none
+					};
+				}
+			case 'LoadSessionResult':
+				if (_p3._0.ctor === 'Ok') {
+					var _p9 = _p3._0._0;
+					return {
+						ctor: '_Tuple3',
+						_0: _elm_lang$core$Native_Utils.update(
+							taco,
+							{
+								username: _elm_lang$core$Maybe$Just(_p9.username),
+								userId: _elm_lang$core$Maybe$Just(_p9.userId)
+							}),
+						_1: _user$project$Types$TacoNoOp,
+						_2: function () {
+							var _p8 = taco.routeData;
+							var route = _p8._0;
+							var location = _p8._1;
+							return _elm_lang$navigation$Navigation$modifyUrl(location.hash);
+						}()
+					};
+				} else {
+					return {
+						ctor: '_Tuple3',
+						_0: _elm_lang$core$Native_Utils.update(
+							taco,
+							{token: _elm_lang$core$Maybe$Nothing, username: _elm_lang$core$Maybe$Nothing, userId: _elm_lang$core$Maybe$Nothing}),
+						_1: _user$project$Types$TacoNoOp,
+						_2: _elm_lang$core$Platform_Cmd$none
+					};
+				}
+			default:
+				return {ctor: '_Tuple3', _0: taco, _1: _user$project$Types$TacoNoOp, _2: _elm_lang$core$Platform_Cmd$none};
+		}
+	});
+var _user$project$Main$update = F2(
+	function (message, model) {
+		var _p10 = A2(_user$project$Main$tacoUpdate, message, model.taco);
+		var taco = _p10._0;
+		var tacoMsg = _p10._1;
+		var tacoCmd = _p10._2;
+		var updater = F4(
+			function (messageType, pageModel, setter, reducer) {
+				var _p11 = A3(reducer, tacoMsg, pageModel, taco);
+				var updatedPageModel = _p11._0;
+				var cmd = _p11._1;
+				return {
+					ctor: '_Tuple2',
+					_0: A2(setter, model, updatedPageModel),
+					_1: _elm_lang$core$Platform_Cmd$batch(
+						{
+							ctor: '::',
+							_0: tacoCmd,
+							_1: {
+								ctor: '::',
+								_0: A2(_elm_lang$core$Platform_Cmd$map, messageType, cmd),
+								_1: {ctor: '[]'}
+							}
+						})
+				};
+			});
+		var _p12 = A2(_elm_lang$core$Debug$log, 'got message', message);
+		switch (_p12.ctor) {
+			case 'CreateQuestMsg':
+				return A4(
+					updater,
+					_user$project$Main$CreateQuestMsg,
+					model.createQuest,
+					F2(
+						function (model, createQuest) {
+							return _elm_lang$core$Native_Utils.update(
+								model,
+								{createQuest: createQuest});
+						}),
+					_user$project$Update_CreateQuestUpdate$createQuestUpdate(_p12._0));
+			case 'SideQuestsMsg':
+				return A4(
+					updater,
+					_user$project$Main$SideQuestsMsg,
+					model.sideQuests,
+					F2(
+						function (model, sideQuests) {
+							return _elm_lang$core$Native_Utils.update(
+								model,
+								{sideQuests: sideQuests});
+						}),
+					_user$project$Update_SideQuestsUpdate$sideQuestsUpdate(_p12._0));
+			case 'QuestsMsg':
+				return A4(
+					updater,
+					_user$project$Main$QuestsMsg,
+					model.quests,
+					F2(
+						function (model, quests) {
+							return _elm_lang$core$Native_Utils.update(
+								model,
+								{quests: quests});
+						}),
+					_user$project$Update_QuestsUpdate$questsUpdate(_p12._0));
+			case 'LayoutMsg':
+				return A4(
+					updater,
+					_user$project$Main$LayoutMsg,
+					model.layout,
+					F2(
+						function (model, layout) {
+							return _elm_lang$core$Native_Utils.update(
+								model,
+								{layout: layout});
+						}),
+					_user$project$Update_LayoutUpdate$layoutUpdate(_p12._0));
+			case 'MyAdventurerMsg':
+				return A4(
+					updater,
+					_user$project$Main$MyAdventurerMsg,
+					model.myAdventurer,
+					F2(
+						function (model, myAdventurer) {
+							return _elm_lang$core$Native_Utils.update(
+								model,
+								{myAdventurer: myAdventurer});
+						}),
+					_user$project$Update_MyAdventurerUpdate$myAdventurerUpdate(_p12._0));
+			case 'QuestDetailsMsg':
+				return A4(
+					updater,
+					_user$project$Main$QuestDetailsMsg,
+					model.questDetails,
+					F2(
+						function (model, questDetails) {
+							return _elm_lang$core$Native_Utils.update(
+								model,
+								{questDetails: questDetails});
+						}),
+					_user$project$Update_QuestDetailsUpdate$questDetailsUpdate(_p12._0));
+			default:
+				return {ctor: '_Tuple2', _0: model, _1: tacoCmd};
+		}
+	});
+var _user$project$Main$GetTokenResult = function (a) {
+	return {ctor: 'GetTokenResult', _0: a};
+};
+var _user$project$Main$LoadToken = function (a) {
+	return {ctor: 'LoadToken', _0: a};
+};
 var _user$project$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$batch(
 		{
 			ctor: '::',
-			_0: _user$project$Ports$loadToken(_user$project$Msg$LoadToken),
+			_0: _user$project$Ports$loadToken(_user$project$Main$LoadToken),
 			_1: {
 				ctor: '::',
-				_0: _user$project$Ports$uploadQuestImageFinished(_user$project$Msg$UploadQuestImageFinished),
+				_0: _user$project$Ports$uploadQuestImageFinished(
+					function (_p13) {
+						var _p14 = _p13;
+						return _user$project$Main$CreateQuestMsg(
+							_user$project$Update_CreateQuestUpdate$UploadQuestImageFinished(
+								{ctor: '_Tuple2', _0: _p14._0, _1: _p14._1}));
+					}),
 				_1: {ctor: '[]'}
 			}
 		});
 };
-var _user$project$Main$view = function (model) {
-	var _p0 = model.routeData;
-	var route = _p0._0;
-	var location = _p0._1;
-	return A2(
-		_user$project$View_Layout$layout,
-		model,
-		function () {
-			var _p1 = route;
-			switch (_p1.ctor) {
-				case 'QuestsRoute':
-					return A2(
-						_rtfeldman$elm_css$Html_Styled$map,
-						_user$project$Msg$Quests,
-						_user$project$View_QuestsView_Main$questsView(model));
-				case 'QuestDetailsRoute':
-					return A2(
-						_rtfeldman$elm_css$Html_Styled$map,
-						_user$project$Msg$QuestDetails,
-						_user$project$View_QuestDetailsView_Main$questDetailsView(model));
-				case 'SideQuestsRoute':
-					return A2(
-						_rtfeldman$elm_css$Html_Styled$map,
-						_user$project$Msg$SideQuests,
-						_user$project$View_SideQuestsView_Main$sideQuestsView(model));
-				case 'MyAdventurerRoute':
-					return A2(
-						_rtfeldman$elm_css$Html_Styled$map,
-						_user$project$Msg$MyAdventurer,
-						_user$project$View_MyAdventurerView_Main$myAdventurerView(model));
-				case 'CreateQuestRoute':
-					return A2(
-						_rtfeldman$elm_css$Html_Styled$map,
-						_user$project$Msg$CreateQuest,
-						_user$project$View_CreateQuestView_Main$createQuestView(model));
-				default:
-					return A2(
-						_rtfeldman$elm_css$Html_Styled$map,
-						_user$project$Msg$Quests,
-						_user$project$View_QuestsView_Main$questsView(model));
-			}
-		}());
-};
+var _user$project$Main$Init = {ctor: 'Init'};
+var _user$project$Main$init = F2(
+	function (flags, location) {
+		var initialLocation = _user$project$Main$parseLocation(location);
+		var _p15 = A2(
+			_user$project$Main$update,
+			_user$project$Main$Init,
+			A2(_user$project$Main$model, flags, initialLocation));
+		var initialModel = _p15._0;
+		var initialCmd = _p15._1;
+		return {
+			ctor: '_Tuple2',
+			_0: initialModel,
+			_1: _elm_lang$core$Platform_Cmd$batch(
+				{
+					ctor: '::',
+					_0: initialCmd,
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$navigation$Navigation$modifyUrl(location.href),
+						_1: {ctor: '[]'}
+					}
+				})
+		};
+	});
 var _user$project$Main$main = A2(
 	_elm_lang$navigation$Navigation$programWithFlags,
-	_user$project$Msg$OnLocationChange,
+	_user$project$Main$OnLocationChange,
 	{
 		init: _user$project$Main$init,
-		view: function (_p2) {
+		view: function (_p16) {
 			return _rtfeldman$elm_css$Html_Styled$toUnstyled(
-				_user$project$Main$view(_p2));
+				_user$project$Main$view(_p16));
 		},
-		update: _user$project$Update$update,
+		update: _user$project$Main$update,
 		subscriptions: _user$project$Main$subscriptions
 	})(
 	A2(
@@ -25014,7 +24732,7 @@ var _user$project$Main$main = A2(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Msg.Msg":{"args":[],"tags":{"OnLocationChange":["Navigation.Location"],"Layout":["Msg.LayoutMsg.LayoutMsg"],"LoadQuestId":["String"],"UploadQuestImageFinished":["( Bool, String )"],"Unmount":["( String, String )"],"QuestDetails":["Msg.QuestDetailsMsg.QuestDetailsMsg"],"CreateQuest":["Msg.CreateQuestMsg.CreateQuestMsg"],"Mount":["( String, String )"],"Quests":["Msg.QuestsMsg.QuestsMsg"],"LoadToken":["String"],"MyAdventurer":["Msg.MyAdventurerMsg.MyAdventurerMsg"],"SideQuests":["Msg.SideQuestsMsg.SideQuestsMsg"],"Session":["Msg.SessionMsg.SessionMsg"]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Msg.QuestDetailsMsg.QuestDetailsMsg":{"args":[],"tags":{"ToggleShowingSuggestedSideQuests":["Bool"],"AcceptSideQuest":["String"],"AcceptSuggestedSideQuest":[],"GetQuestDetailsResult":["Result.Result Http.Error Types.QuestDetailsResponse"],"DecideSideQuestResult":["Result.Result Http.Error Types.QuestDetailsResponse"],"DeclineSuggestedSideQuest":[],"ToggleShowingSideQuestModal":["Maybe.Maybe Types.SideQuest"],"NoOp":[],"DeclineSideQuest":["String"]}},"Msg.SideQuestsMsg.SideQuestsMsg":{"args":[],"tags":{"SuggestSideQuestResult":["Result.Result Http.Error Bool"],"ShowSideQuestForm":[],"HideSideQuestForm":[],"EditSideQuestName":["String"],"SubmitSideQuestForm":[],"EditSideQuestDescription":["String"],"NoOp":[],"GetSideQuestsResult":["Result.Result Http.Error Types.GetSideQuestsResponse"]}},"Msg.MyAdventurerMsg.MyAdventurerMsg":{"args":[],"tags":{"GetQuestsByUserResult":["Result.Result Http.Error (List Types.RecentPostedQuest)"],"NoOp":[]}},"Msg.LayoutMsg.LayoutMsg":{"args":[],"tags":{"ToggleSidenav":[]}},"Msg.QuestsMsg.QuestsMsg":{"args":[],"tags":{"GetQuestsResult":["Result.Result Http.Error (List Types.RecentPostedQuest)"],"NoOp":[]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Msg.CreateQuestMsg.CreateQuestMsg":{"args":[],"tags":{"EditQuestDescription":["String"],"SubmitCreateQuestResult":["Result.Result Http.Error Types.Quest"],"DeleteQuestStepConfirm":[],"EditQuestStepName":["String","String"],"ShowFileUploadModal":[],"AddQuestStep":[],"OnFileChosen":["String"],"EditQuestStepDescription":["String","String"],"ConfirmFileUpload":["String"],"EditQuestName":["String"],"DeleteQuestStepCancel":[],"HideFileUploadModal":[],"SubmitCreateQuest":[],"NoOp":[],"DeleteQuestStepPrompt":["String"]}},"Msg.SessionMsg.SessionMsg":{"args":[],"tags":{"GetTokenResult":["Result.Result Http.Error String"],"LoadSessionResult":["Result.Result Http.Error Types.SessionInfo"]}}},"aliases":{"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Types.QuestDetailsResponse":{"args":[],"type":"{ quest : Types.RecentPostedQuest , sideQuests : List Types.SideQuest , suggestedSideQuests : List Types.SideQuest }"},"Types.SessionInfo":{"args":[],"type":"{ username : String, userId : String }"},"Types.SideQuest":{"args":[],"type":"{ name : String , description : String , guid : String , suggestedBy : String , id : String }"},"Types.Quest":{"args":[],"type":"{ name : String , description : String , imageUrl : String , id : String }"},"Types.GetSideQuestsResponse":{"args":[],"type":"{ quest : Types.RecentPostedQuest , sideQuests : List Types.SideQuest }"},"Types.RecentPostedQuest":{"args":[],"type":"{ name : String , description : String , imageUrl : String , id : String , guid : String , username : String , userId : String , upvotes : Int }"},"Navigation.Location":{"args":[],"type":"{ href : String , host : String , hostname : String , protocol : String , origin : String , port_ : String , pathname : String , search : String , hash : String , username : String , password : String }"}},"message":"Msg.Msg"},"versions":{"elm":"0.18.0"}});
+    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Update.CreateQuestUpdate.CreateQuestMsg":{"args":[],"tags":{"EditQuestDescription":["String"],"SubmitCreateQuestResult":["Result.Result Http.Error Types.Quest"],"ShowFileUploadModal":[],"UploadQuestImageFinished":["( Bool, String )"],"OnFileChosen":["String"],"ConfirmFileUpload":["String"],"EditQuestName":["String"],"HideFileUploadModal":[],"SubmitCreateQuest":[],"NoOp":[]}},"Update.QuestsUpdate.QuestsMsg":{"args":[],"tags":{"GetQuestsResult":["Result.Result Http.Error (List Types.RecentPostedQuest)"],"NoOp":[]}},"Main.Msg":{"args":[],"tags":{"QuestsMsg":["Update.QuestsUpdate.QuestsMsg"],"SideQuestsMsg":["Update.SideQuestsUpdate.SideQuestsMsg"],"OnLocationChange":["Navigation.Location"],"Init":[],"LayoutMsg":["Update.LayoutUpdate.LayoutMsg"],"GetTokenResult":["Result.Result Http.Error String"],"QuestDetailsMsg":["Update.QuestDetailsUpdate.QuestDetailsMsg"],"LoadToken":["String"],"CreateQuestMsg":["Update.CreateQuestUpdate.CreateQuestMsg"],"LoadSessionResult":["Result.Result Http.Error Types.SessionInfo"],"MyAdventurerMsg":["Update.MyAdventurerUpdate.MyAdventurerMsg"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Update.LayoutUpdate.LayoutMsg":{"args":[],"tags":{"ToggleSidenav":[]}},"Update.SideQuestsUpdate.SideQuestsMsg":{"args":[],"tags":{"SuggestSideQuestResult":["Result.Result Http.Error Bool"],"ShowSideQuestForm":[],"HideSideQuestForm":[],"EditSideQuestName":["String"],"SubmitSideQuestForm":[],"EditSideQuestDescription":["String"],"NoOp":[],"GetSideQuestsResult":["Result.Result Http.Error Types.GetSideQuestsResponse"]}},"Update.QuestDetailsUpdate.QuestDetailsMsg":{"args":[],"tags":{"ToggleShowingSuggestedSideQuests":["Bool"],"AcceptSideQuest":["String"],"AcceptSuggestedSideQuest":[],"GetQuestDetailsResult":["Result.Result Http.Error Types.QuestDetailsResponse"],"DecideSideQuestResult":["Result.Result Http.Error Types.QuestDetailsResponse"],"DeclineSuggestedSideQuest":[],"ToggleShowingSideQuestModal":["Maybe.Maybe Types.SideQuest"],"NoOp":[],"DeclineSideQuest":["String"]}},"Update.MyAdventurerUpdate.MyAdventurerMsg":{"args":[],"tags":{"GetQuestsByUserResult":["Result.Result Http.Error (List Types.RecentPostedQuest)"],"NoOp":[]}}},"aliases":{"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Types.QuestDetailsResponse":{"args":[],"type":"{ quest : Types.RecentPostedQuest , sideQuests : List Types.SideQuest , suggestedSideQuests : List Types.SideQuest }"},"Types.SessionInfo":{"args":[],"type":"{ username : String, userId : String }"},"Types.SideQuest":{"args":[],"type":"{ name : String , description : String , guid : String , suggestedBy : String , id : String }"},"Types.Quest":{"args":[],"type":"{ name : String , description : String , imageUrl : String , id : String }"},"Types.GetSideQuestsResponse":{"args":[],"type":"{ quest : Types.RecentPostedQuest , sideQuests : List Types.SideQuest }"},"Types.RecentPostedQuest":{"args":[],"type":"{ name : String , description : String , imageUrl : String , id : String , guid : String , username : String , userId : String , upvotes : Int }"},"Navigation.Location":{"args":[],"type":"{ href : String , host : String , hostname : String , protocol : String , origin : String , port_ : String , pathname : String , search : String , hash : String , username : String , password : String }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])
