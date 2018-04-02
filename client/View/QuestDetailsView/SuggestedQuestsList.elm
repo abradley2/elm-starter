@@ -1,6 +1,5 @@
 module View.QuestDetailsView.SuggestedQuestsList exposing (suggestedQuestsList)
 
-import Html
 import Array
 import Theme
 import Css exposing (..)

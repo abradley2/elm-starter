@@ -1,6 +1,5 @@
 module View.QuestDetailsView.SideQuestDetails exposing (sideQuestDetails)
 
-import Html
 import Array
 import Theme
 import Css exposing (..)

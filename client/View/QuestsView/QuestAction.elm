@@ -1,6 +1,5 @@
 module View.QuestsView.QuestAction exposing (..)
 
-import Html
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)

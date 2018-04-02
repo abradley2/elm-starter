@@ -1,6 +1,5 @@
 module View.QuestDetailsView.Main exposing (questDetailsView)
 
-import Html
 import Array
 import Theme
 import Css exposing (..)

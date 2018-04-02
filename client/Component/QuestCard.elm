@@ -1,6 +1,5 @@
 module Component.QuestCard exposing (..)
 
-import Html
 import Theme
 import Css exposing (..)
 import Html.Styled exposing (..)

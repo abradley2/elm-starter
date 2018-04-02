@@ -1,6 +1,5 @@
 module Component.FileInput exposing (fileInput)
 
-import Html
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
@@ -12,7 +11,7 @@ fileInput params =
     div [ class "input-field" ]
         [ input
             [ type_ "file"
-            , id ("fileinput-" ++ params.id)
+            , id params.id
             , on "change" (Json.Decode.map params.onChange (Json.Decode.at [ "target", "files", "0", "name" ] Json.Decode.string))
             ]
             []

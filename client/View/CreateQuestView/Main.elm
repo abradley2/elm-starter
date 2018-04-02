@@ -1,6 +1,5 @@
 module View.CreateQuestView.Main exposing (createQuestView)
 
-import Html
 import Array
 import Theme
 import Css exposing (..)
@@ -64,7 +63,7 @@ createQuestView taco createQuest =
                                         { disabled = createQuest.questImageUploadPending
                                         , label = "Upload"
                                         , icon = Just "file_upload"
-                                        , onClick = ConfirmFileUpload fileInputId
+                                        , onClick = ConfirmFileUpload (Debug.log "fileinputid" fileInputId)
                                         }
 
                                 Nothing ->
