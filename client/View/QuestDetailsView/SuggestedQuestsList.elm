@@ -1,17 +1,16 @@
 module View.QuestDetailsView.SuggestedQuestsList exposing (suggestedQuestsList)
 
-import Html
 import Array
 import Theme
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
-import Message.QuestDetailsMessage exposing (QuestDetailsMessage, QuestDetailsMessage(..))
+import Update.QuestDetailsUpdate exposing (QuestDetailsMsg, QuestDetailsMsg(..))
 import Types exposing (RecentPostedQuest, SideQuest)
 
 
-suggestedQuestsList : Bool -> List SideQuest -> Html QuestDetailsMessage
+suggestedQuestsList : Bool -> List SideQuest -> Html QuestDetailsMsg
 suggestedQuestsList isOpen sideQuests =
     div []
         [ a

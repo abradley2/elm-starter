@@ -1,7 +1,6 @@
 module Request.CreateQuestRequest exposing (createQuestRequest)
 
 import Http
-import Message.CreateQuestMessage exposing (CreateQuestMessage(..), CreateQuestMessage)
 import Json.Decode exposing (..)
 import Json.Encode
 import Types exposing (Quest)
@@ -25,20 +24,16 @@ encodeQuest quest =
         ]
 
 
-createQuestRequest : String -> String -> Quest -> Cmd CreateQuestMessage
+createQuestRequest : String -> String -> Quest -> Http.Request Quest
 createQuestRequest apiEndpoint userToken quest =
-    let
-        request =
-            Http.request
-                { method = "POST"
-                , headers =
-                    [ Http.header "Authorization" ("Bearer " ++ (Debug.log "sending user token = " userToken))
-                    ]
-                , url = apiEndpoint ++ "quests"
-                , body = Http.jsonBody <| (encodeQuest quest)
-                , expect = Http.expectJson decodeQuest
-                , timeout = Nothing
-                , withCredentials = False
-                }
-    in
-        Http.send SubmitCreateQuestResult request
+    Http.request
+        { method = "POST"
+        , headers =
+            [ Http.header "Authorization" ("Bearer " ++ (Debug.log "sending user token = " userToken))
+            ]
+        , url = apiEndpoint ++ "quests"
+        , body = Http.jsonBody <| (encodeQuest quest)
+        , expect = Http.expectJson decodeQuest
+        , timeout = Nothing
+        , withCredentials = False
+        }

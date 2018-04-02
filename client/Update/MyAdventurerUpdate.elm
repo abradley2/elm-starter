@@ -1,15 +1,21 @@
 module Update.MyAdventurerUpdate
     exposing
-        ( myAdventurerUpdate
+        ( onUpdate
+        , onTacoMsg
         , myAdventurerInitialModel
         , MyAdventurerModel
+        , MyAdventurerMsg
+        , MyAdventurerMsg(..)
         )
 
-import Message exposing (Message, Message(..))
-import Message.MyAdventurerMessage exposing (MyAdventurerMessage, MyAdventurerMessage(..))
-import Update.RouteUpdate exposing (parseLocation)
 import Request.QuestsRequest exposing (getQuestsByUser)
-import Types exposing (SessionModel, RecentPostedQuest, RouteData, Route, Route(..))
+import Types exposing (Taco, RecentPostedQuest, TacoMsg(..))
+import Http
+
+
+type MyAdventurerMsg
+    = NoOp
+    | GetQuestsByUserResult (Result Http.Error (List RecentPostedQuest))
 
 
 type alias MyAdventurerModel =
@@ -22,55 +28,38 @@ myAdventurerInitialModel =
     }
 
 
-fetchQuests apiEndpoint token userId =
-    Cmd.map MyAdventurer
-        (getQuestsByUser apiEndpoint token userId)
-
-
-onRouteChange : RouteData -> ( SessionModel, MyAdventurerModel ) -> List (Cmd Message) -> ( MyAdventurerModel, List (Cmd Message) )
-onRouteChange routeData ( session, myAdventurer ) commands =
-    let
-        ( route, location ) =
-            routeData
-    in
-        case route of
-            MyAdventurerRoute ->
-                case session.userId of
-                    Just userId ->
-                        ( myAdventurer
-                        , commands
-                            ++ [ fetchQuests session.flags.apiEndpoint (Maybe.withDefault "" session.token) userId
-                               ]
+onTacoMsg : TacoMsg -> ( MyAdventurerModel, Taco ) -> ( MyAdventurerModel, Cmd MyAdventurerMsg )
+onTacoMsg tacoMsg ( model, taco ) =
+    case tacoMsg of
+        MyAdventurerRoute ->
+            let
+                result =
+                    Maybe.map2
+                        (\userId token ->
+                            getQuestsByUser taco.flags.apiEndpoint token userId
                         )
+                        taco.userId
+                        taco.token
+            in
+                case result of
+                    Just request ->
+                        ( model, Http.send GetQuestsByUserResult request )
 
                     Nothing ->
-                        ( myAdventurer, commands )
-
-            _ ->
-                ( myAdventurer, commands )
-
-
-onMyAdventurerMessage : MyAdventurerMessage -> MyAdventurerModel -> List (Cmd Message) -> ( MyAdventurerModel, List (Cmd Message) )
-onMyAdventurerMessage myAdventurerMessage myAdventurer commands =
-    case myAdventurerMessage of
-        GetQuestsByUserResult (Result.Ok quests) ->
-            ( { myAdventurer | quests = quests }, commands )
-
-        GetQuestsByUserResult (Result.Err _) ->
-            ( myAdventurer, commands )
-
-        NoOp ->
-            ( myAdventurer, commands )
-
-
-myAdventurerUpdate : Message -> ( SessionModel, MyAdventurerModel ) -> List (Cmd Message) -> ( MyAdventurerModel, List (Cmd Message) )
-myAdventurerUpdate message ( session, myAdventurer ) commands =
-    case message of
-        OnLocationChange location ->
-            onRouteChange (parseLocation location) ( session, myAdventurer ) commands
-
-        MyAdventurer myAdventurerMessage ->
-            onMyAdventurerMessage myAdventurerMessage myAdventurer commands
+                        ( model, Cmd.none )
 
         _ ->
-            ( myAdventurer, commands )
+            ( model, Cmd.none )
+
+
+onUpdate : MyAdventurerMsg -> ( MyAdventurerModel, Taco ) -> ( MyAdventurerModel, Cmd MyAdventurerMsg )
+onUpdate msg ( model, taco ) =
+    case msg of
+        GetQuestsByUserResult (Result.Ok quests) ->
+            ( { model | quests = quests }, Cmd.none )
+
+        GetQuestsByUserResult (Result.Err _) ->
+            ( model, Cmd.none )
+
+        NoOp ->
+            ( model, Cmd.none )

@@ -1,18 +1,16 @@
 module View.SideQuestsView.Main exposing (sideQuestsView)
 
-import Html
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
-import Message.SideQuestsMessage exposing (SideQuestsMessage, SideQuestsMessage(..))
-import Model exposing (Model)
+import Update.SideQuestsUpdate exposing (SideQuestsModel, SideQuestsMsg, SideQuestsMsg(..))
 import Theme
-import Types exposing (RecentPostedQuest, SideQuest)
+import Types exposing (Taco, RecentPostedQuest, SideQuest)
 import View.SideQuestsView.SideQuestForm exposing (sideQuestForm)
 
 
-ready : Model -> RecentPostedQuest -> List SideQuest -> Html SideQuestsMessage
+ready : SideQuestsModel -> RecentPostedQuest -> List SideQuest -> Html SideQuestsMsg
 ready model quest sideQuests =
     div [ class "container" ]
         [ div []
@@ -25,10 +23,10 @@ ready model quest sideQuests =
                 ]
                 [ hr [] []
                 , (sideQuestForm
-                    { name = model.sideQuests.sideQuestName
-                    , description = model.sideQuests.sideQuestDescription
-                    , open = model.sideQuests.questFormOpen
-                    , submitting = model.sideQuests.suggestingSideQuest
+                    { name = model.sideQuestName
+                    , description = model.sideQuestDescription
+                    , open = model.questFormOpen
+                    , submitting = model.suggestingSideQuest
                     }
                   )
                 , span [ class "flow-text" ] [ text "Care to propose a" ]
@@ -38,7 +36,7 @@ ready model quest sideQuests =
                         [ cursor pointer
                         ]
                     , onClick
-                        (if model.sideQuests.questFormOpen then
+                        (if model.questFormOpen then
                             HideSideQuestForm
                          else
                             ShowSideQuestForm
@@ -51,25 +49,25 @@ ready model quest sideQuests =
         ]
 
 
-loading : Html SideQuestsMessage
-loading =
+loadingIndicator : Html SideQuestsMsg
+loadingIndicator =
     div [ class "container" ]
         [ p [ class "flow-text" ] [ text "...loading" ]
         ]
 
 
-sideQuestsView : Model -> Html SideQuestsMessage
-sideQuestsView model =
+sideQuestsView : Taco -> SideQuestsModel -> Html SideQuestsMsg
+sideQuestsView taco model =
     let
         isLoaded =
             (Maybe.map2 (ready model)
-                model.sideQuests.questInfo
-                model.sideQuests.sideQuestList
+                model.questInfo
+                model.sideQuestList
             )
     in
         case isLoaded of
             Nothing ->
-                loading
+                loadingIndicator
 
             Just view ->
                 view

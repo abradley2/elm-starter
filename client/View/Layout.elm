@@ -1,4 +1,4 @@
-module Layout exposing (layout)
+module View.Layout exposing (layout)
 
 import Css exposing (..)
 import Css.Colors
@@ -8,25 +8,23 @@ import Html.Events exposing (onWithOptions)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
-import Message exposing (Message, Message(..))
-import Message.LayoutMessage exposing (LayoutMessage, LayoutMessage(..))
-import Model exposing (Model)
-import Update.SessionUpdate exposing (userIsLoggedIn)
+import Types exposing (Taco)
+import Update.LayoutUpdate exposing (LayoutMsg, LayoutMsg(..), LayoutModel)
 import Component.TextField exposing (textField)
 
 
-navs : Model -> List (Html LayoutMessage)
-navs model =
+navs : LayoutModel -> Taco -> List (Html LayoutMsg)
+navs model taco =
     [ li []
         [ a [ href "#quests" ] [ text "Quests" ]
         ]
     , li []
-        [ if userIsLoggedIn model.session then
+        [ if taco.token /= Nothing then
             a [ href "#profile" ] [ text "My Adventurer" ]
           else
             let
                 ( route, location ) =
-                    model.routeData
+                    taco.routeData
             in
                 a
                     [ href ("https://www.facebook.com/v2.11/dialog/oauth?client_id=169926423737270&redirect_uri=" ++ location.origin ++ "&state=success") ]
@@ -44,8 +42,8 @@ navs model =
     ]
 
 
-navbar : Model -> Html LayoutMessage
-navbar model =
+navbar : LayoutModel -> Taco -> Html LayoutMsg
+navbar model taco =
     nav []
         [ div
             [ class "nav-wrapper"
@@ -55,12 +53,12 @@ navbar model =
                 [ i [ class "fa fa-shield-alt" ] []
                 , span [] [ text "QUEST" ]
                 ]
-            , ul [ class "hide-on-small-only" ] (navs model)
+            , ul [ class "hide-on-small-only" ] (navs model taco)
             ]
         ]
 
 
-toggleSidenavButton : Html LayoutMessage
+toggleSidenavButton : Html LayoutMsg
 toggleSidenavButton =
     a
         [ href "javascript:void(0);"
@@ -81,22 +79,22 @@ sideNavtransform isOpen =
         "translateX(-105%)"
 
 
-layout : Model -> Html Message -> Html Message
-layout model view =
+layout messageMap model taco view =
     div
         []
-        [ Html.Styled.map Layout (navbar model)
-        , Html.Styled.map Layout
+        [ Html.Styled.map messageMap (navbar model taco)
+        , (Html.Styled.map messageMap
             (ul
                 [ id "slide-out"
                 , class "sidenav"
                 , onClick ToggleSidenav
                 , style
-                    [ ( "transform", sideNavtransform model.layout.sidenavOpen )
+                    [ ( "transform", sideNavtransform model.sidenavOpen )
                     , ( "transition", ".25s" )
                     ]
                 ]
-                (navs model)
+                (navs model taco)
             )
+          )
         , view
         ]

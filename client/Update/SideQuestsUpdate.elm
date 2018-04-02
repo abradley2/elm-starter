@@ -1,11 +1,29 @@
-module Update.SideQuestsUpdate exposing (SideQuestsModel, sideQuestsUpdate, sideQuestsModel)
+module Update.SideQuestsUpdate
+    exposing
+        ( onTacoMsg
+        , onUpdate
+        , sideQuestsModel
+        , SideQuestsModel
+        , SideQuestsMsg
+        , SideQuestsMsg(..)
+        )
 
-import Message exposing (Message, Message(..))
-import Message.SideQuestsMessage exposing (SideQuestsMessage, SideQuestsMessage(..))
 import UrlParser exposing (..)
-import Types exposing (SessionModel, SideQuest, GetSideQuestsResponse, RecentPostedQuest)
+import Types exposing (Taco, TacoMsg, TacoMsg(..), SideQuest, GetSideQuestsResponse, RecentPostedQuest)
 import Request.QuestsRequest exposing (getSideQuests, suggestSideQuest)
 import Array
+import Http
+
+
+type SideQuestsMsg
+    = GetSideQuestsResult (Result Http.Error GetSideQuestsResponse)
+    | ShowSideQuestForm
+    | HideSideQuestForm
+    | SubmitSideQuestForm
+    | SuggestSideQuestResult (Result Http.Error Bool)
+    | EditSideQuestName String
+    | EditSideQuestDescription String
+    | NoOp
 
 
 type alias SideQuestsModel =
@@ -33,126 +51,110 @@ sideQuestsModel =
     }
 
 
-onSideQuestsMessage : SideQuestsMessage -> ( SessionModel, SideQuestsModel ) -> List (Cmd Message) -> ( SideQuestsModel, List (Cmd Message) )
-onSideQuestsMessage sideQuestsMessage ( session, sideQuests ) commands =
-    case sideQuestsMessage of
+onTacoMsg : TacoMsg -> ( SideQuestsModel, Taco ) -> ( SideQuestsModel, Cmd SideQuestsMsg )
+onTacoMsg tacoMsg ( model, taco ) =
+    case tacoMsg of
+        SideQuestsRoute queryPath ->
+            let
+                params =
+                    Array.fromList (String.split ":" queryPath)
+            in
+                ( { model
+                    | loading = True
+                    , questInfo = Nothing
+                    , sideQuestList = Nothing
+                  }
+                , Http.send GetSideQuestsResult
+                    (getSideQuests
+                        taco.flags.apiEndpoint
+                        (Maybe.withDefault "" taco.token)
+                        (Maybe.withDefault "" (Array.get 0 params))
+                        (Maybe.withDefault "" (Array.get 1 params))
+                    )
+                )
+
+        _ ->
+            ( model, Cmd.none )
+
+
+onUpdate : SideQuestsMsg -> ( SideQuestsModel, Taco ) -> ( SideQuestsModel, Cmd SideQuestsMsg )
+onUpdate message ( model, taco ) =
+    case message of
         SuggestSideQuestResult (Result.Err _) ->
-            ( { sideQuests
+            ( { model
                 | suggestingSideQuest = False
                 , suggestSideQuestSuccess = Just False
               }
-            , commands
+            , Cmd.none
             )
 
         SuggestSideQuestResult (Result.Ok success) ->
-            ( { sideQuests
+            ( { model
                 | suggestingSideQuest = False
                 , suggestSideQuestSuccess = Just True
               }
-            , commands
+            , Cmd.none
             )
 
         GetSideQuestsResult (Result.Err _) ->
-            ( { sideQuests
+            ( { model
                 | loading = False
               }
-            , commands
+            , Cmd.none
             )
 
         GetSideQuestsResult (Result.Ok response) ->
-            ( { sideQuests
+            ( { model
                 | sideQuestList = Just response.sideQuests
                 , questInfo = Just response.quest
                 , loading = False
               }
-            , commands
+            , Cmd.none
             )
 
         ShowSideQuestForm ->
-            ( { sideQuests
+            ( { model
                 | questFormOpen = True
                 , sideQuestName = ""
                 , sideQuestDescription = ""
               }
-            , commands
+            , Cmd.none
             )
 
         HideSideQuestForm ->
-            ( { sideQuests | questFormOpen = False }, commands )
+            ( { model | questFormOpen = False }, Cmd.none )
 
         SubmitSideQuestForm ->
-            ( { sideQuests
+            ( { model
                 | questFormOpen = False
                 , suggestingSideQuest = True
               }
-            , (commands
-                ++ (let
-                        result =
-                            Maybe.map2
-                                (\quest userId ->
-                                    [ Cmd.map SideQuests
-                                        (suggestSideQuest
-                                            session.flags.apiEndpoint
-                                            userId
-                                            quest
-                                            { guid = ""
-                                            , name = sideQuests.sideQuestName
-                                            , description = sideQuests.sideQuestDescription
-                                            , suggestedBy = ""
-                                            , id = ""
-                                            }
-                                        )
-                                    ]
-                                )
-                                sideQuests.questInfo
-                                session.token
-                    in
-                        Maybe.withDefault [] result
-                   )
-              )
+            , Maybe.withDefault Cmd.none
+                (Maybe.map2
+                    (\quest userId ->
+                        Http.send SuggestSideQuestResult
+                            (suggestSideQuest
+                                taco.flags.apiEndpoint
+                                userId
+                                quest
+                                { guid = ""
+                                , name = model.sideQuestName
+                                , description = model.sideQuestDescription
+                                , suggestedBy = ""
+                                , id = ""
+                                }
+                            )
+                    )
+                    model.questInfo
+                    taco.token
+                )
             )
 
         EditSideQuestName newName ->
-            ( { sideQuests | sideQuestName = newName }, commands )
+            ( { model | sideQuestName = newName }, Cmd.none )
 
         EditSideQuestDescription newDescription ->
-            ( { sideQuests | sideQuestDescription = newDescription }, commands )
+            ( { model | sideQuestDescription = newDescription }, Cmd.none )
 
         NoOp ->
-            ( sideQuests, commands )
-
-
-sideQuestsUpdate : Message -> ( SessionModel, SideQuestsModel ) -> List (Cmd Message) -> ( SideQuestsModel, List (Cmd Message) )
-sideQuestsUpdate message ( session, sideQuests ) commands =
-    case message of
-        SideQuests sideQuestsMessage ->
-            onSideQuestsMessage sideQuestsMessage ( session, sideQuests ) commands
-
-        OnLocationChange location ->
-            case parseHash (s "sidequests" </> string) location of
-                Just queryPath ->
-                    let
-                        params =
-                            Array.fromList (String.split ":" queryPath)
-                    in
-                        ( { sideQuestsModel
-                            | loading = True
-                            , questInfo = Nothing
-                            , sideQuestList = Nothing
-                          }
-                        , commands
-                            ++ [ Cmd.map SideQuests
-                                    (getSideQuests
-                                        session.flags.apiEndpoint
-                                        (Maybe.withDefault "" session.token)
-                                        (Maybe.withDefault "" (Array.get 0 params))
-                                        (Maybe.withDefault "" (Array.get 1 params))
-                                    )
-                               ]
-                        )
-
-                Nothing ->
-                    ( sideQuests, commands )
-
-        _ ->
-            ( sideQuests, commands )
+            ( model, Cmd.none )

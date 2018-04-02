@@ -1,10 +1,20 @@
-module Update.QuestsUpdate exposing (questsModel, questsUpdate, QuestsModel)
+module Update.QuestsUpdate
+    exposing
+        ( onTacoMsg
+        , onUpdate
+        , questsModel
+        , QuestsModel
+        , QuestsMsg
+        )
 
-import Message exposing (Message, Message(..))
-import Message.QuestsMessage exposing (QuestsMessage, QuestsMessage(..))
-import Update.RouteUpdate exposing (parseLocation)
 import Request.QuestsRequest exposing (getQuests)
-import Types exposing (SessionModel, RecentPostedQuest, RouteData, Route, Route(..))
+import Types exposing (Taco, RecentPostedQuest, TacoMsg, TacoMsg(..))
+import Http
+
+
+type QuestsMsg
+    = NoOp
+    | GetQuestsResult (Result Http.Error (List RecentPostedQuest))
 
 
 type alias QuestsModel =
@@ -18,47 +28,31 @@ questsModel =
     }
 
 
-onRouteChange : RouteData -> ( SessionModel, QuestsModel ) -> List (Cmd Message) -> ( QuestsModel, List (Cmd Message) )
-onRouteChange routeData ( session, quests ) commands =
-    let
-        ( route, location ) =
-            routeData
-    in
-        case route of
-            QuestsRoute ->
-                let
-                    token =
-                        Maybe.withDefault "" session.token
-                in
-                    ( quests
-                    , commands ++ [ Cmd.map Quests (getQuests session.flags.apiEndpoint token) ]
-                    )
-
-            _ ->
-                ( quests, commands )
-
-
-onQuestsMessage : QuestsMessage -> QuestsModel -> List (Cmd Message) -> ( QuestsModel, List (Cmd Message) )
-onQuestsMessage questsMessage quests commands =
-    case questsMessage of
-        GetQuestsResult (Result.Ok questList) ->
-            ( { quests | questList = questList }, commands )
-
-        GetQuestsResult (Result.Err _) ->
-            ( quests, commands )
-
-        NoOp ->
-            ( quests, commands )
-
-
-questsUpdate : Message -> ( SessionModel, QuestsModel ) -> List (Cmd Message) -> ( QuestsModel, List (Cmd Message) )
-questsUpdate message ( session, quests ) commands =
-    case message of
-        OnLocationChange location ->
-            onRouteChange (parseLocation location) ( session, quests ) commands
-
-        Quests questsMessage ->
-            onQuestsMessage questsMessage quests commands
+onTacoMsg : TacoMsg -> ( QuestsModel, Taco ) -> ( QuestsModel, Cmd QuestsMsg )
+onTacoMsg tacoMsg ( quests, taco ) =
+    case tacoMsg of
+        QuestsRoute ->
+            let
+                token =
+                    Maybe.withDefault "" taco.token
+            in
+                ( quests
+                , Http.send GetQuestsResult (getQuests taco.flags.apiEndpoint token)
+                  -- TODO: why this need token
+                )
 
         _ ->
-            ( quests, commands )
+            ( quests, Cmd.none )
+
+
+onUpdate : QuestsMsg -> ( QuestsModel, Taco ) -> ( QuestsModel, Cmd QuestsMsg )
+onUpdate msg ( model, taco ) =
+    case msg of
+        GetQuestsResult (Result.Ok questList) ->
+            ( { model | questList = questList }, Cmd.none )
+
+        GetQuestsResult (Result.Err _) ->
+            ( model, Cmd.none )
+
+        NoOp ->
+            ( model, Cmd.none )

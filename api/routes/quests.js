@@ -2,6 +2,7 @@ const uuid = require('uuid')
 const router = require('express').Router
 const jwt = require('jsonwebtoken')
 const co = require('co')
+const cuid = require('cuid')
 const request = require('axios')
 const redis = require('../redis')
 const {
@@ -151,7 +152,7 @@ questsRouter.post('/', (req, res) => co(function * () {
     guid,
     userId,
     username: nameResponse.data.first_name,
-    id: req.body.id,
+    id: cuid(),
     name: req.body.name,
     description: req.body.description,
     imageUrl: req.body.imageUrl,

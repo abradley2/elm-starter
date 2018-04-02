@@ -1,14 +1,13 @@
 module View.CreateQuestView.Main exposing (createQuestView)
 
-import Html
 import Array
 import Theme
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
-import Model exposing (Model)
-import Message.CreateQuestMessage exposing (CreateQuestMessage, CreateQuestMessage(..))
+import Types exposing (Taco)
+import Update.CreateQuestUpdate exposing (CreateQuestModel, CreateQuestMsg, CreateQuestMsg(..))
 import Component.TextField exposing (textField)
 import Component.TextArea exposing (textArea)
 import Component.Modal exposing (modal)
@@ -23,29 +22,33 @@ THY QUEST (if you choose to accept it) IS
 """
 
 
-validQuest : Model -> Bool
-validQuest model =
+validQuest : CreateQuestModel -> Bool
+validQuest createQuest =
     List.all (\val -> val == True)
-        [ (model.createQuest.questName /= "")
+        [ (createQuest.questName /= "")
         ]
 
 
-createQuestView : Model -> Html CreateQuestMessage
-createQuestView model =
+fileInputId =
+    "create-quest-image-upload"
+
+
+createQuestView : Taco -> CreateQuestModel -> Html CreateQuestMsg
+createQuestView taco createQuest =
     div []
         [ div []
             [ modal
-                { open = model.createQuest.imageUploadModalOpen
-                , id = Maybe.withDefault "" model.createQuest.imageUploadModalFor
+                { open = createQuest.imageUploadModalOpen
+                , id = Maybe.withDefault "" createQuest.imageUploadModalFor
                 , content =
                     div []
                         [ p [ class "float-text" ] [ text "Upload a picture that describes this adventure" ]
                         , div [ class "row" ]
                             [ (fileInput
-                                { id = "image-upload"
+                                { id = fileInputId
                                 , label = "Image (max size 2mb)"
                                 , onChange = OnFileChosen
-                                , value = Maybe.withDefault "" model.createQuest.imageUploadPath
+                                , value = Maybe.withDefault "" createQuest.imageUploadPath
                                 }
                               )
                             ]
@@ -54,13 +57,13 @@ createQuestView model =
                                 { label = "Cancel"
                                 , onClick = HideFileUploadModal
                                 }
-                            , case model.createQuest.imageUploadPath of
+                            , case createQuest.imageUploadPath of
                                 Just validpath ->
                                     raisedButton
-                                        { disabled = model.createQuest.questImageUploadPending
+                                        { disabled = createQuest.questImageUploadPending
                                         , label = "Upload"
                                         , icon = Just "file_upload"
-                                        , onClick = ConfirmFileUpload "image-upload"
+                                        , onClick = ConfirmFileUpload (Debug.log "fileinputid" fileInputId)
                                         }
 
                                 Nothing ->
@@ -68,7 +71,7 @@ createQuestView model =
                             ]
                         , div [ css [ color Theme.errorTextColor ] ]
                             [ text
-                                (if model.createQuest.questImageUploadError then
+                                (if createQuest.questImageUploadError then
                                     "There was an error uploading your image. Please ensure images are less than 2mb"
                                  else
                                     ""
@@ -95,7 +98,7 @@ createQuestView model =
                         ]
                         [ div [ class "card" ]
                             [ div [ class "card-image" ]
-                                [ img [ src model.createQuest.questImageUrl ] []
+                                [ img [ src createQuest.questImageUrl ] []
                                 , div
                                     [ class "card-title"
                                     , style [ ( "padding", "8px 8px 24px 8px" ) ]
@@ -106,33 +109,33 @@ createQuestView model =
                                         , Css.bottom (px 0)
                                         ]
                                     ]
-                                    [ h5 [ css [ color Theme.baseTextColor, margin (px 0) ] ] [ text model.createQuest.questName ]
+                                    [ h5 [ css [ color Theme.baseTextColor, margin (px 0) ] ] [ text createQuest.questName ]
                                     ]
                                 , a
                                     [ class "btn-floating halfway-fab waves-effect waves-light red"
-                                    , onClick (ShowFileUploadModal model.createQuest.id)
+                                    , onClick (ShowFileUploadModal)
                                     ]
                                     [ i [ class "material-icons" ] [ text "add_a_photo" ]
                                     ]
                                 ]
                             , div [ class "card-content" ]
                                 [ textField
-                                    { id = "name-textfield" ++ model.createQuest.id
-                                    , value = model.createQuest.questName
+                                    { id = "name-textfield-createquest"
+                                    , value = createQuest.questName
                                     , onInput = EditQuestName
                                     , label = "Quest Name"
                                     , class = Nothing
                                     }
                                 , textArea
-                                    { id = "description-textarea" ++ model.createQuest.id
-                                    , value = model.createQuest.questDescription
+                                    { id = "description-textarea-createquest"
+                                    , value = createQuest.questDescription
                                     , label = "Quest Description"
                                     , class = Nothing
                                     , onInput = EditQuestDescription
                                     }
                                 , raisedButton
                                     { label =
-                                        if validQuest model then
+                                        if validQuest createQuest then
                                             "embark"
                                         else
                                             "fill in details"
@@ -140,7 +143,7 @@ createQuestView model =
                                         if
                                             List.all
                                                 (\v -> v == True)
-                                                [ validQuest model, model.createQuest.submitPending == False ]
+                                                [ validQuest createQuest, createQuest.submitPending == False ]
                                         then
                                             SubmitCreateQuest
                                         else
@@ -149,14 +152,14 @@ createQuestView model =
                                     , disabled =
                                         List.any
                                             (\v -> v == True)
-                                            [ validQuest model == False, model.createQuest.submitPending ]
+                                            [ validQuest createQuest == False, createQuest.submitPending ]
                                     }
                                 , div [ css [ paddingTop (px 8) ] ]
                                     [ span
                                         [ css [ color Theme.errorTextColor ]
                                         ]
                                         [ text
-                                            (if model.createQuest.submitError then
+                                            (if createQuest.submitError then
                                                 "Oops! was an error creating this quest"
                                              else
                                                 ""

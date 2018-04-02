@@ -1,35 +1,39 @@
 module Update.CreateQuestUpdate
     exposing
-        ( createQuestUpdate
+        ( onUpdate
+        , onTacoMsg
         , createQuestInitialModel
         , CreateQuestModel
+        , CreateQuestMsg
+        , CreateQuestMsg(..)
         )
 
 import Navigation
 import Html.Attributes exposing (name)
-import Message exposing (Message, Message(..))
-import Message.CreateQuestMessage exposing (CreateQuestMessage, CreateQuestMessage(..))
 import Request.CreateQuestRequest exposing (createQuestRequest)
-import Update.RouteUpdate exposing (parseLocation)
-import Ports exposing (requestQuestStepId, requestQuestId, uploadQuestImage)
-import Types exposing (SessionModel, Route(..))
+import Ports exposing (uploadQuestImage)
+import Types exposing (Quest, Taco, TacoMsg(..))
 import Array
+import Http
 
 
-type alias QuestStep =
-    { id : String
-    , name : String
-    , description : String
-    , imageUrl : String
-    }
+type CreateQuestMsg
+    = NoOp
+    | EditQuestName String
+    | EditQuestDescription String
+    | ShowFileUploadModal
+    | HideFileUploadModal
+    | OnFileChosen String
+    | ConfirmFileUpload String
+    | SubmitCreateQuest
+    | SubmitCreateQuestResult (Result Http.Error Quest)
+    | UploadQuestImageFinished ( Bool, String )
 
 
 type alias CreateQuestModel =
-    { id : String
-    , questName : String
+    { questName : String
     , questDescription : String
     , questImageUrl : String
-    , questSteps : Array.Array QuestStep
     , imageUploadModalOpen : Bool
     , imageUploadModalFor : Maybe String
     , imageUploadPath : Maybe String
@@ -42,11 +46,9 @@ type alias CreateQuestModel =
 
 
 createQuestInitialModel =
-    { id = ""
-    , questName = ""
+    { questName = ""
     , questDescription = ""
     , questImageUrl = "/placeholder.png"
-    , questSteps = Array.empty
     , imageUploadModalOpen = False
     , imageUploadModalFor = Nothing
     , imageUploadPath = Nothing
@@ -58,212 +60,110 @@ createQuestInitialModel =
     }
 
 
-onMountCreateQuestView : CreateQuestModel -> List (Cmd Message) -> ( CreateQuestModel, List (Cmd Message) )
-onMountCreateQuestView createQuest commands =
-    ( ({ createQuestInitialModel | token = createQuest.token })
-    , commands ++ [ requestQuestId "gimme!" ]
-    )
-
-
-getQuestStepById id questSteps =
-    questSteps
-        |> Array.indexedMap (\idx questStep -> ( idx, questStep ))
-        |> Array.foldr
-            (\( idx, questStep ) found ->
-                if questStep.id == id then
-                    idx
-                else
-                    found
-            )
-            -1
-        |> (\idx -> ( idx, Array.get idx questSteps ))
-
-
-questStepEditor : String -> (QuestStep -> QuestStep) -> CreateQuestModel -> CreateQuestModel
-questStepEditor stepId setterFunc createQuest =
-    let
-        ( idx, maybeStep ) =
-            getQuestStepById stepId createQuest.questSteps
-    in
-        case maybeStep of
-            Just targetQuestStep ->
-                { createQuest
-                    | questSteps =
-                        Array.set idx (setterFunc targetQuestStep) createQuest.questSteps
-                }
-
-            Nothing ->
-                createQuest
-
-
-onCreateQuestMessage : CreateQuestMessage -> ( SessionModel, CreateQuestModel ) -> List (Cmd Message) -> ( CreateQuestModel, List (Cmd Message) )
-onCreateQuestMessage createQuestMessage ( session, createQuest ) commands =
-    case createQuestMessage of
-        SubmitCreateQuest ->
-            ( { createQuest
-                | submitPending = True
-                , submitError = False
-              }
-            , (commands
-                ++ [ Cmd.map CreateQuest
-                        (createQuestRequest
-                            session.flags.apiEndpoint
-                            (Maybe.withDefault "" session.token)
-                            { id = createQuest.id
-                            , name = createQuest.questName
-                            , description = createQuest.questDescription
-                            , imageUrl = createQuest.questImageUrl
-                            }
-                        )
-                   ]
-              )
-            )
-
-        SubmitCreateQuestResult (Result.Ok quest) ->
-            ( createQuest
-            , (commands
-                ++ [ Navigation.modifyUrl "/#profile" ]
-              )
-            )
-
-        SubmitCreateQuestResult (Result.Err _) ->
-            ( { createQuest
-                | submitError = True
-              }
-            , commands
-            )
-
-        OnFileChosen filePath ->
-            ( { createQuest
-                | imageUploadPath = Just filePath
-              }
-            , commands
-            )
-
-        ShowFileUploadModal id ->
-            ( { createQuest
-                | imageUploadModalOpen = True
-                , imageUploadPath = Nothing
-                , imageUploadModalFor = Just id
-              }
-            , commands
-            )
-
-        HideFileUploadModal ->
-            ( { createQuest
-                | imageUploadModalOpen = False
-                , imageUploadPath = Nothing
-              }
-            , commands
-            )
-
-        ConfirmFileUpload id ->
-            ( { createQuest
-                | questImageUploadPending = True
-                , questImageUploadError = False
-              }
-            , commands ++ [ uploadQuestImage ("fileinput-" ++ id) ]
-            )
-
-        EditQuestName questName ->
-            ( { createQuest
-                | questName = questName
-              }
-            , commands
-            )
-
-        EditQuestDescription questDescription ->
-            ( { createQuest
-                | questDescription = questDescription
-              }
-            , commands
-            )
-
-        EditQuestStepName questStepId name ->
-            ( questStepEditor
-                questStepId
-                (\questStep -> { questStep | name = name })
-                createQuest
-            , commands
-            )
-
-        EditQuestStepDescription questStepId description ->
-            ( questStepEditor
-                questStepId
-                (\questStep -> { questStep | description = description })
-                createQuest
-            , commands
-            )
-
-        AddQuestStep ->
-            ( { createQuest
-                | questSteps =
-                    Array.append createQuest.questSteps
-                        (Array.fromList
-                            [ { id = "newquest"
-                              , name = ""
-                              , description = ""
-                              , imageUrl = "/placeholder.png"
-                              }
-                            ]
-                        )
-              }
-            , commands ++ [ requestQuestStepId "newquest" ]
-            )
-
-        NoOp ->
-            ( createQuest, commands )
+onTacoMsg : TacoMsg -> ( CreateQuestModel, Taco ) -> ( CreateQuestModel, Cmd CreateQuestMsg )
+onTacoMsg tacoMsg ( model, taco ) =
+    case tacoMsg of
+        CreateQuestRoute ->
+            ( createQuestInitialModel, Cmd.none )
 
         _ ->
-            ( createQuest, commands )
+            ( model, Cmd.none )
 
 
-createQuestUpdate : Message -> ( SessionModel, CreateQuestModel ) -> List (Cmd Message) -> ( CreateQuestModel, List (Cmd Message) )
-createQuestUpdate message ( session, createQuest ) commands =
-    case message of
+onUpdate : CreateQuestMsg -> ( CreateQuestModel, Taco ) -> ( CreateQuestModel, Cmd CreateQuestMsg )
+onUpdate msg ( model, taco ) =
+    case msg of
         UploadQuestImageFinished ( success, questImageUrl ) ->
             if success then
-                ( { createQuest
+                ( { model
                     | questImageUploadPending = False
                     , questImageUploadError = True
                     , questImageUrl = questImageUrl
                     , imageUploadModalOpen = False
                   }
-                , commands
+                , Cmd.none
                 )
             else
-                ( { createQuest
+                ( { model
                     | questImageUploadPending = False
                     , questImageUploadError = True
                   }
-                , commands
+                , Cmd.none
                 )
 
-        CreateQuest createQuestMessage ->
-            onCreateQuestMessage createQuestMessage ( session, createQuest ) commands
-
-        LoadQuestId cuid ->
-            ( { createQuest | id = cuid }, commands )
-
-        LoadQuestStepId ( prevId, cuid ) ->
-            ( questStepEditor
-                prevId
-                (\questStep -> { questStep | id = cuid })
-                createQuest
-            , commands
+        SubmitCreateQuest ->
+            ( { model
+                | submitPending = True
+                , submitError = False
+              }
+            , Http.send SubmitCreateQuestResult
+                (createQuestRequest
+                    taco.flags.apiEndpoint
+                    (Maybe.withDefault "" taco.token)
+                    { id = ""
+                    , name = model.questName
+                    , description = model.questDescription
+                    , imageUrl = model.questImageUrl
+                    }
+                )
             )
 
-        OnLocationChange location ->
-            let
-                ( route, locationData ) =
-                    parseLocation location
-            in
-                case route of
-                    CreateQuestRoute ->
-                        onMountCreateQuestView createQuest commands
+        SubmitCreateQuestResult (Result.Ok quest) ->
+            ( model
+            , Navigation.modifyUrl "/#profile"
+            )
 
-                    _ ->
-                        ( createQuest, commands )
+        SubmitCreateQuestResult (Result.Err _) ->
+            ( { model
+                | submitError = True
+              }
+            , Cmd.none
+            )
 
-        _ ->
-            ( createQuest, commands )
+        OnFileChosen filePath ->
+            ( { model
+                | imageUploadPath = Just filePath
+              }
+            , Cmd.none
+            )
+
+        ShowFileUploadModal ->
+            ( { model
+                | imageUploadModalOpen = True
+                , imageUploadPath = Nothing
+              }
+            , Cmd.none
+            )
+
+        HideFileUploadModal ->
+            ( { model
+                | imageUploadModalOpen = False
+                , imageUploadPath = Nothing
+              }
+            , Cmd.none
+            )
+
+        ConfirmFileUpload fileInputId ->
+            ( { model
+                | questImageUploadPending = True
+                , questImageUploadError = False
+              }
+            , uploadQuestImage fileInputId
+            )
+
+        EditQuestName questName ->
+            ( { model
+                | questName = questName
+              }
+            , Cmd.none
+            )
+
+        EditQuestDescription questDescription ->
+            ( { model
+                | questDescription = questDescription
+              }
+            , Cmd.none
+            )
+
+        NoOp ->
+            ( model, Cmd.none )

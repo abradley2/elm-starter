@@ -1,12 +1,31 @@
-module Update.QuestDetailsUpdate exposing (QuestDetailsModel, questDetailsUpdate, questDetailsInitialModel)
+module Update.QuestDetailsUpdate
+    exposing
+        ( onUpdate
+        , onTacoMsg
+        , questDetailsInitialModel
+        , QuestDetailsModel
+        , QuestDetailsMsg
+        , QuestDetailsMsg(..)
+        )
 
-import Message exposing (Message, Message(..))
-import Message.QuestDetailsMessage exposing (QuestDetailsMessage, QuestDetailsMessage(..))
 import UrlParser exposing (..)
-import Types exposing (SessionModel, Route, Route(..), SideQuest, RecentPostedQuest)
+import Types exposing (Taco, TacoMsg, TacoMsg(..), SideQuest, RecentPostedQuest, QuestDetailsResponse)
 import Request.QuestsRequest exposing (getQuestDetails, decideSideQuest)
 import String
 import Array
+import Http
+
+
+type QuestDetailsMsg
+    = NoOp
+    | GetQuestDetailsResult (Result Http.Error QuestDetailsResponse)
+    | DecideSideQuestResult (Result Http.Error QuestDetailsResponse)
+    | ToggleShowingSuggestedSideQuests Bool
+    | AcceptSuggestedSideQuest
+    | DeclineSuggestedSideQuest
+    | ToggleShowingSideQuestModal (Maybe SideQuest)
+    | AcceptSideQuest String
+    | DeclineSideQuest String
 
 
 type alias QuestDetailsModel =
@@ -28,134 +47,118 @@ questDetailsInitialModel =
     }
 
 
-decideOnSuggestedSideQuest : SessionModel -> QuestDetailsModel -> Bool -> Cmd Message
-decideOnSuggestedSideQuest session questDetails isAccepted =
+decideOnSuggestedSideQuest : Taco -> QuestDetailsModel -> Bool -> Cmd QuestDetailsMsg
+decideOnSuggestedSideQuest taco model isAccepted =
     let
-        isCmd =
+        request =
             Maybe.map3
                 (\userToken quest sideQuest ->
-                    decideSideQuest
-                        { apiEndpoint = session.flags.apiEndpoint
-                        , userToken = userToken
-                        , isAccepted = isAccepted
-                        , sideQuestId = sideQuest.id
-                        , questId = quest.id
-                        }
+                    Http.send DecideSideQuestResult
+                        (decideSideQuest
+                            { apiEndpoint = taco.flags.apiEndpoint
+                            , userToken = userToken
+                            , isAccepted = isAccepted
+                            , sideQuestId = sideQuest.id
+                            , questId = quest.id
+                            }
+                        )
                 )
-                session.token
-                questDetails.quest
-                questDetails.decidingSideQuest
+                taco.token
+                model.quest
+                model.decidingSideQuest
     in
-        case isCmd of
-            Just cmd ->
-                Cmd.map QuestDetails cmd
-
-            Nothing ->
-                Cmd.none
+        Maybe.withDefault Cmd.none request
 
 
-onQuestDetailsMessage : QuestDetailsMessage -> ( SessionModel, QuestDetailsModel ) -> List (Cmd Message) -> ( QuestDetailsModel, List (Cmd Message) )
-onQuestDetailsMessage message ( session, questDetails ) commands =
-    case message of
+onTacoMsg : TacoMsg -> ( QuestDetailsModel, Taco ) -> ( QuestDetailsModel, Cmd QuestDetailsMsg )
+onTacoMsg tacoMsg ( model, taco ) =
+    case tacoMsg of
+        QuestDetailsRoute params ->
+            let
+                paramArray =
+                    Array.fromList (String.split ":" params)
+
+                request =
+                    Maybe.map2
+                        (\userId questId ->
+                            Http.send GetQuestDetailsResult
+                                (getQuestDetails
+                                    taco.flags.apiEndpoint
+                                    userId
+                                    questId
+                                )
+                        )
+                        (Array.get 0 paramArray)
+                        (Array.get 1 paramArray)
+            in
+                ( questDetailsInitialModel, Maybe.withDefault Cmd.none request )
+
+        _ ->
+            ( model, Cmd.none )
+
+
+onUpdate : QuestDetailsMsg -> ( QuestDetailsModel, Taco ) -> ( QuestDetailsModel, Cmd QuestDetailsMsg )
+onUpdate msg ( model, taco ) =
+    case msg of
         DecideSideQuestResult (Result.Ok response) ->
-            ( { questDetails
+            ( { model
                 | quest = Just response.quest
                 , sideQuests = Just response.sideQuests
                 , suggestedSideQuests = Just response.suggestedSideQuests
               }
-            , commands
+            , Cmd.none
             )
 
         DecideSideQuestResult (Result.Err _) ->
-            ( questDetails, commands )
+            ( model, Cmd.none )
 
         GetQuestDetailsResult (Result.Ok response) ->
-            ( { questDetails
+            ( { model
                 | quest = Just response.quest
                 , sideQuests = Just response.sideQuests
                 , suggestedSideQuests = Just response.suggestedSideQuests
               }
-            , commands
+            , Cmd.none
             )
 
         GetQuestDetailsResult (Result.Err _) ->
-            ( questDetails, commands )
+            ( model, Cmd.none )
 
         ToggleShowingSuggestedSideQuests isShowing ->
-            ( { questDetails
+            ( { model
                 | showingSuggestedSideQuests = isShowing
               }
-            , commands
+            , Cmd.none
             )
 
         AcceptSuggestedSideQuest ->
-            ( { questDetails
+            ( { model
                 | decidingSideQuest = Nothing
                 , quest = Nothing
                 , sideQuests = Nothing
                 , suggestedSideQuests = Nothing
               }
-            , commands ++ [ decideOnSuggestedSideQuest session questDetails True ]
+            , decideOnSuggestedSideQuest taco model True
             )
 
         DeclineSuggestedSideQuest ->
-            ( { questDetails
+            ( { model
                 | decidingSideQuest = Nothing
                 , quest = Nothing
                 , sideQuests = Nothing
                 , suggestedSideQuests = Nothing
               }
-            , commands ++ [ decideOnSuggestedSideQuest session questDetails False ]
+            , decideOnSuggestedSideQuest taco model False
             )
 
         ToggleShowingSideQuestModal ifSideQuest ->
-            ( { questDetails | decidingSideQuest = ifSideQuest }, commands )
+            ( { model | decidingSideQuest = ifSideQuest }, Cmd.none )
 
         AcceptSideQuest sideQuestId ->
-            ( questDetails, commands )
+            ( model, Cmd.none )
 
         DeclineSideQuest sideQuestId ->
-            ( questDetails, commands )
+            ( model, Cmd.none )
 
         NoOp ->
-            ( questDetails, commands )
-
-
-questDetailsUpdate : Message -> ( SessionModel, QuestDetailsModel ) -> List (Cmd Message) -> ( QuestDetailsModel, List (Cmd Message) )
-questDetailsUpdate message ( session, questDetails ) commands =
-    case message of
-        QuestDetails questDetailsMessage ->
-            onQuestDetailsMessage questDetailsMessage ( session, questDetails ) commands
-
-        OnLocationChange newLocation ->
-            let
-                ( route, location ) =
-                    session.routeData
-            in
-                case route of
-                    QuestDetailsRoute params ->
-                        let
-                            paramArray =
-                                Array.fromList (String.split ":" params)
-
-                            request =
-                                Maybe.map2
-                                    (\userId questId ->
-                                        [ Cmd.map QuestDetails
-                                            (getQuestDetails
-                                                session.flags.apiEndpoint
-                                                userId
-                                                questId
-                                            )
-                                        ]
-                                    )
-                                    (Array.get 0 paramArray)
-                                    (Array.get 1 paramArray)
-                        in
-                            ( questDetailsInitialModel, commands ++ (Maybe.withDefault [] request) )
-
-                    _ ->
-                        ( questDetails, commands )
-
-        _ ->
-            ( questDetails, commands )
+            ( model, Cmd.none )

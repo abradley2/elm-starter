@@ -1,6 +1,5 @@
 const axios = require('axios')
 const cookies = require('js-cookie')
-const cuid = require('cuid')
 const components = require('./components')
 
 const apiEndpoint = process.env.NODE_ENV === 'production' ?
@@ -19,13 +18,11 @@ document.addEventListener('animationstart', e => {
   if (e.animationName === 'nodeInserted') {
     const parent = e.target.parentElement
     const target = e.target
-    const targetId = target.id
     const componentType = target.getAttribute('data-js-component')
 
     if (componentType) {
       components.mount(target, componentType, app)
     }
-    app.ports.mount.send([targetId, componentType])
 
     const observer = new MutationObserver(ev => {
       if (ev[0].removedNodes && ev[0].removedNodes.length !== 0) {
@@ -34,7 +31,6 @@ document.addEventListener('animationstart', e => {
             if (componentType) {
               components.unmount(target, componentType, app)
             }
-            app.ports.unmount.send(targetId)
             observer.disconnect()
           }
         })
@@ -55,14 +51,6 @@ const token = cookies.get('thyQuestIs:token')
 if (token) {
   app.ports.loadToken.send(token)
 }
-
-app.ports.requestQuestId.subscribe(() => {
-  app.ports.loadQuestId.send(cuid())
-})
-
-app.ports.requestQuestStepId.subscribe(prevStepId => {
-  app.ports.loadQuestStepId.send(prevStepId, cuid())
-})
 
 app.ports.uploadQuestImage.subscribe(inputId => {
   const fileInput = document.getElementById(inputId)

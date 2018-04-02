@@ -1,7 +1,6 @@
 module Component.Modal exposing (modal)
 
 import Css exposing (..)
-import Html
 import Html.Events exposing (onWithOptions)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
