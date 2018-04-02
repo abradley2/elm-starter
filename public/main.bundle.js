@@ -24673,13 +24673,10 @@ var _user$project$Main$subscriptions = function (model) {
 			_0: _user$project$Ports$loadToken(_user$project$Main$LoadToken),
 			_1: {
 				ctor: '::',
-				_0: _user$project$Ports$uploadQuestImageFinished(
-					function (_p13) {
-						var _p14 = _p13;
-						return _user$project$Main$CreateQuestMsg(
-							_user$project$Update_CreateQuestUpdate$UploadQuestImageFinished(
-								{ctor: '_Tuple2', _0: _p14._0, _1: _p14._1}));
-					}),
+				_0: A2(
+					_elm_lang$core$Platform_Sub$map,
+					_user$project$Main$CreateQuestMsg,
+					_user$project$Ports$uploadQuestImageFinished(_user$project$Update_CreateQuestUpdate$UploadQuestImageFinished)),
 				_1: {ctor: '[]'}
 			}
 		});
@@ -24688,12 +24685,12 @@ var _user$project$Main$Init = {ctor: 'Init'};
 var _user$project$Main$init = F2(
 	function (flags, location) {
 		var initialLocation = _user$project$Main$parseLocation(location);
-		var _p15 = A2(
+		var _p13 = A2(
 			_user$project$Main$update,
 			_user$project$Main$Init,
 			A2(_user$project$Main$model, flags, initialLocation));
-		var initialModel = _p15._0;
-		var initialCmd = _p15._1;
+		var initialModel = _p13._0;
+		var initialCmd = _p13._1;
 		return {
 			ctor: '_Tuple2',
 			_0: initialModel,
@@ -24714,9 +24711,9 @@ var _user$project$Main$main = A2(
 	_user$project$Main$OnLocationChange,
 	{
 		init: _user$project$Main$init,
-		view: function (_p16) {
+		view: function (_p14) {
 			return _rtfeldman$elm_css$Html_Styled$toUnstyled(
-				_user$project$Main$view(_p16));
+				_user$project$Main$view(_p14));
 		},
 		update: _user$project$Main$update,
 		subscriptions: _user$project$Main$subscriptions

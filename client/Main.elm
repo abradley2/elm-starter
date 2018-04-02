@@ -266,7 +266,7 @@ view model =
 subscriptions model =
     Sub.batch
         [ loadToken LoadToken
-        , uploadQuestImageFinished (\( a, b ) -> (CreateQuestMsg (UploadQuestImageFinished ( a, b ))))
+        , Sub.map CreateQuestMsg (uploadQuestImageFinished UploadQuestImageFinished)
         ]
 
 
