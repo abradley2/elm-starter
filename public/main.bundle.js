@@ -21436,16 +21436,23 @@ var _user$project$Request_SessionRequest$loadSession = F2(
 			});
 	});
 
-var _user$project$Update_LayoutUpdate$onUpdate = F4(
-	function (msg, tacoMsg, layoutModel, taco) {
-		var _p0 = msg;
+var _user$project$Update_LayoutUpdate$onUpdate = F2(
+	function (msg, _p0) {
+		var _p1 = _p0;
+		var _p3 = _p1._0;
+		var _p2 = msg;
 		return {
 			ctor: '_Tuple2',
 			_0: _elm_lang$core$Native_Utils.update(
-				layoutModel,
-				{sidenavOpen: !layoutModel.sidenavOpen}),
+				_p3,
+				{sidenavOpen: !_p3.sidenavOpen}),
 			_1: _elm_lang$core$Platform_Cmd$none
 		};
+	});
+var _user$project$Update_LayoutUpdate$onTacoUpdate = F2(
+	function (tacoMsg, _p4) {
+		var _p5 = _p4;
+		return {ctor: '_Tuple2', _0: _p5._0, _1: _elm_lang$core$Platform_Cmd$none};
 	});
 var _user$project$Update_LayoutUpdate$layoutModel = {sidenavOpen: false};
 var _user$project$Update_LayoutUpdate$LayoutModel = function (a) {
@@ -21961,6 +21968,27 @@ var _user$project$Request_QuestsRequest$DecideSideQuestParams = F5(
 		return {apiEndpoint: a, userToken: b, questId: c, sideQuestId: d, isAccepted: e};
 	});
 
+var _user$project$Update_MyAdventurerUpdate$onUpdate = F2(
+	function (msg, _p0) {
+		var _p1 = _p0;
+		var _p3 = _p1._0;
+		var _p2 = msg;
+		if (_p2.ctor === 'GetQuestsByUserResult') {
+			if (_p2._0.ctor === 'Ok') {
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						_p3,
+						{quests: _p2._0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			} else {
+				return {ctor: '_Tuple2', _0: _p3, _1: _elm_lang$core$Platform_Cmd$none};
+			}
+		} else {
+			return {ctor: '_Tuple2', _0: _p3, _1: _elm_lang$core$Platform_Cmd$none};
+		}
+	});
 var _user$project$Update_MyAdventurerUpdate$myAdventurerInitialModel = {
 	quests: {ctor: '[]'}
 };
@@ -21970,50 +21998,33 @@ var _user$project$Update_MyAdventurerUpdate$MyAdventurerModel = function (a) {
 var _user$project$Update_MyAdventurerUpdate$GetQuestsByUserResult = function (a) {
 	return {ctor: 'GetQuestsByUserResult', _0: a};
 };
-var _user$project$Update_MyAdventurerUpdate$onUpdate = F4(
-	function (msg, tacoMsg, model, taco) {
-		var _p0 = function () {
-			var _p1 = tacoMsg;
-			if (_p1.ctor === 'MyAdventurerRoute') {
-				var result = A3(
-					_elm_lang$core$Maybe$map2,
-					F2(
-						function (userId, token) {
-							return A3(_user$project$Request_QuestsRequest$getQuestsByUser, taco.flags.apiEndpoint, token, userId);
-						}),
-					taco.userId,
-					taco.token);
-				var _p2 = result;
-				if (_p2.ctor === 'Just') {
-					return {
-						ctor: '_Tuple2',
-						_0: model,
-						_1: A2(_elm_lang$http$Http$send, _user$project$Update_MyAdventurerUpdate$GetQuestsByUserResult, _p2._0)
-					};
-				} else {
-					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-				}
-			} else {
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-			}
-		}();
-		var myAdventurer = _p0._0;
-		var command = _p0._1;
-		var _p3 = msg;
-		if (_p3.ctor === 'GetQuestsByUserResult') {
-			if (_p3._0.ctor === 'Ok') {
+var _user$project$Update_MyAdventurerUpdate$onTacoUpdate = F2(
+	function (tacoMsg, _p4) {
+		var _p5 = _p4;
+		var _p9 = _p5._1;
+		var _p8 = _p5._0;
+		var _p6 = tacoMsg;
+		if (_p6.ctor === 'MyAdventurerRoute') {
+			var result = A3(
+				_elm_lang$core$Maybe$map2,
+				F2(
+					function (userId, token) {
+						return A3(_user$project$Request_QuestsRequest$getQuestsByUser, _p9.flags.apiEndpoint, token, userId);
+					}),
+				_p9.userId,
+				_p9.token);
+			var _p7 = result;
+			if (_p7.ctor === 'Just') {
 				return {
 					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						myAdventurer,
-						{quests: _p3._0._0}),
-					_1: command
+					_0: _p8,
+					_1: A2(_elm_lang$http$Http$send, _user$project$Update_MyAdventurerUpdate$GetQuestsByUserResult, _p7._0)
 				};
 			} else {
-				return {ctor: '_Tuple2', _0: myAdventurer, _1: command};
+				return {ctor: '_Tuple2', _0: _p8, _1: _elm_lang$core$Platform_Cmd$none};
 			}
 		} else {
-			return {ctor: '_Tuple2', _0: myAdventurer, _1: command};
+			return {ctor: '_Tuple2', _0: _p8, _1: _elm_lang$core$Platform_Cmd$none};
 		}
 	});
 var _user$project$Update_MyAdventurerUpdate$NoOp = {ctor: 'NoOp'};
@@ -22161,6 +22172,27 @@ var _user$project$View_MyAdventurerView_Main$myAdventurerView = F2(
 			});
 	});
 
+var _user$project$Update_QuestsUpdate$onUpdate = F2(
+	function (msg, _p0) {
+		var _p1 = _p0;
+		var _p3 = _p1._0;
+		var _p2 = msg;
+		if (_p2.ctor === 'GetQuestsResult') {
+			if (_p2._0.ctor === 'Ok') {
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						_p3,
+						{questList: _p2._0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			} else {
+				return {ctor: '_Tuple2', _0: _p3, _1: _elm_lang$core$Platform_Cmd$none};
+			}
+		} else {
+			return {ctor: '_Tuple2', _0: _p3, _1: _elm_lang$core$Platform_Cmd$none};
+		}
+	});
 var _user$project$Update_QuestsUpdate$questsModel = {
 	questList: {ctor: '[]'}
 };
@@ -22170,47 +22202,24 @@ var _user$project$Update_QuestsUpdate$QuestsModel = function (a) {
 var _user$project$Update_QuestsUpdate$GetQuestsResult = function (a) {
 	return {ctor: 'GetQuestsResult', _0: a};
 };
-var _user$project$Update_QuestsUpdate$handleTacoMsg = F3(
-	function (tacoMsg, quests, taco) {
-		var _p0 = tacoMsg;
-		if (_p0.ctor === 'QuestsRoute') {
-			var token = A2(_elm_lang$core$Maybe$withDefault, '', taco.token);
+var _user$project$Update_QuestsUpdate$onTacoMsg = F2(
+	function (tacoMsg, _p4) {
+		var _p5 = _p4;
+		var _p8 = _p5._1;
+		var _p7 = _p5._0;
+		var _p6 = tacoMsg;
+		if (_p6.ctor === 'QuestsRoute') {
+			var token = A2(_elm_lang$core$Maybe$withDefault, '', _p8.token);
 			return {
 				ctor: '_Tuple2',
-				_0: quests,
+				_0: _p7,
 				_1: A2(
 					_elm_lang$http$Http$send,
 					_user$project$Update_QuestsUpdate$GetQuestsResult,
-					A2(_user$project$Request_QuestsRequest$getQuests, taco.flags.apiEndpoint, token))
+					A2(_user$project$Request_QuestsRequest$getQuests, _p8.flags.apiEndpoint, token))
 			};
 		} else {
-			return {ctor: '_Tuple2', _0: quests, _1: _elm_lang$core$Platform_Cmd$none};
-		}
-	});
-var _user$project$Update_QuestsUpdate$onUpdate = F4(
-	function (msg, tacoMsg, model, taco) {
-		var _p1 = A3(
-			_user$project$Update_QuestsUpdate$handleTacoMsg,
-			A2(_elm_lang$core$Debug$log, 'got taco msg', tacoMsg),
-			model,
-			taco);
-		var quests = _p1._0;
-		var commands = _p1._1;
-		var _p2 = msg;
-		if (_p2.ctor === 'GetQuestsResult') {
-			if (_p2._0.ctor === 'Ok') {
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						quests,
-						{questList: _p2._0._0}),
-					_1: commands
-				};
-			} else {
-				return {ctor: '_Tuple2', _0: quests, _1: commands};
-			}
-		} else {
-			return {ctor: '_Tuple2', _0: quests, _1: commands};
+			return {ctor: '_Tuple2', _0: _p7, _1: _elm_lang$core$Platform_Cmd$none};
 		}
 	});
 var _user$project$Update_QuestsUpdate$NoOp = {ctor: 'NoOp'};
@@ -22479,48 +22488,11 @@ var _user$project$Update_SideQuestsUpdate$EditSideQuestName = function (a) {
 var _user$project$Update_SideQuestsUpdate$SuggestSideQuestResult = function (a) {
 	return {ctor: 'SuggestSideQuestResult', _0: a};
 };
-var _user$project$Update_SideQuestsUpdate$SubmitSideQuestForm = {ctor: 'SubmitSideQuestForm'};
-var _user$project$Update_SideQuestsUpdate$HideSideQuestForm = {ctor: 'HideSideQuestForm'};
-var _user$project$Update_SideQuestsUpdate$ShowSideQuestForm = {ctor: 'ShowSideQuestForm'};
-var _user$project$Update_SideQuestsUpdate$GetSideQuestsResult = function (a) {
-	return {ctor: 'GetSideQuestsResult', _0: a};
-};
-var _user$project$Update_SideQuestsUpdate$handleTacoMsg = F3(
-	function (tacoMsg, sideQuests, taco) {
-		var _p0 = tacoMsg;
-		if (_p0.ctor === 'SideQuestsRoute') {
-			var params = _elm_lang$core$Array$fromList(
-				A2(_elm_lang$core$String$split, ':', _p0._0));
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Native_Utils.update(
-					_user$project$Update_SideQuestsUpdate$sideQuestsModel,
-					{loading: true, questInfo: _elm_lang$core$Maybe$Nothing, sideQuestList: _elm_lang$core$Maybe$Nothing}),
-				_1: A2(
-					_elm_lang$http$Http$send,
-					_user$project$Update_SideQuestsUpdate$GetSideQuestsResult,
-					A4(
-						_user$project$Request_QuestsRequest$getSideQuests,
-						taco.flags.apiEndpoint,
-						A2(_elm_lang$core$Maybe$withDefault, '', taco.token),
-						A2(
-							_elm_lang$core$Maybe$withDefault,
-							'',
-							A2(_elm_lang$core$Array$get, 0, params)),
-						A2(
-							_elm_lang$core$Maybe$withDefault,
-							'',
-							A2(_elm_lang$core$Array$get, 1, params))))
-			};
-		} else {
-			return {ctor: '_Tuple2', _0: sideQuests, _1: _elm_lang$core$Platform_Cmd$none};
-		}
-	});
-var _user$project$Update_SideQuestsUpdate$onUpdate = F4(
-	function (message, tacoMsg, model, taco) {
-		var _p1 = A3(_user$project$Update_SideQuestsUpdate$handleTacoMsg, tacoMsg, model, taco);
-		var sideQuests = _p1._0;
-		var commands = _p1._1;
+var _user$project$Update_SideQuestsUpdate$onUpdate = F2(
+	function (message, _p0) {
+		var _p1 = _p0;
+		var _p5 = _p1._1;
+		var _p4 = _p1._0;
 		var _p2 = message;
 		switch (_p2.ctor) {
 			case 'SuggestSideQuestResult':
@@ -22528,23 +22500,23 @@ var _user$project$Update_SideQuestsUpdate$onUpdate = F4(
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
-							sideQuests,
+							_p4,
 							{
 								suggestingSideQuest: false,
 								suggestSideQuestSuccess: _elm_lang$core$Maybe$Just(false)
 							}),
-						_1: commands
+						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				} else {
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
-							sideQuests,
+							_p4,
 							{
 								suggestingSideQuest: false,
 								suggestSideQuestSuccess: _elm_lang$core$Maybe$Just(true)
 							}),
-						_1: commands
+						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				}
 			case 'GetSideQuestsResult':
@@ -22552,45 +22524,45 @@ var _user$project$Update_SideQuestsUpdate$onUpdate = F4(
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
-							sideQuests,
+							_p4,
 							{loading: false}),
-						_1: commands
+						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				} else {
 					var _p3 = _p2._0._0;
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
-							sideQuests,
+							_p4,
 							{
 								sideQuestList: _elm_lang$core$Maybe$Just(_p3.sideQuests),
 								questInfo: _elm_lang$core$Maybe$Just(_p3.quest),
 								loading: false
 							}),
-						_1: commands
+						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				}
 			case 'ShowSideQuestForm':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
-						sideQuests,
+						_p4,
 						{questFormOpen: true, sideQuestName: '', sideQuestDescription: ''}),
-					_1: commands
+					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'HideSideQuestForm':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
-						sideQuests,
+						_p4,
 						{questFormOpen: false}),
-					_1: commands
+					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SubmitSideQuestForm':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
-						sideQuests,
+						_p4,
 						{questFormOpen: false, suggestingSideQuest: true}),
 					_1: A2(
 						_elm_lang$core$Maybe$withDefault,
@@ -22604,32 +22576,72 @@ var _user$project$Update_SideQuestsUpdate$onUpdate = F4(
 										_user$project$Update_SideQuestsUpdate$SuggestSideQuestResult,
 										A4(
 											_user$project$Request_QuestsRequest$suggestSideQuest,
-											taco.flags.apiEndpoint,
+											_p5.flags.apiEndpoint,
 											userId,
 											quest,
-											{guid: '', name: sideQuests.sideQuestName, description: sideQuests.sideQuestDescription, suggestedBy: '', id: ''}));
+											{guid: '', name: _p4.sideQuestName, description: _p4.sideQuestDescription, suggestedBy: '', id: ''}));
 								}),
-							sideQuests.questInfo,
-							taco.token))
+							_p4.questInfo,
+							_p5.token))
 				};
 			case 'EditSideQuestName':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
-						sideQuests,
+						_p4,
 						{sideQuestName: _p2._0}),
-					_1: commands
+					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'EditSideQuestDescription':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
-						sideQuests,
+						_p4,
 						{sideQuestDescription: _p2._0}),
-					_1: commands
+					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			default:
-				return {ctor: '_Tuple2', _0: sideQuests, _1: commands};
+				return {ctor: '_Tuple2', _0: _p4, _1: _elm_lang$core$Platform_Cmd$none};
+		}
+	});
+var _user$project$Update_SideQuestsUpdate$SubmitSideQuestForm = {ctor: 'SubmitSideQuestForm'};
+var _user$project$Update_SideQuestsUpdate$HideSideQuestForm = {ctor: 'HideSideQuestForm'};
+var _user$project$Update_SideQuestsUpdate$ShowSideQuestForm = {ctor: 'ShowSideQuestForm'};
+var _user$project$Update_SideQuestsUpdate$GetSideQuestsResult = function (a) {
+	return {ctor: 'GetSideQuestsResult', _0: a};
+};
+var _user$project$Update_SideQuestsUpdate$onTacoMsg = F2(
+	function (tacoMsg, _p6) {
+		var _p7 = _p6;
+		var _p10 = _p7._1;
+		var _p9 = _p7._0;
+		var _p8 = tacoMsg;
+		if (_p8.ctor === 'SideQuestsRoute') {
+			var params = _elm_lang$core$Array$fromList(
+				A2(_elm_lang$core$String$split, ':', _p8._0));
+			return {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Native_Utils.update(
+					_p9,
+					{loading: true, questInfo: _elm_lang$core$Maybe$Nothing, sideQuestList: _elm_lang$core$Maybe$Nothing}),
+				_1: A2(
+					_elm_lang$http$Http$send,
+					_user$project$Update_SideQuestsUpdate$GetSideQuestsResult,
+					A4(
+						_user$project$Request_QuestsRequest$getSideQuests,
+						_p10.flags.apiEndpoint,
+						A2(_elm_lang$core$Maybe$withDefault, '', _p10.token),
+						A2(
+							_elm_lang$core$Maybe$withDefault,
+							'',
+							A2(_elm_lang$core$Array$get, 0, params)),
+						A2(
+							_elm_lang$core$Maybe$withDefault,
+							'',
+							A2(_elm_lang$core$Array$get, 1, params))))
+			};
+		} else {
+			return {ctor: '_Tuple2', _0: _p9, _1: _elm_lang$core$Platform_Cmd$none};
 		}
 	});
 
@@ -23054,13 +23066,14 @@ var _user$project$Request_CreateQuestRequest$createQuestRequest = F3(
 	});
 
 var _user$project$Update_CreateQuestUpdate$createQuestInitialModel = {questName: '', questDescription: '', questImageUrl: '/placeholder.png', imageUploadModalOpen: false, imageUploadModalFor: _elm_lang$core$Maybe$Nothing, imageUploadPath: _elm_lang$core$Maybe$Nothing, questImageUploadPending: false, questImageUploadError: false, submitPending: false, submitError: false, token: _elm_lang$core$Maybe$Nothing};
-var _user$project$Update_CreateQuestUpdate$handleTacoMsg = F3(
-	function (tacoMsg, model, taco) {
-		var _p0 = tacoMsg;
-		if (_p0.ctor === 'CreateQuestRoute') {
+var _user$project$Update_CreateQuestUpdate$onTacoMsg = F2(
+	function (tacoMsg, _p0) {
+		var _p1 = _p0;
+		var _p2 = tacoMsg;
+		if (_p2.ctor === 'CreateQuestRoute') {
 			return {ctor: '_Tuple2', _0: _user$project$Update_CreateQuestUpdate$createQuestInitialModel, _1: _elm_lang$core$Platform_Cmd$none};
 		} else {
-			return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			return {ctor: '_Tuple2', _0: _p1._0, _1: _elm_lang$core$Platform_Cmd$none};
 		}
 	});
 var _user$project$Update_CreateQuestUpdate$CreateQuestModel = function (a) {
@@ -23092,110 +23105,110 @@ var _user$project$Update_CreateQuestUpdate$UploadQuestImageFinished = function (
 var _user$project$Update_CreateQuestUpdate$SubmitCreateQuestResult = function (a) {
 	return {ctor: 'SubmitCreateQuestResult', _0: a};
 };
-var _user$project$Update_CreateQuestUpdate$onUpdate = F4(
-	function (msg, tacoMsg, model, taco) {
-		var _p1 = A3(_user$project$Update_CreateQuestUpdate$handleTacoMsg, tacoMsg, model, taco);
-		var createQuest = _p1._0;
-		var commands = _p1._1;
-		var _p2 = msg;
-		switch (_p2.ctor) {
+var _user$project$Update_CreateQuestUpdate$onUpdate = F2(
+	function (msg, _p3) {
+		var _p4 = _p3;
+		var _p7 = _p4._1;
+		var _p6 = _p4._0;
+		var _p5 = msg;
+		switch (_p5.ctor) {
 			case 'UploadQuestImageFinished':
-				return _p2._0._0 ? {
+				return _p5._0._0 ? {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
-						createQuest,
-						{questImageUploadPending: false, questImageUploadError: true, questImageUrl: _p2._0._1, imageUploadModalOpen: false}),
-					_1: commands
+						_p6,
+						{questImageUploadPending: false, questImageUploadError: true, questImageUrl: _p5._0._1, imageUploadModalOpen: false}),
+					_1: _elm_lang$core$Platform_Cmd$none
 				} : {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
-						createQuest,
+						_p6,
 						{questImageUploadPending: false, questImageUploadError: true}),
-					_1: commands
+					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SubmitCreateQuest':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
-						createQuest,
+						_p6,
 						{submitPending: true, submitError: false}),
 					_1: A2(
 						_elm_lang$http$Http$send,
 						_user$project$Update_CreateQuestUpdate$SubmitCreateQuestResult,
 						A3(
 							_user$project$Request_CreateQuestRequest$createQuestRequest,
-							taco.flags.apiEndpoint,
-							A2(_elm_lang$core$Maybe$withDefault, '', taco.token),
-							{id: '', name: createQuest.questName, description: createQuest.questDescription, imageUrl: createQuest.questImageUrl}))
+							_p7.flags.apiEndpoint,
+							A2(_elm_lang$core$Maybe$withDefault, '', _p7.token),
+							{id: '', name: _p6.questName, description: _p6.questDescription, imageUrl: _p6.questImageUrl}))
 				};
 			case 'SubmitCreateQuestResult':
-				if (_p2._0.ctor === 'Ok') {
+				if (_p5._0.ctor === 'Ok') {
 					return {
 						ctor: '_Tuple2',
-						_0: createQuest,
+						_0: _p6,
 						_1: _elm_lang$navigation$Navigation$modifyUrl('/#profile')
 					};
 				} else {
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
-							createQuest,
+							_p6,
 							{submitError: true}),
-						_1: commands
+						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				}
 			case 'OnFileChosen':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
-						createQuest,
+						_p6,
 						{
-							imageUploadPath: _elm_lang$core$Maybe$Just(_p2._0)
+							imageUploadPath: _elm_lang$core$Maybe$Just(_p5._0)
 						}),
-					_1: commands
+					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ShowFileUploadModal':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
-						createQuest,
+						_p6,
 						{imageUploadModalOpen: true, imageUploadPath: _elm_lang$core$Maybe$Nothing}),
-					_1: commands
+					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'HideFileUploadModal':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
-						createQuest,
+						_p6,
 						{imageUploadModalOpen: false, imageUploadPath: _elm_lang$core$Maybe$Nothing}),
-					_1: commands
+					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ConfirmFileUpload':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
-						createQuest,
+						_p6,
 						{questImageUploadPending: true, questImageUploadError: false}),
-					_1: _user$project$Ports$uploadQuestImage(_p2._0)
+					_1: _user$project$Ports$uploadQuestImage(_p5._0)
 				};
 			case 'EditQuestName':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
-						createQuest,
-						{questName: _p2._0}),
-					_1: commands
+						_p6,
+						{questName: _p5._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'EditQuestDescription':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
-						createQuest,
-						{questDescription: _p2._0}),
-					_1: commands
+						_p6,
+						{questDescription: _p5._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			default:
-				return {ctor: '_Tuple2', _0: createQuest, _1: commands};
+				return {ctor: '_Tuple2', _0: _p6, _1: _elm_lang$core$Platform_Cmd$none};
 		}
 	});
 var _user$project$Update_CreateQuestUpdate$SubmitCreateQuest = {ctor: 'SubmitCreateQuest'};
@@ -23715,15 +23728,97 @@ var _user$project$Update_QuestDetailsUpdate$decideOnSuggestedSideQuest = F3(
 			model.decidingSideQuest);
 		return A2(_elm_lang$core$Maybe$withDefault, _elm_lang$core$Platform_Cmd$none, request);
 	});
+var _user$project$Update_QuestDetailsUpdate$onUpdate = F2(
+	function (msg, _p0) {
+		var _p1 = _p0;
+		var _p6 = _p1._1;
+		var _p5 = _p1._0;
+		var _p2 = msg;
+		switch (_p2.ctor) {
+			case 'DecideSideQuestResult':
+				if (_p2._0.ctor === 'Ok') {
+					var _p3 = _p2._0._0;
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							_p5,
+							{
+								quest: _elm_lang$core$Maybe$Just(_p3.quest),
+								sideQuests: _elm_lang$core$Maybe$Just(_p3.sideQuests),
+								suggestedSideQuests: _elm_lang$core$Maybe$Just(_p3.suggestedSideQuests)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					return {ctor: '_Tuple2', _0: _p5, _1: _elm_lang$core$Platform_Cmd$none};
+				}
+			case 'GetQuestDetailsResult':
+				if (_p2._0.ctor === 'Ok') {
+					var _p4 = _p2._0._0;
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							_p5,
+							{
+								quest: _elm_lang$core$Maybe$Just(_p4.quest),
+								sideQuests: _elm_lang$core$Maybe$Just(_p4.sideQuests),
+								suggestedSideQuests: _elm_lang$core$Maybe$Just(_p4.suggestedSideQuests)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					return {ctor: '_Tuple2', _0: _p5, _1: _elm_lang$core$Platform_Cmd$none};
+				}
+			case 'ToggleShowingSuggestedSideQuests':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						_p5,
+						{showingSuggestedSideQuests: _p2._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'AcceptSuggestedSideQuest':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						_p5,
+						{decidingSideQuest: _elm_lang$core$Maybe$Nothing, quest: _elm_lang$core$Maybe$Nothing, sideQuests: _elm_lang$core$Maybe$Nothing, suggestedSideQuests: _elm_lang$core$Maybe$Nothing}),
+					_1: A3(_user$project$Update_QuestDetailsUpdate$decideOnSuggestedSideQuest, _p6, _p5, true)
+				};
+			case 'DeclineSuggestedSideQuest':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						_p5,
+						{decidingSideQuest: _elm_lang$core$Maybe$Nothing, quest: _elm_lang$core$Maybe$Nothing, sideQuests: _elm_lang$core$Maybe$Nothing, suggestedSideQuests: _elm_lang$core$Maybe$Nothing}),
+					_1: A3(_user$project$Update_QuestDetailsUpdate$decideOnSuggestedSideQuest, _p6, _p5, false)
+				};
+			case 'ToggleShowingSideQuestModal':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						_p5,
+						{decidingSideQuest: _p2._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'AcceptSideQuest':
+				return {ctor: '_Tuple2', _0: _p5, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'DeclineSideQuest':
+				return {ctor: '_Tuple2', _0: _p5, _1: _elm_lang$core$Platform_Cmd$none};
+			default:
+				return {ctor: '_Tuple2', _0: _p5, _1: _elm_lang$core$Platform_Cmd$none};
+		}
+	});
 var _user$project$Update_QuestDetailsUpdate$GetQuestDetailsResult = function (a) {
 	return {ctor: 'GetQuestDetailsResult', _0: a};
 };
-var _user$project$Update_QuestDetailsUpdate$handleTacoMsg = F3(
-	function (tacoMsg, model, taco) {
-		var _p0 = tacoMsg;
-		if (_p0.ctor === 'QuestDetailsRoute') {
+var _user$project$Update_QuestDetailsUpdate$onTacoUpdate = F2(
+	function (tacoMsg, _p7) {
+		var _p8 = _p7;
+		var _p9 = tacoMsg;
+		if (_p9.ctor === 'QuestDetailsRoute') {
 			var paramArray = _elm_lang$core$Array$fromList(
-				A2(_elm_lang$core$String$split, ':', _p0._0));
+				A2(_elm_lang$core$String$split, ':', _p9._0));
 			var request = A3(
 				_elm_lang$core$Maybe$map2,
 				F2(
@@ -23731,7 +23826,7 @@ var _user$project$Update_QuestDetailsUpdate$handleTacoMsg = F3(
 						return A2(
 							_elm_lang$http$Http$send,
 							_user$project$Update_QuestDetailsUpdate$GetQuestDetailsResult,
-							A3(_user$project$Request_QuestsRequest$getQuestDetails, taco.flags.apiEndpoint, userId, questId));
+							A3(_user$project$Request_QuestsRequest$getQuestDetails, _p8._1.flags.apiEndpoint, userId, questId));
 					}),
 				A2(_elm_lang$core$Array$get, 0, paramArray),
 				A2(_elm_lang$core$Array$get, 1, paramArray));
@@ -23741,88 +23836,7 @@ var _user$project$Update_QuestDetailsUpdate$handleTacoMsg = F3(
 				_1: A2(_elm_lang$core$Maybe$withDefault, _elm_lang$core$Platform_Cmd$none, request)
 			};
 		} else {
-			return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-		}
-	});
-var _user$project$Update_QuestDetailsUpdate$onUpdate = F4(
-	function (msg, tacoMsg, model, taco) {
-		var _p1 = A3(_user$project$Update_QuestDetailsUpdate$handleTacoMsg, tacoMsg, model, taco);
-		var questDetails = _p1._0;
-		var commands = _p1._1;
-		var _p2 = msg;
-		switch (_p2.ctor) {
-			case 'DecideSideQuestResult':
-				if (_p2._0.ctor === 'Ok') {
-					var _p3 = _p2._0._0;
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							questDetails,
-							{
-								quest: _elm_lang$core$Maybe$Just(_p3.quest),
-								sideQuests: _elm_lang$core$Maybe$Just(_p3.sideQuests),
-								suggestedSideQuests: _elm_lang$core$Maybe$Just(_p3.suggestedSideQuests)
-							}),
-						_1: commands
-					};
-				} else {
-					return {ctor: '_Tuple2', _0: questDetails, _1: commands};
-				}
-			case 'GetQuestDetailsResult':
-				if (_p2._0.ctor === 'Ok') {
-					var _p4 = _p2._0._0;
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							questDetails,
-							{
-								quest: _elm_lang$core$Maybe$Just(_p4.quest),
-								sideQuests: _elm_lang$core$Maybe$Just(_p4.sideQuests),
-								suggestedSideQuests: _elm_lang$core$Maybe$Just(_p4.suggestedSideQuests)
-							}),
-						_1: commands
-					};
-				} else {
-					return {ctor: '_Tuple2', _0: questDetails, _1: commands};
-				}
-			case 'ToggleShowingSuggestedSideQuests':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						questDetails,
-						{showingSuggestedSideQuests: _p2._0}),
-					_1: commands
-				};
-			case 'AcceptSuggestedSideQuest':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						questDetails,
-						{decidingSideQuest: _elm_lang$core$Maybe$Nothing, quest: _elm_lang$core$Maybe$Nothing, sideQuests: _elm_lang$core$Maybe$Nothing, suggestedSideQuests: _elm_lang$core$Maybe$Nothing}),
-					_1: A3(_user$project$Update_QuestDetailsUpdate$decideOnSuggestedSideQuest, taco, questDetails, true)
-				};
-			case 'DeclineSuggestedSideQuest':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						questDetails,
-						{decidingSideQuest: _elm_lang$core$Maybe$Nothing, quest: _elm_lang$core$Maybe$Nothing, sideQuests: _elm_lang$core$Maybe$Nothing, suggestedSideQuests: _elm_lang$core$Maybe$Nothing}),
-					_1: A3(_user$project$Update_QuestDetailsUpdate$decideOnSuggestedSideQuest, taco, questDetails, false)
-				};
-			case 'ToggleShowingSideQuestModal':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						questDetails,
-						{decidingSideQuest: _p2._0}),
-					_1: commands
-				};
-			case 'AcceptSideQuest':
-				return {ctor: '_Tuple2', _0: questDetails, _1: commands};
-			case 'DeclineSideQuest':
-				return {ctor: '_Tuple2', _0: questDetails, _1: commands};
-			default:
-				return {ctor: '_Tuple2', _0: questDetails, _1: commands};
+			return {ctor: '_Tuple2', _0: _p8._0, _1: _elm_lang$core$Platform_Cmd$none};
 		}
 	});
 var _user$project$Update_QuestDetailsUpdate$NoOp = {ctor: 'NoOp'};
@@ -24564,7 +24578,8 @@ var _user$project$Main$update = F2(
 		var tacoCmd = _p10._2;
 		var updater = F4(
 			function (messageType, pageModel, setter, reducer) {
-				var _p11 = A3(reducer, tacoMsg, pageModel, taco);
+				var _p11 = reducer(
+					{ctor: '_Tuple2', _0: pageModel, _1: taco});
 				var updatedPageModel = _p11._0;
 				var cmd = _p11._1;
 				return {

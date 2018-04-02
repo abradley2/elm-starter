@@ -1,6 +1,7 @@
 module Update.LayoutUpdate
     exposing
         ( onUpdate
+        , onTacoUpdate
         , layoutModel
         , LayoutModel
         , LayoutMsg
@@ -24,12 +25,16 @@ layoutModel =
     }
 
 
-onUpdate : LayoutMsg -> TacoMsg -> LayoutModel -> Taco -> ( LayoutModel, Cmd LayoutMsg )
-onUpdate msg tacoMsg layoutModel taco =
+onTacoUpdate tacoMsg ( model, taco ) =
+    ( model, Cmd.none )
+
+
+onUpdate : LayoutMsg -> ( LayoutModel, Taco ) -> ( LayoutModel, Cmd LayoutMsg )
+onUpdate msg ( model, taco ) =
     case msg of
         ToggleSidenav ->
-            ( { layoutModel
-                | sidenavOpen = not layoutModel.sidenavOpen
+            ( { model
+                | sidenavOpen = not model.sidenavOpen
               }
             , Cmd.none
             )

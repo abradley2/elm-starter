@@ -174,7 +174,7 @@ update message model =
             (\messageType pageModel setter reducer ->
                 let
                     ( updatedPageModel, cmd ) =
-                        reducer tacoMsg pageModel taco
+                        reducer ( pageModel, taco )
                 in
                     ( setter model updatedPageModel, Cmd.batch [ tacoCmd, Cmd.map messageType cmd ] )
             )

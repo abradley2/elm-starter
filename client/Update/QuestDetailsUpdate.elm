@@ -1,6 +1,7 @@
 module Update.QuestDetailsUpdate
     exposing
         ( onUpdate
+        , onTacoUpdate
         , questDetailsInitialModel
         , QuestDetailsModel
         , QuestDetailsMsg
@@ -69,8 +70,8 @@ decideOnSuggestedSideQuest taco model isAccepted =
         Maybe.withDefault Cmd.none request
 
 
-handleTacoMsg : TacoMsg -> QuestDetailsModel -> Taco -> ( QuestDetailsModel, Cmd QuestDetailsMsg )
-handleTacoMsg tacoMsg model taco =
+onTacoUpdate : TacoMsg -> ( QuestDetailsModel, Taco ) -> ( QuestDetailsModel, Cmd QuestDetailsMsg )
+onTacoUpdate tacoMsg ( model, taco ) =
     case tacoMsg of
         QuestDetailsRoute params ->
             let
@@ -96,72 +97,68 @@ handleTacoMsg tacoMsg model taco =
             ( model, Cmd.none )
 
 
-onUpdate : QuestDetailsMsg -> TacoMsg -> QuestDetailsModel -> Taco -> ( QuestDetailsModel, Cmd QuestDetailsMsg )
-onUpdate msg tacoMsg model taco =
-    let
-        ( questDetails, commands ) =
-            handleTacoMsg tacoMsg model taco
-    in
-        case msg of
-            DecideSideQuestResult (Result.Ok response) ->
-                ( { questDetails
-                    | quest = Just response.quest
-                    , sideQuests = Just response.sideQuests
-                    , suggestedSideQuests = Just response.suggestedSideQuests
-                  }
-                , commands
-                )
+onUpdate : QuestDetailsMsg -> ( QuestDetailsModel, Taco ) -> ( QuestDetailsModel, Cmd QuestDetailsMsg )
+onUpdate msg ( model, taco ) =
+    case msg of
+        DecideSideQuestResult (Result.Ok response) ->
+            ( { model
+                | quest = Just response.quest
+                , sideQuests = Just response.sideQuests
+                , suggestedSideQuests = Just response.suggestedSideQuests
+              }
+            , Cmd.none
+            )
 
-            DecideSideQuestResult (Result.Err _) ->
-                ( questDetails, commands )
+        DecideSideQuestResult (Result.Err _) ->
+            ( model, Cmd.none )
 
-            GetQuestDetailsResult (Result.Ok response) ->
-                ( { questDetails
-                    | quest = Just response.quest
-                    , sideQuests = Just response.sideQuests
-                    , suggestedSideQuests = Just response.suggestedSideQuests
-                  }
-                , commands
-                )
+        GetQuestDetailsResult (Result.Ok response) ->
+            ( { model
+                | quest = Just response.quest
+                , sideQuests = Just response.sideQuests
+                , suggestedSideQuests = Just response.suggestedSideQuests
+              }
+            , Cmd.none
+            )
 
-            GetQuestDetailsResult (Result.Err _) ->
-                ( questDetails, commands )
+        GetQuestDetailsResult (Result.Err _) ->
+            ( model, Cmd.none )
 
-            ToggleShowingSuggestedSideQuests isShowing ->
-                ( { questDetails
-                    | showingSuggestedSideQuests = isShowing
-                  }
-                , commands
-                )
+        ToggleShowingSuggestedSideQuests isShowing ->
+            ( { model
+                | showingSuggestedSideQuests = isShowing
+              }
+            , Cmd.none
+            )
 
-            AcceptSuggestedSideQuest ->
-                ( { questDetails
-                    | decidingSideQuest = Nothing
-                    , quest = Nothing
-                    , sideQuests = Nothing
-                    , suggestedSideQuests = Nothing
-                  }
-                , decideOnSuggestedSideQuest taco questDetails True
-                )
+        AcceptSuggestedSideQuest ->
+            ( { model
+                | decidingSideQuest = Nothing
+                , quest = Nothing
+                , sideQuests = Nothing
+                , suggestedSideQuests = Nothing
+              }
+            , decideOnSuggestedSideQuest taco model True
+            )
 
-            DeclineSuggestedSideQuest ->
-                ( { questDetails
-                    | decidingSideQuest = Nothing
-                    , quest = Nothing
-                    , sideQuests = Nothing
-                    , suggestedSideQuests = Nothing
-                  }
-                , decideOnSuggestedSideQuest taco questDetails False
-                )
+        DeclineSuggestedSideQuest ->
+            ( { model
+                | decidingSideQuest = Nothing
+                , quest = Nothing
+                , sideQuests = Nothing
+                , suggestedSideQuests = Nothing
+              }
+            , decideOnSuggestedSideQuest taco model False
+            )
 
-            ToggleShowingSideQuestModal ifSideQuest ->
-                ( { questDetails | decidingSideQuest = ifSideQuest }, commands )
+        ToggleShowingSideQuestModal ifSideQuest ->
+            ( { model | decidingSideQuest = ifSideQuest }, Cmd.none )
 
-            AcceptSideQuest sideQuestId ->
-                ( questDetails, commands )
+        AcceptSideQuest sideQuestId ->
+            ( model, Cmd.none )
 
-            DeclineSideQuest sideQuestId ->
-                ( questDetails, commands )
+        DeclineSideQuest sideQuestId ->
+            ( model, Cmd.none )
 
-            NoOp ->
-                ( questDetails, commands )
+        NoOp ->
+            ( model, Cmd.none )

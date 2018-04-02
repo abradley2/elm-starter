@@ -1,6 +1,7 @@
 module Update.CreateQuestUpdate
     exposing
         ( onUpdate
+        , onTacoMsg
         , createQuestInitialModel
         , CreateQuestModel
         , CreateQuestMsg
@@ -59,8 +60,8 @@ createQuestInitialModel =
     }
 
 
-handleTacoMsg : TacoMsg -> CreateQuestModel -> Taco -> ( CreateQuestModel, Cmd CreateQuestMsg )
-handleTacoMsg tacoMsg model taco =
+onTacoMsg : TacoMsg -> ( CreateQuestModel, Taco ) -> ( CreateQuestModel, Cmd CreateQuestMsg )
+onTacoMsg tacoMsg ( model, taco ) =
     case tacoMsg of
         CreateQuestRoute ->
             ( createQuestInitialModel, Cmd.none )
@@ -69,104 +70,100 @@ handleTacoMsg tacoMsg model taco =
             ( model, Cmd.none )
 
 
-onUpdate : CreateQuestMsg -> TacoMsg -> CreateQuestModel -> Taco -> ( CreateQuestModel, Cmd CreateQuestMsg )
-onUpdate msg tacoMsg model taco =
-    let
-        ( createQuest, commands ) =
-            handleTacoMsg tacoMsg model taco
-    in
-        case msg of
-            UploadQuestImageFinished ( success, questImageUrl ) ->
-                if success then
-                    ( { createQuest
-                        | questImageUploadPending = False
-                        , questImageUploadError = True
-                        , questImageUrl = questImageUrl
-                        , imageUploadModalOpen = False
-                      }
-                    , commands
-                    )
-                else
-                    ( { createQuest
-                        | questImageUploadPending = False
-                        , questImageUploadError = True
-                      }
-                    , commands
-                    )
-
-            SubmitCreateQuest ->
-                ( { createQuest
-                    | submitPending = True
-                    , submitError = False
+onUpdate : CreateQuestMsg -> ( CreateQuestModel, Taco ) -> ( CreateQuestModel, Cmd CreateQuestMsg )
+onUpdate msg ( model, taco ) =
+    case msg of
+        UploadQuestImageFinished ( success, questImageUrl ) ->
+            if success then
+                ( { model
+                    | questImageUploadPending = False
+                    , questImageUploadError = True
+                    , questImageUrl = questImageUrl
+                    , imageUploadModalOpen = False
                   }
-                , Http.send SubmitCreateQuestResult
-                    (createQuestRequest
-                        taco.flags.apiEndpoint
-                        (Maybe.withDefault "" taco.token)
-                        { id = ""
-                        , name = createQuest.questName
-                        , description = createQuest.questDescription
-                        , imageUrl = createQuest.questImageUrl
-                        }
-                    )
+                , Cmd.none
                 )
-
-            SubmitCreateQuestResult (Result.Ok quest) ->
-                ( createQuest
-                , Navigation.modifyUrl "/#profile"
-                )
-
-            SubmitCreateQuestResult (Result.Err _) ->
-                ( { createQuest
-                    | submitError = True
+            else
+                ( { model
+                    | questImageUploadPending = False
+                    , questImageUploadError = True
                   }
-                , commands
+                , Cmd.none
                 )
 
-            OnFileChosen filePath ->
-                ( { createQuest
-                    | imageUploadPath = Just filePath
-                  }
-                , commands
+        SubmitCreateQuest ->
+            ( { model
+                | submitPending = True
+                , submitError = False
+              }
+            , Http.send SubmitCreateQuestResult
+                (createQuestRequest
+                    taco.flags.apiEndpoint
+                    (Maybe.withDefault "" taco.token)
+                    { id = ""
+                    , name = model.questName
+                    , description = model.questDescription
+                    , imageUrl = model.questImageUrl
+                    }
                 )
+            )
 
-            ShowFileUploadModal ->
-                ( { createQuest
-                    | imageUploadModalOpen = True
-                    , imageUploadPath = Nothing
-                  }
-                , commands
-                )
+        SubmitCreateQuestResult (Result.Ok quest) ->
+            ( model
+            , Navigation.modifyUrl "/#profile"
+            )
 
-            HideFileUploadModal ->
-                ( { createQuest
-                    | imageUploadModalOpen = False
-                    , imageUploadPath = Nothing
-                  }
-                , commands
-                )
+        SubmitCreateQuestResult (Result.Err _) ->
+            ( { model
+                | submitError = True
+              }
+            , Cmd.none
+            )
 
-            ConfirmFileUpload fileInputId ->
-                ( { createQuest
-                    | questImageUploadPending = True
-                    , questImageUploadError = False
-                  }
-                , uploadQuestImage fileInputId
-                )
+        OnFileChosen filePath ->
+            ( { model
+                | imageUploadPath = Just filePath
+              }
+            , Cmd.none
+            )
 
-            EditQuestName questName ->
-                ( { createQuest
-                    | questName = questName
-                  }
-                , commands
-                )
+        ShowFileUploadModal ->
+            ( { model
+                | imageUploadModalOpen = True
+                , imageUploadPath = Nothing
+              }
+            , Cmd.none
+            )
 
-            EditQuestDescription questDescription ->
-                ( { createQuest
-                    | questDescription = questDescription
-                  }
-                , commands
-                )
+        HideFileUploadModal ->
+            ( { model
+                | imageUploadModalOpen = False
+                , imageUploadPath = Nothing
+              }
+            , Cmd.none
+            )
 
-            NoOp ->
-                ( createQuest, commands )
+        ConfirmFileUpload fileInputId ->
+            ( { model
+                | questImageUploadPending = True
+                , questImageUploadError = False
+              }
+            , uploadQuestImage fileInputId
+            )
+
+        EditQuestName questName ->
+            ( { model
+                | questName = questName
+              }
+            , Cmd.none
+            )
+
+        EditQuestDescription questDescription ->
+            ( { model
+                | questDescription = questDescription
+              }
+            , Cmd.none
+            )
+
+        NoOp ->
+            ( model, Cmd.none )

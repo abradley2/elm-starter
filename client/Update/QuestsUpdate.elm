@@ -1,6 +1,7 @@
 module Update.QuestsUpdate
     exposing
-        ( onUpdate
+        ( onTacoMsg
+        , onUpdate
         , questsModel
         , QuestsModel
         , QuestsMsg
@@ -27,7 +28,8 @@ questsModel =
     }
 
 
-handleTacoMsg tacoMsg quests taco =
+onTacoMsg : TacoMsg -> ( QuestsModel, Taco ) -> ( QuestsModel, Cmd QuestsMsg )
+onTacoMsg tacoMsg ( quests, taco ) =
     case tacoMsg of
         QuestsRoute ->
             let
@@ -42,18 +44,14 @@ handleTacoMsg tacoMsg quests taco =
             ( quests, Cmd.none )
 
 
-onUpdate : QuestsMsg -> TacoMsg -> QuestsModel -> Taco -> ( QuestsModel, Cmd QuestsMsg )
-onUpdate msg tacoMsg model taco =
-    let
-        ( quests, commands ) =
-            handleTacoMsg (Debug.log "got taco msg" tacoMsg) model taco
-    in
-        case msg of
-            GetQuestsResult (Result.Ok questList) ->
-                ( { quests | questList = questList }, commands )
+onUpdate : QuestsMsg -> ( QuestsModel, Taco ) -> ( QuestsModel, Cmd QuestsMsg )
+onUpdate msg ( model, taco ) =
+    case msg of
+        GetQuestsResult (Result.Ok questList) ->
+            ( { model | questList = questList }, Cmd.none )
 
-            GetQuestsResult (Result.Err _) ->
-                ( quests, commands )
+        GetQuestsResult (Result.Err _) ->
+            ( model, Cmd.none )
 
-            NoOp ->
-                ( quests, commands )
+        NoOp ->
+            ( model, Cmd.none )

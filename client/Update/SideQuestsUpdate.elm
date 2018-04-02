@@ -1,6 +1,7 @@
 module Update.SideQuestsUpdate
     exposing
-        ( onUpdate
+        ( onTacoMsg
+        , onUpdate
         , sideQuestsModel
         , SideQuestsModel
         , SideQuestsMsg
@@ -50,15 +51,15 @@ sideQuestsModel =
     }
 
 
-handleTacoMsg : TacoMsg -> SideQuestsModel -> Taco -> ( SideQuestsModel, Cmd SideQuestsMsg )
-handleTacoMsg tacoMsg sideQuests taco =
+onTacoMsg : TacoMsg -> ( SideQuestsModel, Taco ) -> ( SideQuestsModel, Cmd SideQuestsMsg )
+onTacoMsg tacoMsg ( model, taco ) =
     case tacoMsg of
         SideQuestsRoute queryPath ->
             let
                 params =
                     Array.fromList (String.split ":" queryPath)
             in
-                ( { sideQuestsModel
+                ( { model
                     | loading = True
                     , questInfo = Nothing
                     , sideQuestList = Nothing
@@ -73,91 +74,87 @@ handleTacoMsg tacoMsg sideQuests taco =
                 )
 
         _ ->
-            ( sideQuests, Cmd.none )
+            ( model, Cmd.none )
 
 
-onUpdate : SideQuestsMsg -> TacoMsg -> SideQuestsModel -> Taco -> ( SideQuestsModel, Cmd SideQuestsMsg )
-onUpdate message tacoMsg model taco =
-    let
-        ( sideQuests, commands ) =
-            handleTacoMsg tacoMsg model taco
-    in
-        case message of
-            SuggestSideQuestResult (Result.Err _) ->
-                ( { sideQuests
-                    | suggestingSideQuest = False
-                    , suggestSideQuestSuccess = Just False
-                  }
-                , commands
-                )
+onUpdate : SideQuestsMsg -> ( SideQuestsModel, Taco ) -> ( SideQuestsModel, Cmd SideQuestsMsg )
+onUpdate message ( model, taco ) =
+    case message of
+        SuggestSideQuestResult (Result.Err _) ->
+            ( { model
+                | suggestingSideQuest = False
+                , suggestSideQuestSuccess = Just False
+              }
+            , Cmd.none
+            )
 
-            SuggestSideQuestResult (Result.Ok success) ->
-                ( { sideQuests
-                    | suggestingSideQuest = False
-                    , suggestSideQuestSuccess = Just True
-                  }
-                , commands
-                )
+        SuggestSideQuestResult (Result.Ok success) ->
+            ( { model
+                | suggestingSideQuest = False
+                , suggestSideQuestSuccess = Just True
+              }
+            , Cmd.none
+            )
 
-            GetSideQuestsResult (Result.Err _) ->
-                ( { sideQuests
-                    | loading = False
-                  }
-                , commands
-                )
+        GetSideQuestsResult (Result.Err _) ->
+            ( { model
+                | loading = False
+              }
+            , Cmd.none
+            )
 
-            GetSideQuestsResult (Result.Ok response) ->
-                ( { sideQuests
-                    | sideQuestList = Just response.sideQuests
-                    , questInfo = Just response.quest
-                    , loading = False
-                  }
-                , commands
-                )
+        GetSideQuestsResult (Result.Ok response) ->
+            ( { model
+                | sideQuestList = Just response.sideQuests
+                , questInfo = Just response.quest
+                , loading = False
+              }
+            , Cmd.none
+            )
 
-            ShowSideQuestForm ->
-                ( { sideQuests
-                    | questFormOpen = True
-                    , sideQuestName = ""
-                    , sideQuestDescription = ""
-                  }
-                , commands
-                )
+        ShowSideQuestForm ->
+            ( { model
+                | questFormOpen = True
+                , sideQuestName = ""
+                , sideQuestDescription = ""
+              }
+            , Cmd.none
+            )
 
-            HideSideQuestForm ->
-                ( { sideQuests | questFormOpen = False }, commands )
+        HideSideQuestForm ->
+            ( { model | questFormOpen = False }, Cmd.none )
 
-            SubmitSideQuestForm ->
-                ( { sideQuests
-                    | questFormOpen = False
-                    , suggestingSideQuest = True
-                  }
-                , Maybe.withDefault Cmd.none
-                    (Maybe.map2
-                        (\quest userId ->
-                            Http.send SuggestSideQuestResult
-                                (suggestSideQuest
-                                    taco.flags.apiEndpoint
-                                    userId
-                                    quest
-                                    { guid = ""
-                                    , name = sideQuests.sideQuestName
-                                    , description = sideQuests.sideQuestDescription
-                                    , suggestedBy = ""
-                                    , id = ""
-                                    }
-                                )
-                        )
-                        sideQuests.questInfo
-                        taco.token
+        SubmitSideQuestForm ->
+            ( { model
+                | questFormOpen = False
+                , suggestingSideQuest = True
+              }
+            , Maybe.withDefault Cmd.none
+                (Maybe.map2
+                    (\quest userId ->
+                        Http.send SuggestSideQuestResult
+                            (suggestSideQuest
+                                taco.flags.apiEndpoint
+                                userId
+                                quest
+                                { guid = ""
+                                , name = model.sideQuestName
+                                , description = model.sideQuestDescription
+                                , suggestedBy = ""
+                                , id = ""
+                                }
+                            )
                     )
+                    model.questInfo
+                    taco.token
                 )
+            )
 
-            EditSideQuestName newName ->
-                ( { sideQuests | sideQuestName = newName }, commands )
+        EditSideQuestName newName ->
+            ( { model | sideQuestName = newName }, Cmd.none )
 
-            EditSideQuestDescription newDescription ->
-                ( { sideQuests | sideQuestDescription = newDescription }, commands )
+        EditSideQuestDescription newDescription ->
+            ( { model | sideQuestDescription = newDescription }, Cmd.none )
 
-            NoOp ->
-                ( sideQuests, commands )
+        NoOp ->
+            ( model, Cmd.none )

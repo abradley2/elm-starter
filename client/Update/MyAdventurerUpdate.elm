@@ -1,6 +1,7 @@
 module Update.MyAdventurerUpdate
     exposing
         ( onUpdate
+        , onTacoUpdate
         , myAdventurerInitialModel
         , MyAdventurerModel
         , MyAdventurerMsg
@@ -27,37 +28,38 @@ myAdventurerInitialModel =
     }
 
 
-onUpdate : MyAdventurerMsg -> TacoMsg -> MyAdventurerModel -> Taco -> ( MyAdventurerModel, Cmd MyAdventurerMsg )
-onUpdate msg tacoMsg model taco =
-    let
-        ( myAdventurer, command ) =
-            case tacoMsg of
-                MyAdventurerRoute ->
-                    let
-                        result =
-                            Maybe.map2
-                                (\userId token ->
-                                    getQuestsByUser taco.flags.apiEndpoint token userId
-                                )
-                                taco.userId
-                                taco.token
-                    in
-                        case result of
-                            Just request ->
-                                ( model, Http.send GetQuestsByUserResult request )
+onTacoUpdate : TacoMsg -> ( MyAdventurerModel, Taco ) -> ( MyAdventurerModel, Cmd MyAdventurerMsg )
+onTacoUpdate tacoMsg ( model, taco ) =
+    case tacoMsg of
+        MyAdventurerRoute ->
+            let
+                result =
+                    Maybe.map2
+                        (\userId token ->
+                            getQuestsByUser taco.flags.apiEndpoint token userId
+                        )
+                        taco.userId
+                        taco.token
+            in
+                case result of
+                    Just request ->
+                        ( model, Http.send GetQuestsByUserResult request )
 
-                            Nothing ->
-                                ( model, Cmd.none )
+                    Nothing ->
+                        ( model, Cmd.none )
 
-                _ ->
-                    ( model, Cmd.none )
-    in
-        case msg of
-            GetQuestsByUserResult (Result.Ok quests) ->
-                ( { myAdventurer | quests = quests }, command )
+        _ ->
+            ( model, Cmd.none )
 
-            GetQuestsByUserResult (Result.Err _) ->
-                ( myAdventurer, command )
 
-            NoOp ->
-                ( myAdventurer, command )
+onUpdate : MyAdventurerMsg -> ( MyAdventurerModel, Taco ) -> ( MyAdventurerModel, Cmd MyAdventurerMsg )
+onUpdate msg ( model, taco ) =
+    case msg of
+        GetQuestsByUserResult (Result.Ok quests) ->
+            ( { model | quests = quests }, Cmd.none )
+
+        GetQuestsByUserResult (Result.Err _) ->
+            ( model, Cmd.none )
+
+        NoOp ->
+            ( model, Cmd.none )
