@@ -1,6 +1,6 @@
 module Update.SideQuestsUpdate
     exposing
-        ( sideQuestsUpdate
+        ( onUpdate
         , sideQuestsModel
         , SideQuestsModel
         , SideQuestsMsg
@@ -76,8 +76,8 @@ handleTacoMsg tacoMsg sideQuests taco =
             ( sideQuests, Cmd.none )
 
 
-sideQuestsUpdate : SideQuestsMsg -> TacoMsg -> SideQuestsModel -> Taco -> ( SideQuestsModel, Cmd SideQuestsMsg )
-sideQuestsUpdate message tacoMsg model taco =
+onUpdate : SideQuestsMsg -> TacoMsg -> SideQuestsModel -> Taco -> ( SideQuestsModel, Cmd SideQuestsMsg )
+onUpdate message tacoMsg model taco =
     let
         ( sideQuests, commands ) =
             handleTacoMsg tacoMsg model taco

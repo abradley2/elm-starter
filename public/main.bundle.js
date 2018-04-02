@@ -21436,7 +21436,7 @@ var _user$project$Request_SessionRequest$loadSession = F2(
 			});
 	});
 
-var _user$project$Update_LayoutUpdate$layoutUpdate = F4(
+var _user$project$Update_LayoutUpdate$onUpdate = F4(
 	function (msg, tacoMsg, layoutModel, taco) {
 		var _p0 = msg;
 		return {
@@ -21970,7 +21970,7 @@ var _user$project$Update_MyAdventurerUpdate$MyAdventurerModel = function (a) {
 var _user$project$Update_MyAdventurerUpdate$GetQuestsByUserResult = function (a) {
 	return {ctor: 'GetQuestsByUserResult', _0: a};
 };
-var _user$project$Update_MyAdventurerUpdate$myAdventurerUpdate = F4(
+var _user$project$Update_MyAdventurerUpdate$onUpdate = F4(
 	function (msg, tacoMsg, model, taco) {
 		var _p0 = function () {
 			var _p1 = tacoMsg;
@@ -22187,7 +22187,7 @@ var _user$project$Update_QuestsUpdate$handleTacoMsg = F3(
 			return {ctor: '_Tuple2', _0: quests, _1: _elm_lang$core$Platform_Cmd$none};
 		}
 	});
-var _user$project$Update_QuestsUpdate$questsUpdate = F4(
+var _user$project$Update_QuestsUpdate$onUpdate = F4(
 	function (msg, tacoMsg, model, taco) {
 		var _p1 = A3(
 			_user$project$Update_QuestsUpdate$handleTacoMsg,
@@ -22516,7 +22516,7 @@ var _user$project$Update_SideQuestsUpdate$handleTacoMsg = F3(
 			return {ctor: '_Tuple2', _0: sideQuests, _1: _elm_lang$core$Platform_Cmd$none};
 		}
 	});
-var _user$project$Update_SideQuestsUpdate$sideQuestsUpdate = F4(
+var _user$project$Update_SideQuestsUpdate$onUpdate = F4(
 	function (message, tacoMsg, model, taco) {
 		var _p1 = A3(_user$project$Update_SideQuestsUpdate$handleTacoMsg, tacoMsg, model, taco);
 		var sideQuests = _p1._0;
@@ -23092,7 +23092,7 @@ var _user$project$Update_CreateQuestUpdate$UploadQuestImageFinished = function (
 var _user$project$Update_CreateQuestUpdate$SubmitCreateQuestResult = function (a) {
 	return {ctor: 'SubmitCreateQuestResult', _0: a};
 };
-var _user$project$Update_CreateQuestUpdate$createQuestUpdate = F4(
+var _user$project$Update_CreateQuestUpdate$onUpdate = F4(
 	function (msg, tacoMsg, model, taco) {
 		var _p1 = A3(_user$project$Update_CreateQuestUpdate$handleTacoMsg, tacoMsg, model, taco);
 		var createQuest = _p1._0;
@@ -23744,7 +23744,7 @@ var _user$project$Update_QuestDetailsUpdate$handleTacoMsg = F3(
 			return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 		}
 	});
-var _user$project$Update_QuestDetailsUpdate$questDetailsUpdate = F4(
+var _user$project$Update_QuestDetailsUpdate$onUpdate = F4(
 	function (msg, tacoMsg, model, taco) {
 		var _p1 = A3(_user$project$Update_QuestDetailsUpdate$handleTacoMsg, tacoMsg, model, taco);
 		var questDetails = _p1._0;
@@ -24595,7 +24595,7 @@ var _user$project$Main$update = F2(
 								model,
 								{createQuest: createQuest});
 						}),
-					_user$project$Update_CreateQuestUpdate$createQuestUpdate(_p12._0));
+					_user$project$Update_CreateQuestUpdate$onUpdate(_p12._0));
 			case 'SideQuestsMsg':
 				return A4(
 					updater,
@@ -24607,7 +24607,7 @@ var _user$project$Main$update = F2(
 								model,
 								{sideQuests: sideQuests});
 						}),
-					_user$project$Update_SideQuestsUpdate$sideQuestsUpdate(_p12._0));
+					_user$project$Update_SideQuestsUpdate$onUpdate(_p12._0));
 			case 'QuestsMsg':
 				return A4(
 					updater,
@@ -24619,7 +24619,7 @@ var _user$project$Main$update = F2(
 								model,
 								{quests: quests});
 						}),
-					_user$project$Update_QuestsUpdate$questsUpdate(_p12._0));
+					_user$project$Update_QuestsUpdate$onUpdate(_p12._0));
 			case 'LayoutMsg':
 				return A4(
 					updater,
@@ -24631,7 +24631,7 @@ var _user$project$Main$update = F2(
 								model,
 								{layout: layout});
 						}),
-					_user$project$Update_LayoutUpdate$layoutUpdate(_p12._0));
+					_user$project$Update_LayoutUpdate$onUpdate(_p12._0));
 			case 'MyAdventurerMsg':
 				return A4(
 					updater,
@@ -24643,7 +24643,7 @@ var _user$project$Main$update = F2(
 								model,
 								{myAdventurer: myAdventurer});
 						}),
-					_user$project$Update_MyAdventurerUpdate$myAdventurerUpdate(_p12._0));
+					_user$project$Update_MyAdventurerUpdate$onUpdate(_p12._0));
 			case 'QuestDetailsMsg':
 				return A4(
 					updater,
@@ -24655,7 +24655,7 @@ var _user$project$Main$update = F2(
 								model,
 								{questDetails: questDetails});
 						}),
-					_user$project$Update_QuestDetailsUpdate$questDetailsUpdate(_p12._0));
+					_user$project$Update_QuestDetailsUpdate$onUpdate(_p12._0));
 			default:
 				return {ctor: '_Tuple2', _0: model, _1: tacoCmd};
 		}

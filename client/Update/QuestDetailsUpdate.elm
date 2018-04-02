@@ -1,6 +1,6 @@
 module Update.QuestDetailsUpdate
     exposing
-        ( questDetailsUpdate
+        ( onUpdate
         , questDetailsInitialModel
         , QuestDetailsModel
         , QuestDetailsMsg
@@ -96,8 +96,8 @@ handleTacoMsg tacoMsg model taco =
             ( model, Cmd.none )
 
 
-questDetailsUpdate : QuestDetailsMsg -> TacoMsg -> QuestDetailsModel -> Taco -> ( QuestDetailsModel, Cmd QuestDetailsMsg )
-questDetailsUpdate msg tacoMsg model taco =
+onUpdate : QuestDetailsMsg -> TacoMsg -> QuestDetailsModel -> Taco -> ( QuestDetailsModel, Cmd QuestDetailsMsg )
+onUpdate msg tacoMsg model taco =
     let
         ( questDetails, commands ) =
             handleTacoMsg tacoMsg model taco

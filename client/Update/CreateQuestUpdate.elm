@@ -1,6 +1,6 @@
 module Update.CreateQuestUpdate
     exposing
-        ( createQuestUpdate
+        ( onUpdate
         , createQuestInitialModel
         , CreateQuestModel
         , CreateQuestMsg
@@ -69,8 +69,8 @@ handleTacoMsg tacoMsg model taco =
             ( model, Cmd.none )
 
 
-createQuestUpdate : CreateQuestMsg -> TacoMsg -> CreateQuestModel -> Taco -> ( CreateQuestModel, Cmd CreateQuestMsg )
-createQuestUpdate msg tacoMsg model taco =
+onUpdate : CreateQuestMsg -> TacoMsg -> CreateQuestModel -> Taco -> ( CreateQuestModel, Cmd CreateQuestMsg )
+onUpdate msg tacoMsg model taco =
     let
         ( createQuest, commands ) =
             handleTacoMsg tacoMsg model taco

@@ -1,4 +1,10 @@
-module Update.QuestsUpdate exposing (questsModel, questsUpdate, QuestsModel, QuestsMsg)
+module Update.QuestsUpdate
+    exposing
+        ( onUpdate
+        , questsModel
+        , QuestsModel
+        , QuestsMsg
+        )
 
 import Request.QuestsRequest exposing (getQuests)
 import Types exposing (Taco, RecentPostedQuest, TacoMsg, TacoMsg(..))
@@ -36,8 +42,8 @@ handleTacoMsg tacoMsg quests taco =
             ( quests, Cmd.none )
 
 
-questsUpdate : QuestsMsg -> TacoMsg -> QuestsModel -> Taco -> ( QuestsModel, Cmd QuestsMsg )
-questsUpdate msg tacoMsg model taco =
+onUpdate : QuestsMsg -> TacoMsg -> QuestsModel -> Taco -> ( QuestsModel, Cmd QuestsMsg )
+onUpdate msg tacoMsg model taco =
     let
         ( quests, commands ) =
             handleTacoMsg (Debug.log "got taco msg" tacoMsg) model taco

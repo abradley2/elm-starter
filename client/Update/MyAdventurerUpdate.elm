@@ -1,6 +1,6 @@
 module Update.MyAdventurerUpdate
     exposing
-        ( myAdventurerUpdate
+        ( onUpdate
         , myAdventurerInitialModel
         , MyAdventurerModel
         , MyAdventurerMsg
@@ -27,8 +27,8 @@ myAdventurerInitialModel =
     }
 
 
-myAdventurerUpdate : MyAdventurerMsg -> TacoMsg -> MyAdventurerModel -> Taco -> ( MyAdventurerModel, Cmd MyAdventurerMsg )
-myAdventurerUpdate msg tacoMsg model taco =
+onUpdate : MyAdventurerMsg -> TacoMsg -> MyAdventurerModel -> Taco -> ( MyAdventurerModel, Cmd MyAdventurerMsg )
+onUpdate msg tacoMsg model taco =
     let
         ( myAdventurer, command ) =
             case tacoMsg of

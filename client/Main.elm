@@ -26,18 +26,12 @@ import View.QuestDetailsView.Main exposing (questDetailsView)
 
 -- import updates
 
-import Update.LayoutUpdate exposing (LayoutModel, layoutModel, layoutUpdate)
-import Update.MyAdventurerUpdate exposing (MyAdventurerModel, myAdventurerInitialModel, myAdventurerUpdate)
-import Update.QuestsUpdate exposing (QuestsModel, questsModel, questsUpdate)
-import Update.SideQuestsUpdate exposing (SideQuestsModel, sideQuestsModel, sideQuestsUpdate)
-import Update.QuestDetailsUpdate exposing (QuestDetailsModel, questDetailsInitialModel, questDetailsUpdate)
-import Update.CreateQuestUpdate
-    exposing
-        ( CreateQuestMsg(UploadQuestImageFinished)
-        , CreateQuestModel
-        , createQuestInitialModel
-        , createQuestUpdate
-        )
+import Update.LayoutUpdate exposing (LayoutModel, layoutModel)
+import Update.MyAdventurerUpdate exposing (MyAdventurerModel, myAdventurerInitialModel)
+import Update.QuestsUpdate exposing (QuestsModel, questsModel)
+import Update.SideQuestsUpdate exposing (SideQuestsModel, sideQuestsModel)
+import Update.QuestDetailsUpdate exposing (QuestDetailsModel, questDetailsInitialModel)
+import Update.CreateQuestUpdate exposing (CreateQuestMsg(UploadQuestImageFinished), CreateQuestModel, createQuestInitialModel)
 import Types exposing (Taco, TacoMsg, Flags, TacoMsg(..), RouteData, SessionInfo)
 
 
@@ -191,42 +185,42 @@ update message model =
                     (CreateQuestMsg)
                     model.createQuest
                     (\model createQuest -> { model | createQuest = createQuest })
-                    (createQuestUpdate msg)
+                    (Update.CreateQuestUpdate.onUpdate msg)
 
             SideQuestsMsg msg ->
                 updater
                     (SideQuestsMsg)
                     model.sideQuests
                     (\model sideQuests -> { model | sideQuests = sideQuests })
-                    (sideQuestsUpdate msg)
+                    (Update.SideQuestsUpdate.onUpdate msg)
 
             QuestsMsg msg ->
                 updater
                     (QuestsMsg)
                     model.quests
                     (\model quests -> { model | quests = quests })
-                    (questsUpdate msg)
+                    (Update.QuestsUpdate.onUpdate msg)
 
             LayoutMsg msg ->
                 updater
                     (LayoutMsg)
                     model.layout
                     (\model layout -> { model | layout = layout })
-                    (layoutUpdate msg)
+                    (Update.LayoutUpdate.onUpdate msg)
 
             MyAdventurerMsg msg ->
                 updater
                     (MyAdventurerMsg)
                     model.myAdventurer
                     (\model myAdventurer -> { model | myAdventurer = myAdventurer })
-                    (myAdventurerUpdate msg)
+                    (Update.MyAdventurerUpdate.onUpdate msg)
 
             QuestDetailsMsg msg ->
                 updater
                     (QuestDetailsMsg)
                     model.questDetails
                     (\model questDetails -> { model | questDetails = questDetails })
-                    (questDetailsUpdate msg)
+                    (Update.QuestDetailsUpdate.onUpdate msg)
 
             _ ->
                 ( model, tacoCmd )

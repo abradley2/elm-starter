@@ -1,6 +1,6 @@
 module Update.LayoutUpdate
     exposing
-        ( layoutUpdate
+        ( onUpdate
         , layoutModel
         , LayoutModel
         , LayoutMsg
@@ -24,8 +24,8 @@ layoutModel =
     }
 
 
-layoutUpdate : LayoutMsg -> TacoMsg -> LayoutModel -> Taco -> ( LayoutModel, Cmd LayoutMsg )
-layoutUpdate msg tacoMsg layoutModel taco =
+onUpdate : LayoutMsg -> TacoMsg -> LayoutModel -> Taco -> ( LayoutModel, Cmd LayoutMsg )
+onUpdate msg tacoMsg layoutModel taco =
     case msg of
         ToggleSidenav ->
             ( { layoutModel

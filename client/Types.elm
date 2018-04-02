@@ -34,6 +34,10 @@ type alias Taco =
     }
 
 
+type alias UpdateHandler messageType modelType =
+    messageType -> modelType -> Taco -> ( modelType, Cmd messageType )
+
+
 type alias SessionInfo =
     { username : String
     , userId : String
