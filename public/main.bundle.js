@@ -21396,6 +21396,28 @@ var _user$project$Ports$uploadQuestImageFinished = _elm_lang$core$Native_Platfor
 		},
 		A2(_elm_lang$core$Json_Decode$index, 0, _elm_lang$core$Json_Decode$bool)));
 
+var _user$project$Util$getReducerFactory = F7(
+	function (model, taco, tacoCmd, messageType, pageModel, setter, reducer) {
+		var _p0 = reducer(
+			{ctor: '_Tuple2', _0: pageModel, _1: taco});
+		var updatedPageModel = _p0._0;
+		var cmd = _p0._1;
+		return {
+			ctor: '_Tuple2',
+			_0: A2(setter, model, updatedPageModel),
+			_1: _elm_lang$core$Platform_Cmd$batch(
+				{
+					ctor: '::',
+					_0: tacoCmd,
+					_1: {
+						ctor: '::',
+						_0: A2(_elm_lang$core$Platform_Cmd$map, messageType, cmd),
+						_1: {ctor: '[]'}
+					}
+				})
+		};
+	});
+
 var _user$project$Request_SessionRequest$decodeSessionInfo = A3(
 	_elm_lang$core$Json_Decode$map2,
 	_user$project$Types$SessionInfo,
@@ -24576,29 +24598,9 @@ var _user$project$Main$update = F2(
 		var taco = _p10._0;
 		var tacoMsg = _p10._1;
 		var tacoCmd = _p10._2;
-		var updater = F4(
-			function (messageType, pageModel, setter, reducer) {
-				var _p11 = reducer(
-					{ctor: '_Tuple2', _0: pageModel, _1: taco});
-				var updatedPageModel = _p11._0;
-				var cmd = _p11._1;
-				return {
-					ctor: '_Tuple2',
-					_0: A2(setter, model, updatedPageModel),
-					_1: _elm_lang$core$Platform_Cmd$batch(
-						{
-							ctor: '::',
-							_0: tacoCmd,
-							_1: {
-								ctor: '::',
-								_0: A2(_elm_lang$core$Platform_Cmd$map, messageType, cmd),
-								_1: {ctor: '[]'}
-							}
-						})
-				};
-			});
-		var _p12 = A2(_elm_lang$core$Debug$log, 'got message', message);
-		switch (_p12.ctor) {
+		var updater = A3(_user$project$Util$getReducerFactory, model, taco, tacoCmd);
+		var _p11 = message;
+		switch (_p11.ctor) {
 			case 'CreateQuestMsg':
 				return A4(
 					updater,
@@ -24610,7 +24612,7 @@ var _user$project$Main$update = F2(
 								model,
 								{createQuest: createQuest});
 						}),
-					_user$project$Update_CreateQuestUpdate$onUpdate(_p12._0));
+					_user$project$Update_CreateQuestUpdate$onUpdate(_p11._0));
 			case 'SideQuestsMsg':
 				return A4(
 					updater,
@@ -24622,7 +24624,7 @@ var _user$project$Main$update = F2(
 								model,
 								{sideQuests: sideQuests});
 						}),
-					_user$project$Update_SideQuestsUpdate$onUpdate(_p12._0));
+					_user$project$Update_SideQuestsUpdate$onUpdate(_p11._0));
 			case 'QuestsMsg':
 				return A4(
 					updater,
@@ -24634,7 +24636,7 @@ var _user$project$Main$update = F2(
 								model,
 								{quests: quests});
 						}),
-					_user$project$Update_QuestsUpdate$onUpdate(_p12._0));
+					_user$project$Update_QuestsUpdate$onUpdate(_p11._0));
 			case 'LayoutMsg':
 				return A4(
 					updater,
@@ -24646,7 +24648,7 @@ var _user$project$Main$update = F2(
 								model,
 								{layout: layout});
 						}),
-					_user$project$Update_LayoutUpdate$onUpdate(_p12._0));
+					_user$project$Update_LayoutUpdate$onUpdate(_p11._0));
 			case 'MyAdventurerMsg':
 				return A4(
 					updater,
@@ -24658,7 +24660,7 @@ var _user$project$Main$update = F2(
 								model,
 								{myAdventurer: myAdventurer});
 						}),
-					_user$project$Update_MyAdventurerUpdate$onUpdate(_p12._0));
+					_user$project$Update_MyAdventurerUpdate$onUpdate(_p11._0));
 			case 'QuestDetailsMsg':
 				return A4(
 					updater,
@@ -24670,7 +24672,7 @@ var _user$project$Main$update = F2(
 								model,
 								{questDetails: questDetails});
 						}),
-					_user$project$Update_QuestDetailsUpdate$onUpdate(_p12._0));
+					_user$project$Update_QuestDetailsUpdate$onUpdate(_p11._0));
 			default:
 				return {ctor: '_Tuple2', _0: model, _1: tacoCmd};
 		}
@@ -24700,12 +24702,12 @@ var _user$project$Main$Init = {ctor: 'Init'};
 var _user$project$Main$init = F2(
 	function (flags, location) {
 		var initialLocation = _user$project$Main$parseLocation(location);
-		var _p13 = A2(
+		var _p12 = A2(
 			_user$project$Main$update,
 			_user$project$Main$Init,
 			A2(_user$project$Main$model, flags, initialLocation));
-		var initialModel = _p13._0;
-		var initialCmd = _p13._1;
+		var initialModel = _p12._0;
+		var initialCmd = _p12._1;
 		return {
 			ctor: '_Tuple2',
 			_0: initialModel,
@@ -24726,9 +24728,9 @@ var _user$project$Main$main = A2(
 	_user$project$Main$OnLocationChange,
 	{
 		init: _user$project$Main$init,
-		view: function (_p14) {
+		view: function (_p13) {
 			return _rtfeldman$elm_css$Html_Styled$toUnstyled(
-				_user$project$Main$view(_p14));
+				_user$project$Main$view(_p13));
 		},
 		update: _user$project$Main$update,
 		subscriptions: _user$project$Main$subscriptions

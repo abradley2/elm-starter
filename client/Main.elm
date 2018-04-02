@@ -7,6 +7,7 @@ import Html.Styled.Attributes exposing (..)
 import Navigation exposing (Location)
 import UrlParser exposing (..)
 import Ports exposing (..)
+import Util exposing (getReducerFactory)
 
 
 -- import requests
@@ -171,15 +172,9 @@ update message model =
             tacoUpdate message model.taco
 
         updater =
-            (\messageType pageModel setter reducer ->
-                let
-                    ( updatedPageModel, cmd ) =
-                        reducer ( pageModel, taco )
-                in
-                    ( setter model updatedPageModel, Cmd.batch [ tacoCmd, Cmd.map messageType cmd ] )
-            )
+            getReducerFactory model taco tacoCmd
     in
-        case (Debug.log "got message" message) of
+        case message of
             CreateQuestMsg msg ->
                 updater
                     (CreateQuestMsg)
