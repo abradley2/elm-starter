@@ -7,7 +7,7 @@ import Html.Styled.Attributes exposing (..)
 import Navigation exposing (Location)
 import UrlParser exposing (..)
 import Ports exposing (..)
-import Util exposing (getReducerFactory)
+import Util exposing (getReducerFactory, onTacoUpdate)
 
 
 -- import requests
@@ -166,13 +166,45 @@ tacoUpdate msg taco =
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update message model =
+update message prevModel =
     let
         ( taco, tacoMsg, tacoCmd ) =
-            tacoUpdate message model.taco
+            tacoUpdate message prevModel.taco
+
+        tacoUpdater =
+            onTacoUpdate tacoMsg taco
+
+        -- ALL our update functions should recieve the tacoMsg if there is one
+        ( model, commands ) =
+            ( { prevModel | taco = taco }, Cmd.none )
+                |> tacoUpdater
+                    (CreateQuestMsg)
+                    (\model -> model.createQuest)
+                    (\model createQuest -> { model | createQuest = createQuest })
+                    (Update.CreateQuestUpdate.onTacoMsg tacoMsg)
+                |> tacoUpdater
+                    (SideQuestsMsg)
+                    (\model -> model.sideQuests)
+                    (\model sideQuests -> { model | sideQuests = sideQuests })
+                    (Update.SideQuestsUpdate.onTacoMsg tacoMsg)
+                |> tacoUpdater
+                    (QuestsMsg)
+                    (\model -> model.quests)
+                    (\model quests -> { model | quests = quests })
+                    (Update.QuestsUpdate.onTacoMsg tacoMsg)
+                |> tacoUpdater
+                    (MyAdventurerMsg)
+                    (\model -> model.myAdventurer)
+                    (\model myAdventurer -> { model | myAdventurer = myAdventurer })
+                    (Update.MyAdventurerUpdate.onTacoMsg tacoMsg)
+                |> tacoUpdater
+                    (QuestDetailsMsg)
+                    (\model -> model.questDetails)
+                    (\model questDetails -> { model | questDetails = questDetails })
+                    (Update.QuestDetailsUpdate.onTacoMsg tacoMsg)
 
         updater =
-            getReducerFactory model taco tacoCmd
+            getReducerFactory model taco tacoCmd commands
     in
         case message of
             CreateQuestMsg msg ->
@@ -218,7 +250,7 @@ update message model =
                     (Update.QuestDetailsUpdate.onUpdate msg)
 
             _ ->
-                ( model, tacoCmd )
+                ( model, Cmd.batch [ tacoCmd, commands ] )
 
 
 view : Model -> Html Msg

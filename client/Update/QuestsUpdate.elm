@@ -38,6 +38,7 @@ onTacoMsg tacoMsg ( quests, taco ) =
             in
                 ( quests
                 , Http.send GetQuestsResult (getQuests taco.flags.apiEndpoint token)
+                  -- TODO: why this need token
                 )
 
         _ ->

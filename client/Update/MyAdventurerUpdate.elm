@@ -1,7 +1,7 @@
 module Update.MyAdventurerUpdate
     exposing
         ( onUpdate
-        , onTacoUpdate
+        , onTacoMsg
         , myAdventurerInitialModel
         , MyAdventurerModel
         , MyAdventurerMsg
@@ -28,8 +28,8 @@ myAdventurerInitialModel =
     }
 
 
-onTacoUpdate : TacoMsg -> ( MyAdventurerModel, Taco ) -> ( MyAdventurerModel, Cmd MyAdventurerMsg )
-onTacoUpdate tacoMsg ( model, taco ) =
+onTacoMsg : TacoMsg -> ( MyAdventurerModel, Taco ) -> ( MyAdventurerModel, Cmd MyAdventurerMsg )
+onTacoMsg tacoMsg ( model, taco ) =
     case tacoMsg of
         MyAdventurerRoute ->
             let

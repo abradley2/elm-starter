@@ -1,7 +1,7 @@
 module Update.QuestDetailsUpdate
     exposing
         ( onUpdate
-        , onTacoUpdate
+        , onTacoMsg
         , questDetailsInitialModel
         , QuestDetailsModel
         , QuestDetailsMsg
@@ -70,8 +70,8 @@ decideOnSuggestedSideQuest taco model isAccepted =
         Maybe.withDefault Cmd.none request
 
 
-onTacoUpdate : TacoMsg -> ( QuestDetailsModel, Taco ) -> ( QuestDetailsModel, Cmd QuestDetailsMsg )
-onTacoUpdate tacoMsg ( model, taco ) =
+onTacoMsg : TacoMsg -> ( QuestDetailsModel, Taco ) -> ( QuestDetailsModel, Cmd QuestDetailsMsg )
+onTacoMsg tacoMsg ( model, taco ) =
     case tacoMsg of
         QuestDetailsRoute params ->
             let
