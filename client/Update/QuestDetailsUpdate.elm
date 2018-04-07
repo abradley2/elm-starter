@@ -8,9 +8,8 @@ module Update.QuestDetailsUpdate
         , QuestDetailsMsg(..)
         )
 
-import UrlParser exposing (..)
 import Types exposing (Taco, TacoMsg, TacoMsg(..), SideQuest, RecentPostedQuest, QuestDetailsResponse)
-import Request.QuestsRequest exposing (getQuestDetails, decideSideQuest)
+import Request.QuestsRequest exposing (getQuestDetails, decideSideQuest, suggestSideQuest)
 import String
 import Array
 import Http
@@ -26,6 +25,13 @@ type QuestDetailsMsg
     | ToggleShowingSideQuestModal (Maybe SideQuest)
     | AcceptSideQuest String
     | DeclineSideQuest String
+      -- side quest messages
+    | ShowSideQuestForm
+    | HideSideQuestForm
+    | SubmitSideQuestForm
+    | SuggestSideQuestResult (Result Http.Error Bool)
+    | EditSideQuestName String
+    | EditSideQuestDescription String
 
 
 type alias QuestDetailsModel =
@@ -34,6 +40,11 @@ type alias QuestDetailsModel =
     , suggestedSideQuests : Maybe (List SideQuest)
     , showingSuggestedSideQuests : Bool
     , decidingSideQuest : Maybe SideQuest
+    , questFormOpen : Bool
+    , sideQuestName : String
+    , sideQuestDescription : String
+    , suggestingSideQuest : Bool
+    , suggestSideQuestSuccess : Maybe Bool
     }
 
 
@@ -44,6 +55,11 @@ questDetailsInitialModel =
     , suggestedSideQuests = Nothing
     , showingSuggestedSideQuests = False
     , decidingSideQuest = Nothing
+    , questFormOpen = False
+    , sideQuestName = ""
+    , sideQuestDescription = ""
+    , suggestingSideQuest = False
+    , suggestSideQuestSuccess = Nothing
     }
 
 
@@ -162,3 +178,63 @@ onUpdate msg ( model, taco ) =
 
         NoOp ->
             ( model, Cmd.none )
+
+        SuggestSideQuestResult (Result.Err _) ->
+            ( { model
+                | suggestingSideQuest = False
+                , suggestSideQuestSuccess = Just False
+              }
+            , Cmd.none
+            )
+
+        SuggestSideQuestResult (Result.Ok success) ->
+            ( { model
+                | suggestingSideQuest = False
+                , suggestSideQuestSuccess = Just True
+              }
+            , Cmd.none
+            )
+
+        ShowSideQuestForm ->
+            ( { model
+                | questFormOpen = True
+                , sideQuestName = ""
+                , sideQuestDescription = ""
+              }
+            , Cmd.none
+            )
+
+        HideSideQuestForm ->
+            ( { model | questFormOpen = False }, Cmd.none )
+
+        SubmitSideQuestForm ->
+            ( { model
+                | questFormOpen = False
+                , suggestingSideQuest = True
+              }
+            , Maybe.withDefault Cmd.none
+                (Maybe.map2
+                    (\quest userId ->
+                        Http.send SuggestSideQuestResult
+                            (suggestSideQuest
+                                taco.flags.apiEndpoint
+                                userId
+                                quest
+                                { guid = ""
+                                , name = model.sideQuestName
+                                , description = model.sideQuestDescription
+                                , suggestedBy = ""
+                                , id = ""
+                                }
+                            )
+                    )
+                    model.quest
+                    taco.token
+                )
+            )
+
+        EditSideQuestName newName ->
+            ( { model | sideQuestName = newName }, Cmd.none )
+
+        EditSideQuestDescription newDescription ->
+            ( { model | sideQuestDescription = newDescription }, Cmd.none )

@@ -38,12 +38,6 @@ questsView taco model =
                                     , href = "#details/" ++ quest.userId ++ ":" ++ quest.id
                                     }
                                   )
-                                , (questAction
-                                    { icon = "map-signs"
-                                    , text = "Side Quests"
-                                    , href = "#sidequests/" ++ quest.userId ++ ":" ++ quest.id
-                                    }
-                                  )
                                 ]
                         }
                 )

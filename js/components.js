@@ -19,7 +19,7 @@ const components = {
   }
 }
 
-module.exports = { // eslint-disable-line no-undef
+module.exports = {
   mount(elem, componentType, app) {
     const id = elem.getAttribute('data-elm-lifecycle')
     components[componentType].mount(elem, id, app)

@@ -10,13 +10,47 @@ import Update.QuestDetailsUpdate exposing (QuestDetailsModel, QuestDetailsMsg, Q
 import Component.Stepper exposing (stepper)
 import View.QuestDetailsView.SuggestedQuestsList exposing (suggestedQuestsList)
 import View.QuestDetailsView.SideQuestDetails exposing (sideQuestDetails)
+import View.QuestDetailsView.SideQuestForm exposing (sideQuestForm)
 import Types exposing (RecentPostedQuest, SideQuest, Taco)
 
 
 view : RecentPostedQuest -> List SideQuest -> List SideQuest -> QuestDetailsModel -> Html QuestDetailsMsg
 view quest sideQuests suggestedSideQuests model =
     div [ class "container" ]
-        [ (if (List.length suggestedSideQuests) == 0 then
+        [ div []
+            [ h4 []
+                [ text quest.name ]
+            , div
+                [ css
+                    [ position relative
+                    ]
+                ]
+                [ hr [] []
+                , (sideQuestForm
+                    { name = model.sideQuestName
+                    , description = model.sideQuestDescription
+                    , open = model.questFormOpen
+                    , submitting = model.suggestingSideQuest
+                    }
+                  )
+                , span [ class "flow-text" ] [ text "Care to propose a" ]
+                , a
+                    [ class "flow-text"
+                    , css
+                        [ cursor pointer
+                        ]
+                    , onClick
+                        (if model.questFormOpen then
+                            HideSideQuestForm
+                         else
+                            ShowSideQuestForm
+                        )
+                    ]
+                    [ text " Side Quest " ]
+                , span [ class "flow-text" ] [ text "for this adventurer to complete while on their journey?" ]
+                ]
+            ]
+        , (if (List.length suggestedSideQuests) == 0 then
             div [] []
            else
             div

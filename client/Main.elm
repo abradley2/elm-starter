@@ -20,7 +20,6 @@ import Request.SessionRequest exposing (loadSession)
 import View.Layout exposing (layout)
 import View.MyAdventurerView.Main exposing (myAdventurerView)
 import View.QuestsView.Main exposing (questsView)
-import View.SideQuestsView.Main exposing (sideQuestsView)
 import View.CreateQuestView.Main exposing (createQuestView)
 import View.QuestDetailsView.Main exposing (questDetailsView)
 
@@ -30,7 +29,6 @@ import View.QuestDetailsView.Main exposing (questDetailsView)
 import Update.LayoutUpdate exposing (LayoutModel, layoutModel)
 import Update.MyAdventurerUpdate exposing (MyAdventurerModel, myAdventurerInitialModel)
 import Update.QuestsUpdate exposing (QuestsModel, questsModel)
-import Update.SideQuestsUpdate exposing (SideQuestsModel, sideQuestsModel)
 import Update.QuestDetailsUpdate exposing (QuestDetailsModel, questDetailsInitialModel)
 import Update.CreateQuestUpdate exposing (CreateQuestMsg(UploadQuestImageFinished), CreateQuestModel, createQuestInitialModel)
 import Types exposing (Taco, TacoMsg, Flags, TacoMsg(..), RouteData, SessionInfo)
@@ -40,7 +38,6 @@ type alias Model =
     { taco : Taco
     , quests : QuestsModel
     , myAdventurer : MyAdventurerModel
-    , sideQuests : SideQuestsModel
     , layout : LayoutModel
     , createQuest : CreateQuestModel
     , questDetails : QuestDetailsModel
@@ -57,7 +54,6 @@ model flags routeData =
         }
     , quests = questsModel
     , myAdventurer = myAdventurerInitialModel
-    , sideQuests = sideQuestsModel
     , layout = layoutModel
     , createQuest = createQuestInitialModel
     , questDetails = questDetailsInitialModel
@@ -73,7 +69,6 @@ type Msg
     | OnLocationChange Location
       -- page messages
     | QuestsMsg Update.QuestsUpdate.QuestsMsg
-    | SideQuestsMsg Update.SideQuestsUpdate.SideQuestsMsg
     | LayoutMsg Update.LayoutUpdate.LayoutMsg
     | MyAdventurerMsg Update.MyAdventurerUpdate.MyAdventurerMsg
     | CreateQuestMsg Update.CreateQuestUpdate.CreateQuestMsg
@@ -86,7 +81,6 @@ matchers =
         [ UrlParser.map QuestsRoute (UrlParser.top)
         , UrlParser.map QuestsRoute (UrlParser.s "quests")
         , UrlParser.map QuestDetailsRoute (UrlParser.s "details" </> UrlParser.string)
-        , UrlParser.map SideQuestsRoute (UrlParser.s "sidequests" </> UrlParser.string)
         , UrlParser.map MyAdventurerRoute (UrlParser.s "profile")
         , UrlParser.map CreateQuestRoute (UrlParser.s "newquest")
         ]
@@ -183,11 +177,6 @@ update message prevModel =
                     (\model createQuest -> { model | createQuest = createQuest })
                     (Update.CreateQuestUpdate.onTacoMsg tacoMsg)
                 |> tacoUpdater
-                    (SideQuestsMsg)
-                    (\model -> model.sideQuests)
-                    (\model sideQuests -> { model | sideQuests = sideQuests })
-                    (Update.SideQuestsUpdate.onTacoMsg tacoMsg)
-                |> tacoUpdater
                     (QuestsMsg)
                     (\model -> model.quests)
                     (\model quests -> { model | quests = quests })
@@ -213,13 +202,6 @@ update message prevModel =
                     model.createQuest
                     (\model createQuest -> { model | createQuest = createQuest })
                     (Update.CreateQuestUpdate.onUpdate msg)
-
-            SideQuestsMsg msg ->
-                updater
-                    (SideQuestsMsg)
-                    model.sideQuests
-                    (\model sideQuests -> { model | sideQuests = sideQuests })
-                    (Update.SideQuestsUpdate.onUpdate msg)
 
             QuestsMsg msg ->
                 updater
@@ -270,9 +252,6 @@ view model =
                 QuestDetailsRoute params ->
                     Html.Styled.map QuestDetailsMsg (questDetailsView model.taco model.questDetails)
 
-                SideQuestsRoute params ->
-                    Html.Styled.map SideQuestsMsg (sideQuestsView model.taco model.sideQuests)
-
                 MyAdventurerRoute ->
                     Html.Styled.map MyAdventurerMsg (myAdventurerView model.taco model.myAdventurer)
 
@@ -280,7 +259,7 @@ view model =
                     Html.Styled.map CreateQuestMsg (createQuestView model.taco model.createQuest)
 
                 _ ->
-                    Html.Styled.map QuestsMsg (questsView model.taco model.quests)
+                    div [] [ h4 [] [ text "NOT FOUND" ] ]
             )
 
 
@@ -300,7 +279,7 @@ init flags location =
         ( initialModel, initialCmd ) =
             update Init (model flags initialLocation)
     in
-        ( initialModel, Cmd.batch [ initialCmd, Navigation.modifyUrl location.href ] )
+        ( initialModel, initialCmd )
 
 
 main : Program Flags Model Msg
