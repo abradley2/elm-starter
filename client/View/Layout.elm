@@ -19,8 +19,8 @@ navs model taco =
         [ a [ href "#quests" ] [ text "Quests" ]
         ]
     , li []
-        [ if taco.token /= Nothing then
-            a [ href "#profile" ] [ text "My Adventurer" ]
+        [ if taco.userId /= Nothing then
+            a [ href "profile" ] [ text "My Adventurer" ]
           else
             let
                 ( route, location ) =

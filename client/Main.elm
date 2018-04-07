@@ -47,7 +47,6 @@ type alias Model =
 model flags routeData =
     { taco =
         { flags = flags
-        , token = Nothing
         , username = Nothing
         , userId = Nothing
         , routeData = routeData
@@ -86,7 +85,7 @@ matchers =
 
 parseLocation : Location -> RouteData
 parseLocation location =
-    case (parseHash matchers location) of
+    case (parsePath matchers location) of
         Just route ->
             ( route, location )
 
@@ -132,14 +131,17 @@ tacoUpdate msg taco =
             )
 
         LoadSessionResult (Result.Err _) ->
-            ( { taco
-                | token = Nothing
-                , username = Nothing
-                , userId = Nothing
-              }
-            , TacoNoOp
-            , Cmd.none
-            )
+            let
+                ( route, location ) =
+                    taco.routeData
+            in
+                ( { taco
+                    | username = Nothing
+                    , userId = Nothing
+                  }
+                , TacoNoOp
+                , (Navigation.modifyUrl location.hash)
+                )
 
         _ ->
             ( taco, TacoNoOp, Cmd.none )

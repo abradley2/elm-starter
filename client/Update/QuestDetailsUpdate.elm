@@ -67,19 +67,17 @@ decideOnSuggestedSideQuest : Taco -> QuestDetailsModel -> Bool -> Cmd QuestDetai
 decideOnSuggestedSideQuest taco model isAccepted =
     let
         request =
-            Maybe.map3
-                (\userToken quest sideQuest ->
+            Maybe.map2
+                (\quest sideQuest ->
                     Http.send DecideSideQuestResult
                         (decideSideQuest
                             { apiEndpoint = taco.flags.apiEndpoint
-                            , userToken = userToken
                             , isAccepted = isAccepted
                             , sideQuestId = sideQuest.id
                             , questId = quest.id
                             }
                         )
                 )
-                taco.token
                 model.quest
                 model.decidingSideQuest
     in
@@ -213,12 +211,11 @@ onUpdate msg ( model, taco ) =
                 , suggestingSideQuest = True
               }
             , Maybe.withDefault Cmd.none
-                (Maybe.map2
-                    (\quest userId ->
+                (Maybe.map
+                    (\quest ->
                         Http.send SuggestSideQuestResult
                             (suggestSideQuest
                                 taco.flags.apiEndpoint
-                                userId
                                 quest
                                 { guid = ""
                                 , name = model.sideQuestName
@@ -229,7 +226,6 @@ onUpdate msg ( model, taco ) =
                             )
                     )
                     model.quest
-                    taco.token
                 )
             )
 

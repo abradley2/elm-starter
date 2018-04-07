@@ -32,14 +32,9 @@ onTacoMsg : TacoMsg -> ( QuestsModel, Taco ) -> ( QuestsModel, Cmd QuestsMsg )
 onTacoMsg tacoMsg ( quests, taco ) =
     case tacoMsg of
         QuestsRoute ->
-            let
-                token =
-                    Maybe.withDefault "" taco.token
-            in
-                ( quests
-                , Http.send GetQuestsResult (getQuests taco.flags.apiEndpoint token)
-                  -- TODO: why this need token
-                )
+            ( quests
+            , Http.send GetQuestsResult (getQuests taco.flags.apiEndpoint)
+            )
 
         _ ->
             ( quests, Cmd.none )

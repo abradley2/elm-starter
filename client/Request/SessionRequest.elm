@@ -12,15 +12,14 @@ decodeSessionInfo =
 
 
 loadSession : String -> String -> Http.Request SessionInfo
-loadSession apiEndpoint userToken =
+loadSession apiEndpoint queryParams =
     Http.request
         { method = "GET"
         , headers =
-            [ Http.header "Authorization" ("Bearer " ++ userToken)
-            ]
-        , url = (apiEndpoint ++ "session/load")
+            []
+        , url = (apiEndpoint ++ "session/load" ++ queryParams)
         , body = Http.emptyBody
         , expect = Http.expectJson decodeSessionInfo
         , timeout = Nothing
-        , withCredentials = False
+        , withCredentials = True
         }

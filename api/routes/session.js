@@ -10,55 +10,59 @@ const sessionRouter = router()
 
 const graphApi = 'https://graph.facebook.com/v2.11/'
 
-sessionRouter.post('/login', (req, res) => co(function * () {
-  const accessTokenResponse = yield request.get(graphApi + 'oauth/access_token', {
-    params: {
-      client_id: global.config.fbAppId, // eslint-disable-line camelcase
-      redirect_uri: global.config.fbRedirectUri, // eslint-disable-line camelcase
-      client_secret: global.config.fbClientSecret, // eslint-disable-line camelcase
-      code: req.body.code
-    }
-  })
-
-  const accessToken = accessTokenResponse.data.access_token
-  const expiry = accessTokenResponse.data.expires_in
-  const sessionId = uuid.v4()
-
-  const userIdResponse = yield request.get(graphApi + 'me?fields=id,first_name&access_token=' + accessToken)
-
-  const userId = userIdResponse.data.id
-
-  redis.set(
-    getAcccessTokenKey(sessionId),
-    accessToken,
-    'EX',
-    expiry
-  )
-
-  const sessionToken = jwt.sign({userId, sessionId}, global.config.appSecret, {expiresIn: '2d'})
-
-  res.cookie('token', sessionToken, {maxAge: 900000, httpOnly: true})
-}).catch(err => {
-  global.logger.error(err, 'session error')
-  return res.status(400).json({
-    success: false
-  })
-}))
-
 sessionRouter.get('/load', (req, res) => co(function * () {
-  const token = res.locals.token
+  let username = null
+  let userId = null
+  // if we already have a token parse it and send back the user information
+  if (res.locals.token) {
+    const token = res.locals.token
 
-  const {userId, sessionId} = yield jwt.verify(token, global.config.appSecret)
+    const sessionInfo = yield jwt.verify(token, global.config.appSecret)
 
-  const accessTokenResponse = yield redis.get(getAcccessTokenKey(sessionId))
+    const accessTokenResponse = yield redis.get(getAcccessTokenKey(sessionInfo.sessionId))
 
-  const nameResponse = yield request.get(graphApi + '/me?fields=first_name&access_token=' + accessTokenResponse)
+    userId = sessionInfo.userId
+    const userResponse = yield request.get(graphApi + '/me?fields=first_name&access_token=' + accessTokenResponse)
+    username = userResponse.data.first_name
+  }
+  // if its sending in a code go through oauth
+  if (!res.locals.token && req.query.code) {
+    const accessTokenResponse = yield request.get(graphApi + 'oauth/access_token', {
+      params: {
+        client_id: global.config.fbAppId, // eslint-disable-line camelcase
+        redirect_uri: global.config.fbRedirectUri, // eslint-disable-line camelcase
+        client_secret: global.config.fbClientSecret, // eslint-disable-line camelcase
+        code: req.query.code
+      }
+    })
+
+    const accessToken = accessTokenResponse.data.access_token
+    const expiry = accessTokenResponse.data.expires_in
+    const sessionId = uuid.v4()
+
+    const userResponse = yield request.get(graphApi + 'me?fields=id,first_name&access_token=' + accessToken)
+
+    userId = userResponse.data.id
+    username = userResponse.data.first_name
+
+    redis.set(
+      getAcccessTokenKey(sessionId),
+      accessToken,
+      'EX',
+      expiry
+    )
+
+    const sessionToken = jwt.sign({userId, sessionId}, global.config.appSecret, {expiresIn: '2d'})
+
+    res.header('Set-Cookie', `token=${sessionToken}; Max-Age=${accessTokenResponse.data.expires_in}; Path=/; HttpOnly`)
+  }
 
   return res.json({
-    username: nameResponse.data.first_name,
+    username,
     userId
   })
 }).catch(err => {
+  global.console.error(err.response.data)
   global.logger.error(err)
   return res.status(400).json({
     success: false

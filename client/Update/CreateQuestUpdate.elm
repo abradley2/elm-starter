@@ -41,7 +41,6 @@ type alias CreateQuestModel =
     , questImageUploadError : Bool
     , submitPending : Bool
     , submitError : Bool
-    , token : Maybe String
     }
 
 
@@ -56,7 +55,6 @@ createQuestInitialModel =
     , questImageUploadError = False
     , submitPending = False
     , submitError = False
-    , token = Nothing
     }
 
 
@@ -99,7 +97,6 @@ onUpdate msg ( model, taco ) =
             , Http.send SubmitCreateQuestResult
                 (createQuestRequest
                     taco.flags.apiEndpoint
-                    (Maybe.withDefault "" taco.token)
                     { id = ""
                     , name = model.questName
                     , description = model.questDescription
@@ -110,7 +107,7 @@ onUpdate msg ( model, taco ) =
 
         SubmitCreateQuestResult (Result.Ok quest) ->
             ( model
-            , Navigation.modifyUrl "/#profile"
+            , Navigation.modifyUrl "/profile"
             )
 
         SubmitCreateQuestResult (Result.Err _) ->

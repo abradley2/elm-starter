@@ -24,13 +24,12 @@ encodeQuest quest =
         ]
 
 
-createQuestRequest : String -> String -> Quest -> Http.Request Quest
-createQuestRequest apiEndpoint userToken quest =
+createQuestRequest : String -> Quest -> Http.Request Quest
+createQuestRequest apiEndpoint quest =
     Http.request
         { method = "POST"
         , headers =
-            [ Http.header "Authorization" ("Bearer " ++ (Debug.log "sending user token = " userToken))
-            ]
+            []
         , url = apiEndpoint ++ "quests"
         , body = Http.jsonBody <| (encodeQuest quest)
         , expect = Http.expectJson decodeQuest

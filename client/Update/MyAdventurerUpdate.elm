@@ -34,12 +34,11 @@ onTacoMsg tacoMsg ( model, taco ) =
         MyAdventurerRoute ->
             let
                 result =
-                    Maybe.map2
-                        (\userId token ->
-                            getQuestsByUser taco.flags.apiEndpoint token userId
+                    Maybe.map
+                        (\userId ->
+                            getQuestsByUser taco.flags.apiEndpoint userId
                         )
                         taco.userId
-                        taco.token
             in
                 case result of
                     Just request ->

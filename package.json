@@ -48,7 +48,6 @@
     "express-fileupload": "^0.4.0",
     "ioredis": "^3.2.2",
     "is-my-json-valid": "^2.17.2",
-    "js-cookie": "^2.2.0",
     "jsonwebtoken": "^8.1.0",
     "nodemon": "^1.11.0",
     "pino": "^4.0.3",

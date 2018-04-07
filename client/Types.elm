@@ -24,15 +24,10 @@ type alias RouteData =
 
 type alias Taco =
     { flags : Flags
-    , token : Maybe String
     , username : Maybe String
     , userId : Maybe String
     , routeData : RouteData
     }
-
-
-type alias UpdateHandler messageType modelType =
-    messageType -> modelType -> Taco -> ( modelType, Cmd messageType )
 
 
 type alias SessionInfo =

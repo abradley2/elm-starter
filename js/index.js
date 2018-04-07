@@ -1,5 +1,4 @@
 const axios = require('axios')
-const cookies = require('js-cookie')
 const components = require('./components')
 
 const apiEndpoint = process.env.NODE_ENV === 'production' ?
@@ -25,18 +24,6 @@ document.addEventListener('animationstart', e => {
   }
 }, false)
 
-const qs = window.location.search.substr(1).split('&').reduce((obj, cur) => {
-  return Object.assign(obj, {
-    [cur.split('=')[0]]: cur.split('=')[1]
-  })
-}, {})
-
-const token = cookies.get('thyQuestIs:token')
-
-if (token) {
-  app.ports.loadToken.send(token)
-}
-
 app.ports.uploadQuestImage.subscribe(inputId => {
   const fileInput = document.getElementById(inputId)
 
@@ -51,10 +38,7 @@ app.ports.uploadQuestImage.subscribe(inputId => {
   axios({
     method: 'POST',
     url: apiEndpoint + 'upload',
-    data,
-    headers: {
-      Authorization: 'bearer ' + cookies.get('thyQuestIs:token')
-    }
+    data
   })
     .then(res => {
       app.ports.uploadQuestImageFinished.send([true, res.data.file])
@@ -63,18 +47,3 @@ app.ports.uploadQuestImage.subscribe(inputId => {
       app.ports.uploadQuestImageFinished.send([false, 'error'])
     })
 })
-
-if (qs && qs.code) {
-  axios.post(apiEndpoint + 'session/login', {code: qs.code})
-    .then(res => {
-      cookies.set('thyQuestIs:token', res.data.token)
-      app.ports.loadToken.send(res.data.token)
-    })
-    .catch(err => {
-      console.error(err)
-    })
-
-  setTimeout(() => {
-    history.replaceState(document.title, {}, '/')
-  }, 0)
-}

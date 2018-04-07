@@ -10,6 +10,9 @@ global.config = require('../local-config.js')
 global.config.uploadDir = path.join(__dirname, '../public/uploads')
 
 const api = router()
+const sessionCorsConfig = process.env.NODE_ENV === 'development' ?
+  {origin: 'http://localhost:8000', credentials: true} :
+  {origin: false}
 
 api.use(fileUpload({
   safeFileNames: true,
@@ -21,12 +24,14 @@ api.use(cookieParser())
 api.use(bodyParser.json())
 api.use(cors())
 api.use((req, res, next) => {
-  if (req.headers.authorization) {
-    res.locals.token = req.headers.authorization.split(' ').pop()
-  }
+  res.locals.token = req.cookies.token
   next()
 })
-api.use('/session', require('./routes/session'))
+api.use(
+  '/session',
+  cors(sessionCorsConfig),
+  require('./routes/session')
+)
 api.use('/quests', require('./routes/quests'))
 api.use('/sidequests', require('./routes/sidequests'))
 api.use('/upload', require('./routes/upload'))

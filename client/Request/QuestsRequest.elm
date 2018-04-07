@@ -63,13 +63,12 @@ decodeGetSideQuestsResponse =
         (field "sideQuests" decodeSideQuestsList)
 
 
-getQuests : String -> String -> Http.Request (List RecentPostedQuest)
-getQuests apiEndpoint userToken =
+getQuests : String -> Http.Request (List RecentPostedQuest)
+getQuests apiEndpoint =
     Http.request
         { method = "GET"
         , headers =
-            [ Http.header "Authorization" ("Bearer " ++ userToken)
-            ]
+            []
         , url = apiEndpoint ++ "quests"
         , body = Http.emptyBody
         , expect = Http.expectJson decodeQuestsList
@@ -78,13 +77,12 @@ getQuests apiEndpoint userToken =
         }
 
 
-getSideQuests : String -> String -> String -> String -> Http.Request GetSideQuestsResponse
-getSideQuests apiEndpoint userToken userId questId =
+getSideQuests : String -> String -> String -> Http.Request GetSideQuestsResponse
+getSideQuests apiEndpoint userId questId =
     Http.request
         { method = "GET"
         , headers =
-            [ Http.header "Authorization" ("Bearer " ++ userToken)
-            ]
+            []
         , url = (apiEndpoint ++ "sidequests/" ++ userId ++ "?questId=" ++ questId)
         , body = Http.emptyBody
         , expect = Http.expectJson decodeGetSideQuestsResponse
@@ -93,13 +91,12 @@ getSideQuests apiEndpoint userToken userId questId =
         }
 
 
-getQuestsByUser : String -> String -> String -> Http.Request (List RecentPostedQuest)
-getQuestsByUser apiEndpoint userToken userId =
+getQuestsByUser : String -> String -> Http.Request (List RecentPostedQuest)
+getQuestsByUser apiEndpoint userId =
     Http.request
         { method = "GET"
         , headers =
-            [ Http.header "Authorization" ("Bearer " ++ userToken)
-            ]
+            []
         , url = (apiEndpoint ++ "quests/" ++ userId)
         , body = Http.emptyBody
         , expect = Http.expectJson decodeQuestsList
@@ -124,7 +121,6 @@ getQuestDetails apiEndpoint userId questId =
 
 type alias DecideSideQuestParams =
     { apiEndpoint : String
-    , userToken : String
     , questId : String
     , sideQuestId : String
     , isAccepted : Bool
@@ -136,8 +132,7 @@ decideSideQuest params =
     Http.request
         { method = "PUT"
         , headers =
-            [ Http.header "Authorization" ("Bearer " ++ params.userToken)
-            ]
+            []
         , url = (params.apiEndpoint ++ "quests/" ++ params.questId ++ "/decidesidequest")
         , body =
             Http.jsonBody
@@ -152,13 +147,12 @@ decideSideQuest params =
         }
 
 
-suggestSideQuest : String -> String -> RecentPostedQuest -> SideQuest -> Http.Request Bool
-suggestSideQuest apiEndpoint userToken quest sideQuest =
+suggestSideQuest : String -> RecentPostedQuest -> SideQuest -> Http.Request Bool
+suggestSideQuest apiEndpoint quest sideQuest =
     Http.request
         { method = "POST"
         , headers =
-            [ Http.header "Authorization" ("Bearer " ++ userToken)
-            ]
+            []
         , url = (apiEndpoint ++ "sidequests/" ++ quest.userId ++ "/" ++ quest.id)
         , body = Http.jsonBody (encodeSideQuest sideQuest)
         , expect = Http.expectJson (Json.Decode.field "success" bool)
