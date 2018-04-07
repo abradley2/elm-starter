@@ -10,15 +10,12 @@ type alias Flags =
 
 type TacoMsg
     = TacoNoOp
-    | UserLoggedIn
-    | UserLoggedout
       -- Routes
     | QuestsRoute
     | SideQuestsRoute String
     | MyAdventurerRoute
     | CreateQuestRoute
     | QuestDetailsRoute String
-    | NotFoundRoute
 
 
 type alias RouteData =
@@ -39,8 +36,8 @@ type alias UpdateHandler messageType modelType =
 
 
 type alias SessionInfo =
-    { username : String
-    , userId : String
+    { username : Maybe String
+    , userId : Maybe String
     }
 
 

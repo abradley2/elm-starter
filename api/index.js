@@ -2,6 +2,7 @@ const path = require('path')
 const router = require('express').Router
 const cors = require('cors')
 const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
 const fileUpload = require('express-fileupload')
 
 global.config = require('../local-config.js')
@@ -16,7 +17,7 @@ api.use(fileUpload({
   preserveExtension: true,
   limits: {fileSize: 2 * 1024 * 1024}
 }))
-
+api.use(cookieParser())
 api.use(bodyParser.json())
 api.use(cors())
 api.use((req, res, next) => {

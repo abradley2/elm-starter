@@ -7,8 +7,8 @@ import Json.Decode exposing (..)
 
 decodeSessionInfo =
     Json.Decode.map2 SessionInfo
-        (at [ "username" ] string)
-        (at [ "userId" ] string)
+        (at [ "username" ] (nullable string))
+        (at [ "userId" ] (nullable string))
 
 
 loadSession : String -> String -> Http.Request SessionInfo

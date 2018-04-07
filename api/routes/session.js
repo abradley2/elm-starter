@@ -37,7 +37,7 @@ sessionRouter.post('/login', (req, res) => co(function * () {
 
   const sessionToken = jwt.sign({userId, sessionId}, global.config.appSecret, {expiresIn: '2d'})
 
-  res.json({token: sessionToken})
+  res.cookie('token', sessionToken, {maxAge: 900000, httpOnly: true})
 }).catch(err => {
   global.logger.error(err, 'session error')
   return res.status(400).json({

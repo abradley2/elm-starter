@@ -38,6 +38,7 @@
     "browserify": "^15.2.0",
     "co": "^4.6.0",
     "concurrently": "^3.5.0",
+    "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
     "cuid": "^2.0.2",
     "elm": "^0.18.0",

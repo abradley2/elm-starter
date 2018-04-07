@@ -77,7 +77,7 @@ onUpdate msg ( model, taco ) =
             if success then
                 ( { model
                     | questImageUploadPending = False
-                    , questImageUploadError = True
+                    , questImageUploadError = False
                     , questImageUrl = questImageUrl
                     , imageUploadModalOpen = False
                   }

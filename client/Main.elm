@@ -63,8 +63,6 @@ model flags routeData =
 type Msg
     = Init
       -- session messages
-    | LoadToken String
-    | GetTokenResult (Result Http.Error String)
     | LoadSessionResult (Result Http.Error SessionInfo)
     | OnLocationChange Location
       -- page messages
@@ -104,7 +102,14 @@ tacoUpdate msg taco =
                 ( route, location ) =
                     taco.routeData
             in
-                ( taco, route, Cmd.none )
+                ( taco
+                , route
+                , Http.send LoadSessionResult
+                    (loadSession
+                        taco.flags.apiEndpoint
+                        location.search
+                    )
+                )
 
         OnLocationChange location ->
             let
@@ -113,29 +118,10 @@ tacoUpdate msg taco =
             in
                 ( { taco | routeData = ( route, location ) }, route, Cmd.none )
 
-        LoadToken token ->
-            ( { taco | token = Just token }
-            , TacoNoOp
-            , Http.send LoadSessionResult (loadSession taco.flags.apiEndpoint token)
-            )
-
-        GetTokenResult (Result.Ok token) ->
-            ( { taco | token = Just token }, TacoNoOp, Cmd.none )
-
-        GetTokenResult (Result.Err _) ->
-            ( { taco
-                | token = Nothing
-                , username = Nothing
-                , userId = Nothing
-              }
-            , TacoNoOp
-            , Cmd.none
-            )
-
         LoadSessionResult (Result.Ok tacoInfo) ->
             ( { taco
-                | username = Just tacoInfo.username
-                , userId = Just tacoInfo.userId
+                | username = tacoInfo.username
+                , userId = tacoInfo.userId
               }
             , TacoNoOp
             , let
@@ -265,8 +251,7 @@ view model =
 
 subscriptions model =
     Sub.batch
-        [ loadToken LoadToken
-        , Sub.map CreateQuestMsg (uploadQuestImageFinished UploadQuestImageFinished)
+        [ Sub.map CreateQuestMsg (uploadQuestImageFinished UploadQuestImageFinished)
         ]
 
 
