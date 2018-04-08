@@ -63,6 +63,7 @@ uploadRouter.post('/', (req, res) => co(function * () {
 
   res.json({success: true, file: '/uploads/' + userId + '/' + fileName})
 }).catch(err => {
+  global.console.error(err)
   global.logger.error(err.message, 'upload error')
 
   res.status(400).json({

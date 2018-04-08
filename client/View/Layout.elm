@@ -4,7 +4,6 @@ import Css exposing (..)
 import Css.Colors
 import Http
 import Html
-import Html.Events exposing (onWithOptions)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
@@ -16,11 +15,11 @@ import Component.TextField exposing (textField)
 navs : LayoutModel -> Taco -> List (Html LayoutMsg)
 navs model taco =
     [ li []
-        [ a [ href "#quests" ] [ text "Quests" ]
+        [ a [ href "/quests", attribute "data-link" "/quests" ] [ text "Quests" ]
         ]
     , li []
         [ if taco.userId /= Nothing then
-            a [ href "profile" ] [ text "My Adventurer" ]
+            a [ href "/profile", attribute "data-link" "/profile" ] [ text "My Adventurer" ]
           else
             let
                 ( route, location ) =

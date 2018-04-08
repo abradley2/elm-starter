@@ -11,6 +11,7 @@ type alias Flags =
 type TacoMsg
     = TacoNoOp
       -- Routes
+    | NotFoundRoute
     | QuestsRoute
     | SideQuestsRoute String
     | MyAdventurerRoute

@@ -2,8 +2,8 @@ const axios = require('axios')
 const components = require('./components')
 
 const apiEndpoint = process.env.NODE_ENV === 'production' ?
-  '/' :
-  'http://localhost:5000/'
+  '/api/' :
+  'http://localhost:5000/api/'
 
 const app = window.Elm.Main.embed(
   document.getElementById('app'),
@@ -23,6 +23,17 @@ document.addEventListener('animationstart', e => {
     }
   }
 }, false)
+
+document.addEventListener('click', e => {
+  const dataLink =
+    e.target.getAttribute('data-link') ||
+    (e.target.parentNode && e.target.parentNode.getAttribute('data-link'))
+
+  if (dataLink) {
+    e.preventDefault()
+    app.ports.navigate.send(dataLink)
+  }
+})
 
 app.ports.uploadQuestImage.subscribe(inputId => {
   const fileInput = document.getElementById(inputId)

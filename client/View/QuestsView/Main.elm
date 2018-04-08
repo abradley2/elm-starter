@@ -35,7 +35,7 @@ questsView taco model =
                                 [ (questAction
                                     { icon = "list"
                                     , text = "Details"
-                                    , href = "#details/" ++ quest.userId ++ ":" ++ quest.id
+                                    , href = "details/" ++ quest.userId ++ ":" ++ quest.id
                                     }
                                   )
                                 ]

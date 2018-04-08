@@ -23,7 +23,8 @@ topCopy model =
             [ (text "it appears you don't have any quests...")
             , br [] []
             , a
-                [ href "#newquest"
+                [ href "/newquest"
+                , attribute "data-link" "/newquest"
                 ]
                 [ text "Let's create one!"
                 ]
@@ -32,7 +33,11 @@ topCopy model =
         p [ class "flow-text" ]
             [ (text "Here are your active quests, adventurer!")
             , br [] []
-            , a [ href "#newquest" ] [ text "Perhaps you'd like to embark upon another?" ]
+            , a
+                [ href "/newquest"
+                , attribute "data-link" "/newquest"
+                ]
+                [ text "Perhaps you'd like to embark upon another?" ]
             ]
 
 
@@ -56,7 +61,7 @@ myAdventurerView taco model =
                                 [ (questAction
                                     { icon = "list"
                                     , text = "Details"
-                                    , href = "#details/" ++ quest.userId ++ ":" ++ quest.id
+                                    , href = "details/" ++ quest.userId ++ ":" ++ quest.id
                                     }
                                   )
                                 ]

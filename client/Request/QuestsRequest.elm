@@ -73,7 +73,7 @@ getQuests apiEndpoint =
         , body = Http.emptyBody
         , expect = Http.expectJson decodeQuestsList
         , timeout = Nothing
-        , withCredentials = False
+        , withCredentials = True
         }
 
 
@@ -87,7 +87,7 @@ getSideQuests apiEndpoint userId questId =
         , body = Http.emptyBody
         , expect = Http.expectJson decodeGetSideQuestsResponse
         , timeout = Nothing
-        , withCredentials = False
+        , withCredentials = True
         }
 
 
@@ -101,7 +101,7 @@ getQuestsByUser apiEndpoint userId =
         , body = Http.emptyBody
         , expect = Http.expectJson decodeQuestsList
         , timeout = Nothing
-        , withCredentials = False
+        , withCredentials = True
         }
 
 
@@ -115,7 +115,7 @@ getQuestDetails apiEndpoint userId questId =
         , body = Http.emptyBody
         , expect = Http.expectJson decodeQuestDetails
         , timeout = Nothing
-        , withCredentials = False
+        , withCredentials = True
         }
 
 
@@ -143,7 +143,7 @@ decideSideQuest params =
                 )
         , expect = Http.expectJson decodeQuestDetails
         , timeout = Nothing
-        , withCredentials = False
+        , withCredentials = True
         }
 
 
@@ -157,5 +157,5 @@ suggestSideQuest apiEndpoint quest sideQuest =
         , body = Http.jsonBody (encodeSideQuest sideQuest)
         , expect = Http.expectJson (Json.Decode.field "success" bool)
         , timeout = Nothing
-        , withCredentials = False
+        , withCredentials = True
         }

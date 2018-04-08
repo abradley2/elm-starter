@@ -19,6 +19,7 @@ questAction : Params b -> Html a
 questAction params =
     a
         [ href params.href
+        , attribute "data-link" params.href
         , css
             [ paddingTop (px 8)
             , cursor Css.pointer
@@ -36,6 +37,7 @@ questAction params =
                 , fontSize (px 16)
                 , minWidth (px 125)
                 ]
+            , attribute "data-link" params.href
             ]
             [ text params.text ]
         , span
@@ -49,9 +51,11 @@ questAction params =
                 , alignItems center
                 , justifyContent center
                 ]
+            , attribute "data-link" params.href
             ]
             [ i
                 [ class ("fa fa-lg fa-" ++ params.icon)
+                , attribute "data-link" params.href
                 , css
                     [ color Theme.white
                     , fontSize (px 16)

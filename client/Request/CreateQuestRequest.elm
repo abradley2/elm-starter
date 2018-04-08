@@ -34,5 +34,5 @@ createQuestRequest apiEndpoint quest =
         , body = Http.jsonBody <| (encodeQuest quest)
         , expect = Http.expectJson decodeQuest
         , timeout = Nothing
-        , withCredentials = False
+        , withCredentials = True
         }

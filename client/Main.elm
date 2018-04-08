@@ -63,6 +63,7 @@ type Msg
     = Init
       -- session messages
     | LoadSessionResult (Result Http.Error SessionInfo)
+    | Navigate String
     | OnLocationChange Location
       -- page messages
     | QuestsMsg Update.QuestsUpdate.QuestsMsg
@@ -110,6 +111,9 @@ tacoUpdate msg taco =
                     )
                 )
 
+        Navigate newUrl ->
+            ( taco, TacoNoOp, Navigation.newUrl newUrl )
+
         OnLocationChange location ->
             let
                 ( route, _ ) =
@@ -127,7 +131,7 @@ tacoUpdate msg taco =
                 ( route, location ) =
                     taco.routeData
               in
-                (Navigation.modifyUrl location.hash)
+                (Navigation.modifyUrl location.pathname)
             )
 
         LoadSessionResult (Result.Err _) ->
@@ -140,7 +144,7 @@ tacoUpdate msg taco =
                     , userId = Nothing
                   }
                 , TacoNoOp
-                , (Navigation.modifyUrl location.hash)
+                , (Navigation.modifyUrl location.pathname)
                 )
 
         _ ->
@@ -254,6 +258,7 @@ view model =
 subscriptions model =
     Sub.batch
         [ Sub.map CreateQuestMsg (uploadQuestImageFinished UploadQuestImageFinished)
+        , navigate Navigate
         ]
 
 
