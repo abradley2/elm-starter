@@ -1,5 +1,4 @@
 const axios = require('axios')
-const components = require('./components')
 
 const apiEndpoint = process.env.NODE_ENV === 'production' ?
   '/api/' :
@@ -14,12 +13,21 @@ const app = window.Elm.Main.embed(
 )
 
 document.addEventListener('animationstart', e => {
+  const components = {
+    textField: function () {
+      window.M.updateTextFields()
+    },
+    sidenav: function (elem) {
+      return new window.M.Sidenav(elem, {})
+    }
+  }
+
   if (e.animationName === 'nodeInserted') {
     const target = e.target
     const componentType = target.getAttribute('data-js-component')
 
     if (componentType) {
-      components.mount(target, componentType, app)
+      components[componentType](target)
     }
   }
 }, false)
@@ -49,7 +57,8 @@ app.ports.uploadQuestImage.subscribe(inputId => {
   axios({
     method: 'POST',
     url: apiEndpoint + 'upload',
-    data
+    data,
+    withCredentials: true
   })
     .then(res => {
       app.ports.uploadQuestImageFinished.send([true, res.data.file])

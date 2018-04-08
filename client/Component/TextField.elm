@@ -9,7 +9,7 @@ import Html.Styled.Events exposing (..)
 textField params =
     div
         [ class ("input-field data-elm-lifecycle " ++ (Maybe.withDefault "" params.class))
-        , id ("textfield-component-" ++ params.id)
+        , id (params.id)
         , attribute "data-js-component" "textField"
         ]
         [ input

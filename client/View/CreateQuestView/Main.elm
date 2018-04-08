@@ -63,7 +63,7 @@ createQuestView taco createQuest =
                                         { disabled = createQuest.questImageUploadPending
                                         , label = "Upload"
                                         , icon = Just "file_upload"
-                                        , onClick = ConfirmFileUpload (Debug.log "fileinputid" fileInputId)
+                                        , onClick = ConfirmFileUpload fileInputId
                                         }
 
                                 Nothing ->

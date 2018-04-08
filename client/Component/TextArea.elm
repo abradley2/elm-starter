@@ -8,8 +8,8 @@ import Html.Styled.Events exposing (..)
 
 textArea params =
     div
-        [ class ("input-field data-elm-lifecycle " ++ (Maybe.withDefault "" params.class))
-        , id ("textarea-component-" ++ params.id)
+        [ class ("input-field " ++ (Maybe.withDefault "" params.class))
+        , id (params.id)
         , attribute "data-js-component" "textField"
         ]
         [ textarea

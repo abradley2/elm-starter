@@ -33,7 +33,7 @@ api.use('/api/sidequests', require('./routes/sidequests'))
 api.use('/api/upload', require('./routes/upload'))
 
 api.get('*', function (request, response) {
-  response.sendfile(path.join(__dirname, '/public/index.html'))
+  response.sendfile(path.join(__dirname, '../public/index.html'))
 })
 
 module.exports = api
