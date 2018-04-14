@@ -147,7 +147,7 @@ decideSideQuest params =
         }
 
 
-suggestSideQuest : String -> RecentPostedQuest -> SideQuest -> Http.Request Bool
+suggestSideQuest : String -> RecentPostedQuest -> SideQuest -> Http.Request (List SideQuest)
 suggestSideQuest apiEndpoint quest sideQuest =
     Http.request
         { method = "POST"
@@ -155,7 +155,7 @@ suggestSideQuest apiEndpoint quest sideQuest =
             []
         , url = (apiEndpoint ++ "sidequests/" ++ quest.userId ++ "/" ++ quest.id)
         , body = Http.jsonBody (encodeSideQuest sideQuest)
-        , expect = Http.expectJson (Json.Decode.field "success" bool)
+        , expect = Http.expectJson (field "sideQuests" (Json.Decode.list decodeSideQuest))
         , timeout = Nothing
         , withCredentials = True
         }

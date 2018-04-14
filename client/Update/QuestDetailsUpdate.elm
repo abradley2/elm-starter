@@ -29,7 +29,7 @@ type QuestDetailsMsg
     | ShowSideQuestForm
     | HideSideQuestForm
     | SubmitSideQuestForm
-    | SuggestSideQuestResult (Result Http.Error Bool)
+    | SuggestSideQuestResult (Result Http.Error (List SideQuest))
     | EditSideQuestName String
     | EditSideQuestDescription String
 
@@ -61,6 +61,20 @@ questDetailsInitialModel =
     , suggestingSideQuest = False
     , suggestSideQuestSuccess = Nothing
     }
+
+
+isOwnQuest : Taco -> QuestDetailsModel -> Bool
+isOwnQuest taco model =
+    let
+        ( questUserId, userId ) =
+            Maybe.withDefault ( "foo", "bar" )
+                (Maybe.map2
+                    (\quest userId -> ( quest.userId, userId ))
+                    model.quest
+                    taco.userId
+                )
+    in
+        questUserId == userId
 
 
 decideOnSuggestedSideQuest : Taco -> QuestDetailsModel -> Bool -> Cmd QuestDetailsMsg
@@ -141,6 +155,7 @@ onUpdate msg ( model, taco ) =
         ToggleShowingSuggestedSideQuests isShowing ->
             ( { model
                 | showingSuggestedSideQuests = isShowing
+                , questFormOpen = False
               }
             , Cmd.none
             )
@@ -185,19 +200,27 @@ onUpdate msg ( model, taco ) =
             , Cmd.none
             )
 
-        SuggestSideQuestResult (Result.Ok success) ->
-            ( { model
-                | suggestingSideQuest = False
-                , suggestSideQuestSuccess = Just True
-              }
-            , Cmd.none
-            )
+        SuggestSideQuestResult (Result.Ok sideQuests) ->
+            let
+                updatedModel =
+                    if Debug.log "is own quest " (isOwnQuest taco model) then
+                        { model | sideQuests = Just sideQuests }
+                    else
+                        { model | suggestedSideQuests = Just sideQuests }
+            in
+                ( { updatedModel
+                    | suggestingSideQuest = False
+                    , suggestSideQuestSuccess = Just True
+                  }
+                , Cmd.none
+                )
 
         ShowSideQuestForm ->
             ( { model
                 | questFormOpen = True
                 , sideQuestName = ""
                 , sideQuestDescription = ""
+                , showingSuggestedSideQuests = False
               }
             , Cmd.none
             )

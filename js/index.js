@@ -35,7 +35,7 @@ document.addEventListener('animationstart', e => {
 document.addEventListener('click', e => {
   const dataLink =
     e.target.getAttribute('data-link') ||
-    (e.target.parentNode && e.target.parentNode.getAttribute('data-link'))
+    (e.target.parentNode &&  e.target.parentNode.getAttribute && e.target.parentNode.getAttribute('data-link'))
 
   if (dataLink) {
     e.preventDefault()
