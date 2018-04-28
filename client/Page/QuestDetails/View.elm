@@ -1,21 +1,22 @@
-module View.QuestDetailsView.Main exposing (questDetailsView)
+module Page.QuestDetails.View exposing (render)
 
-import Array
+import Page.QuestDetails.Update exposing (..)
 import Theme
+import Http
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
-import Update.QuestDetailsUpdate exposing (QuestDetailsModel, QuestDetailsMsg, QuestDetailsMsg(..))
 import Component.Stepper exposing (stepper)
-import View.QuestDetailsView.SuggestedQuestsList exposing (suggestedQuestsList)
-import View.QuestDetailsView.SideQuestDetails exposing (sideQuestDetails)
-import View.QuestDetailsView.SideQuestForm exposing (sideQuestForm)
-import Types exposing (RecentPostedQuest, SideQuest, Taco)
+import Page.QuestDetails.Update exposing (..)
+import Page.QuestDetails.SuggestedQuestsList exposing (suggestedQuestsList)
+import Page.QuestDetails.SideQuestDetails exposing (sideQuestDetails)
+import Page.QuestDetails.SideQuestForm exposing (sideQuestForm)
+import Types exposing (TacoMsg, TacoMsg(..), RecentPostedQuest, SideQuest, Taco, QuestDetailsResponse)
 
 
-view : RecentPostedQuest -> List SideQuest -> List SideQuest -> QuestDetailsModel -> Html QuestDetailsMsg
-view quest sideQuests suggestedSideQuests model =
+loadedView : RecentPostedQuest -> List SideQuest -> List SideQuest -> Model -> Html Msg
+loadedView quest sideQuests suggestedSideQuests model =
     div [ class "container" ]
         [ div []
             [ h4 []
@@ -89,15 +90,15 @@ view quest sideQuests suggestedSideQuests model =
         ]
 
 
-questDetailsView : Taco -> QuestDetailsModel -> Html QuestDetailsMsg
-questDetailsView taco questDetails =
+render : Taco -> Model -> Html Msg
+render taco model =
     let
         viewReady =
             Maybe.map3
-                (\quest sideQuests suggestedSideQuests -> view quest sideQuests suggestedSideQuests questDetails)
-                questDetails.quest
-                questDetails.sideQuests
-                questDetails.suggestedSideQuests
+                (\quest sideQuests suggestedSideQuests -> loadedView quest sideQuests suggestedSideQuests model)
+                model.quest
+                model.sideQuests
+                model.suggestedSideQuests
     in
         case viewReady of
             Just view ->

@@ -62,7 +62,6 @@ sessionRouter.get('/load', (req, res) => co(function * () {
     userId
   })
 }).catch(err => {
-  global.console.error(err.response.data)
   global.logger.error(err)
   return res.status(400).json({
     success: false

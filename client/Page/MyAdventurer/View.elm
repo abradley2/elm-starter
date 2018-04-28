@@ -1,22 +1,22 @@
-module View.MyAdventurerView.Main exposing (myAdventurerView)
+module Page.MyAdventurer.View exposing (render)
 
+import Page.MyAdventurer.Update exposing (..)
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
-import Types exposing (Taco)
-import Update.MyAdventurerUpdate exposing (MyAdventurerModel, MyAdventurerMsg, MyAdventurerMsg(..))
+import Types exposing (Taco, RecentPostedQuest, TacoMsg(..))
 import Component.TextField exposing (textField)
 import Component.QuestCard exposing (questCardWithActionSection)
 import Component.QuestAction exposing (questAction)
 
 
-noQuests : MyAdventurerModel -> Bool
+noQuests : Model -> Bool
 noQuests model =
     List.length model.quests == 0
 
 
-topCopy : MyAdventurerModel -> Html MyAdventurerMsg
+topCopy : Model -> Html Msg
 topCopy model =
     if noQuests model then
         p [ class "flow-text" ]
@@ -41,8 +41,8 @@ topCopy model =
             ]
 
 
-myAdventurerView : Taco -> MyAdventurerModel -> Html MyAdventurerMsg
-myAdventurerView taco model =
+render : Taco -> Model -> Html Msg
+render taco model =
     div [ class "container" ]
         [ topCopy model
         , div

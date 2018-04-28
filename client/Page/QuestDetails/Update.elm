@@ -1,21 +1,12 @@
-module Update.QuestDetailsUpdate
-    exposing
-        ( onUpdate
-        , onTacoMsg
-        , questDetailsInitialModel
-        , QuestDetailsModel
-        , QuestDetailsMsg
-        , QuestDetailsMsg(..)
-        )
+module Page.QuestDetails.Update exposing (..)
 
-import Types exposing (Taco, TacoMsg, TacoMsg(..), SideQuest, RecentPostedQuest, QuestDetailsResponse)
-import Request.QuestsRequest exposing (getQuestDetails, decideSideQuest, suggestSideQuest)
-import String
 import Array
 import Http
+import Request.QuestsRequest exposing (getQuestDetails, decideSideQuest, suggestSideQuest)
+import Types exposing (TacoMsg, TacoMsg(..), RecentPostedQuest, SideQuest, Taco, QuestDetailsResponse)
 
 
-type QuestDetailsMsg
+type Msg
     = NoOp
     | GetQuestDetailsResult (Result Http.Error QuestDetailsResponse)
     | DecideSideQuestResult (Result Http.Error QuestDetailsResponse)
@@ -34,7 +25,7 @@ type QuestDetailsMsg
     | EditSideQuestDescription String
 
 
-type alias QuestDetailsModel =
+type alias Model =
     { quest : Maybe RecentPostedQuest
     , sideQuests : Maybe (List SideQuest)
     , suggestedSideQuests : Maybe (List SideQuest)
@@ -48,8 +39,8 @@ type alias QuestDetailsModel =
     }
 
 
-questDetailsInitialModel : QuestDetailsModel
-questDetailsInitialModel =
+initialModel : Model
+initialModel =
     { quest = Nothing
     , sideQuests = Nothing
     , suggestedSideQuests = Nothing
@@ -63,7 +54,7 @@ questDetailsInitialModel =
     }
 
 
-isOwnQuest : Taco -> QuestDetailsModel -> Bool
+isOwnQuest : Taco -> Model -> Bool
 isOwnQuest taco model =
     let
         ( questUserId, userId ) =
@@ -77,7 +68,7 @@ isOwnQuest taco model =
         questUserId == userId
 
 
-decideOnSuggestedSideQuest : Taco -> QuestDetailsModel -> Bool -> Cmd QuestDetailsMsg
+decideOnSuggestedSideQuest : Taco -> Model -> Bool -> Cmd Msg
 decideOnSuggestedSideQuest taco model isAccepted =
     let
         request =
@@ -98,7 +89,7 @@ decideOnSuggestedSideQuest taco model isAccepted =
         Maybe.withDefault Cmd.none request
 
 
-onTacoMsg : TacoMsg -> ( QuestDetailsModel, Taco ) -> ( QuestDetailsModel, Cmd QuestDetailsMsg )
+onTacoMsg : TacoMsg -> ( Model, Taco ) -> ( Model, Cmd Msg )
 onTacoMsg tacoMsg ( model, taco ) =
     case tacoMsg of
         QuestDetailsRoute params ->
@@ -119,14 +110,14 @@ onTacoMsg tacoMsg ( model, taco ) =
                         (Array.get 0 paramArray)
                         (Array.get 1 paramArray)
             in
-                ( questDetailsInitialModel, Maybe.withDefault Cmd.none request )
+                ( initialModel, Maybe.withDefault Cmd.none request )
 
         _ ->
             ( model, Cmd.none )
 
 
-onUpdate : QuestDetailsMsg -> ( QuestDetailsModel, Taco ) -> ( QuestDetailsModel, Cmd QuestDetailsMsg )
-onUpdate msg ( model, taco ) =
+onMsg : Msg -> ( Model, Taco ) -> ( Model, Cmd Msg )
+onMsg msg ( model, taco ) =
     case msg of
         DecideSideQuestResult (Result.Ok response) ->
             ( { model

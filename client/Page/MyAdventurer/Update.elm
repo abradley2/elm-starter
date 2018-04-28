@@ -1,34 +1,26 @@
-module Update.MyAdventurerUpdate
-    exposing
-        ( onUpdate
-        , onTacoMsg
-        , myAdventurerInitialModel
-        , MyAdventurerModel
-        , MyAdventurerMsg
-        , MyAdventurerMsg(..)
-        )
+module Page.MyAdventurer.Update exposing (..)
 
+import Http
 import Request.QuestsRequest exposing (getQuestsByUser)
 import Types exposing (Taco, RecentPostedQuest, TacoMsg(..))
-import Http
 
 
-type MyAdventurerMsg
+type Msg
     = NoOp
     | GetQuestsByUserResult (Result Http.Error (List RecentPostedQuest))
 
 
-type alias MyAdventurerModel =
+type alias Model =
     { quests : List RecentPostedQuest
     }
 
 
-myAdventurerInitialModel =
+initialModel =
     { quests = []
     }
 
 
-onTacoMsg : TacoMsg -> ( MyAdventurerModel, Taco ) -> ( MyAdventurerModel, Cmd MyAdventurerMsg )
+onTacoMsg : TacoMsg -> ( Model, Taco ) -> ( Model, Cmd Msg )
 onTacoMsg tacoMsg ( model, taco ) =
     case tacoMsg of
         MyAdventurerRoute ->
@@ -51,8 +43,8 @@ onTacoMsg tacoMsg ( model, taco ) =
             ( model, Cmd.none )
 
 
-onUpdate : MyAdventurerMsg -> ( MyAdventurerModel, Taco ) -> ( MyAdventurerModel, Cmd MyAdventurerMsg )
-onUpdate msg ( model, taco ) =
+onMsg : Msg -> ( Model, Taco ) -> ( Model, Cmd Msg )
+onMsg msg ( model, taco ) =
     case msg of
         GetQuestsByUserResult (Result.Ok quests) ->
             ( { model | quests = quests }, Cmd.none )

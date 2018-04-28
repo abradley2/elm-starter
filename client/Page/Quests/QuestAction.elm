@@ -1,4 +1,4 @@
-module View.QuestsView.QuestAction exposing (..)
+module Page.Quests.QuestAction exposing (..)
 
 import Css exposing (..)
 import Html.Styled exposing (..)

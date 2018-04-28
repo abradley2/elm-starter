@@ -8,39 +8,34 @@ import Navigation exposing (Location)
 import UrlParser exposing (..)
 import Ports exposing (..)
 import Util exposing (getReducerFactory, onTacoUpdate)
-
-
--- import requests
-
 import Request.SessionRequest exposing (loadSession)
+import Types exposing (Taco, TacoMsg, Flags, TacoMsg(..), RouteData, SessionInfo)
+
+
+-- import updaters
+
+import Page.CreateQuest.Update as CreateQuestUpdate exposing (Msg(UploadQuestImageFinished))
+import Page.MyAdventurer.Update as MyAdventurerUpdate
+import Page.QuestDetails.Update as QuestDetailsUpdate
+import Page.Quests.Update as QuestsUpdate
 
 
 -- import views
 
-import View.Layout exposing (layout)
-import View.MyAdventurerView.Main exposing (myAdventurerView)
-import View.QuestsView.Main exposing (questsView)
-import View.CreateQuestView.Main exposing (createQuestView)
-import View.QuestDetailsView.Main exposing (questDetailsView)
-
-
--- import updates
-
-import Update.LayoutUpdate exposing (LayoutModel, layoutModel)
-import Update.MyAdventurerUpdate exposing (MyAdventurerModel, myAdventurerInitialModel)
-import Update.QuestsUpdate exposing (QuestsModel, questsModel)
-import Update.QuestDetailsUpdate exposing (QuestDetailsModel, questDetailsInitialModel)
-import Update.CreateQuestUpdate exposing (CreateQuestMsg(UploadQuestImageFinished), CreateQuestModel, createQuestInitialModel)
-import Types exposing (Taco, TacoMsg, Flags, TacoMsg(..), RouteData, SessionInfo)
+import Page.Layout as Layout
+import Page.MyAdventurer.View as MyAdventurerView
+import Page.Quests.View as QuestsView
+import Page.CreateQuest.View as CreateQuestView
+import Page.QuestDetails.View as QuestDetailsView
 
 
 type alias Model =
     { taco : Taco
-    , quests : QuestsModel
-    , myAdventurer : MyAdventurerModel
-    , layout : LayoutModel
-    , createQuest : CreateQuestModel
-    , questDetails : QuestDetailsModel
+    , quests : QuestsUpdate.Model
+    , myAdventurer : MyAdventurerUpdate.Model
+    , layout : Layout.Model
+    , createQuest : CreateQuestUpdate.Model
+    , questDetails : QuestDetailsUpdate.Model
     }
 
 
@@ -51,11 +46,11 @@ model flags routeData =
         , userId = Nothing
         , routeData = routeData
         }
-    , quests = questsModel
-    , myAdventurer = myAdventurerInitialModel
-    , layout = layoutModel
-    , createQuest = createQuestInitialModel
-    , questDetails = questDetailsInitialModel
+    , quests = QuestsUpdate.initialModel
+    , myAdventurer = MyAdventurerUpdate.initialModel
+    , layout = Layout.initialModel
+    , createQuest = CreateQuestUpdate.initialModel
+    , questDetails = QuestDetailsUpdate.initialModel
     }
 
 
@@ -66,11 +61,11 @@ type Msg
     | Navigate String
     | OnLocationChange Location
       -- page messages
-    | QuestsMsg Update.QuestsUpdate.QuestsMsg
-    | LayoutMsg Update.LayoutUpdate.LayoutMsg
-    | MyAdventurerMsg Update.MyAdventurerUpdate.MyAdventurerMsg
-    | CreateQuestMsg Update.CreateQuestUpdate.CreateQuestMsg
-    | QuestDetailsMsg Update.QuestDetailsUpdate.QuestDetailsMsg
+    | QuestsMsg QuestsUpdate.Msg
+    | LayoutMsg Layout.Msg
+    | MyAdventurerMsg MyAdventurerUpdate.Msg
+    | CreateQuestMsg CreateQuestUpdate.Msg
+    | QuestDetailsMsg QuestDetailsUpdate.Msg
 
 
 matchers : Parser (TacoMsg -> a) a
@@ -167,22 +162,22 @@ update message prevModel =
                     (CreateQuestMsg)
                     (\model -> model.createQuest)
                     (\model createQuest -> { model | createQuest = createQuest })
-                    (Update.CreateQuestUpdate.onTacoMsg tacoMsg)
+                    (CreateQuestUpdate.onTacoMsg tacoMsg)
                 |> tacoUpdater
                     (QuestsMsg)
                     (\model -> model.quests)
                     (\model quests -> { model | quests = quests })
-                    (Update.QuestsUpdate.onTacoMsg tacoMsg)
+                    (QuestsUpdate.onTacoMsg tacoMsg)
                 |> tacoUpdater
                     (MyAdventurerMsg)
                     (\model -> model.myAdventurer)
                     (\model myAdventurer -> { model | myAdventurer = myAdventurer })
-                    (Update.MyAdventurerUpdate.onTacoMsg tacoMsg)
+                    (MyAdventurerUpdate.onTacoMsg tacoMsg)
                 |> tacoUpdater
                     (QuestDetailsMsg)
                     (\model -> model.questDetails)
                     (\model questDetails -> { model | questDetails = questDetails })
-                    (Update.QuestDetailsUpdate.onTacoMsg tacoMsg)
+                    (QuestDetailsUpdate.onTacoMsg tacoMsg)
 
         updater =
             getReducerFactory model taco tacoCmd commands
@@ -193,35 +188,35 @@ update message prevModel =
                     (CreateQuestMsg)
                     model.createQuest
                     (\model createQuest -> { model | createQuest = createQuest })
-                    (Update.CreateQuestUpdate.onUpdate msg)
+                    (CreateQuestUpdate.onMsg msg)
 
             QuestsMsg msg ->
                 updater
                     (QuestsMsg)
                     model.quests
                     (\model quests -> { model | quests = quests })
-                    (Update.QuestsUpdate.onUpdate msg)
+                    (QuestsUpdate.onMsg msg)
 
             LayoutMsg msg ->
                 updater
                     (LayoutMsg)
                     model.layout
                     (\model layout -> { model | layout = layout })
-                    (Update.LayoutUpdate.onUpdate msg)
+                    (Layout.onMsg msg)
 
             MyAdventurerMsg msg ->
                 updater
                     (MyAdventurerMsg)
                     model.myAdventurer
                     (\model myAdventurer -> { model | myAdventurer = myAdventurer })
-                    (Update.MyAdventurerUpdate.onUpdate msg)
+                    (MyAdventurerUpdate.onMsg msg)
 
             QuestDetailsMsg msg ->
                 updater
                     (QuestDetailsMsg)
                     model.questDetails
                     (\model questDetails -> { model | questDetails = questDetails })
-                    (Update.QuestDetailsUpdate.onUpdate msg)
+                    (QuestDetailsUpdate.onMsg msg)
 
             _ ->
                 ( model, Cmd.batch [ tacoCmd, commands ] )
@@ -233,22 +228,22 @@ view model =
         ( route, location ) =
             model.taco.routeData
     in
-        layout
+        Layout.render
             (LayoutMsg)
             model.layout
             model.taco
             (case route of
                 QuestsRoute ->
-                    Html.Styled.map QuestsMsg (questsView model.taco model.quests)
+                    Html.Styled.map QuestsMsg (QuestsView.render model.taco model.quests)
 
                 QuestDetailsRoute params ->
-                    Html.Styled.map QuestDetailsMsg (questDetailsView model.taco model.questDetails)
+                    Html.Styled.map QuestDetailsMsg (QuestDetailsView.render model.taco model.questDetails)
 
                 MyAdventurerRoute ->
-                    Html.Styled.map MyAdventurerMsg (myAdventurerView model.taco model.myAdventurer)
+                    Html.Styled.map MyAdventurerMsg (MyAdventurerView.render model.taco model.myAdventurer)
 
                 CreateQuestRoute ->
-                    Html.Styled.map CreateQuestMsg (createQuestView model.taco model.createQuest)
+                    Html.Styled.map CreateQuestMsg (CreateQuestView.render model.taco model.createQuest)
 
                 _ ->
                     div [] [ h4 [] [ text "NOT FOUND" ] ]

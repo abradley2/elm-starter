@@ -1,4 +1,4 @@
-module View.Layout exposing (layout)
+module Page.Layout exposing (..)
 
 import Css exposing (..)
 import Css.Colors
@@ -8,11 +8,40 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
 import Types exposing (Taco)
-import Update.LayoutUpdate exposing (LayoutMsg, LayoutMsg(..), LayoutModel)
 import Component.TextField exposing (textField)
+import Types exposing (Taco, TacoMsg)
 
 
-navs : LayoutModel -> Taco -> List (Html LayoutMsg)
+type Msg
+    = ToggleSidenav
+
+
+type alias Model =
+    { sidenavOpen : Bool
+    }
+
+
+initialModel =
+    { sidenavOpen = False
+    }
+
+
+onTacoMsg tacoMsg ( model, taco ) =
+    ( model, Cmd.none )
+
+
+onMsg : Msg -> ( Model, Taco ) -> ( Model, Cmd Msg )
+onMsg msg ( model, taco ) =
+    case msg of
+        ToggleSidenav ->
+            ( { model
+                | sidenavOpen = not model.sidenavOpen
+              }
+            , Cmd.none
+            )
+
+
+navs : Model -> Taco -> List (Html Msg)
 navs model taco =
     [ li []
         [ a [ href "/quests", attribute "data-link" "/quests" ] [ text "Quests" ]
@@ -41,7 +70,7 @@ navs model taco =
     ]
 
 
-navbar : LayoutModel -> Taco -> Html LayoutMsg
+navbar : Model -> Taco -> Html Msg
 navbar model taco =
     nav []
         [ div
@@ -57,7 +86,7 @@ navbar model taco =
         ]
 
 
-toggleSidenavButton : Html LayoutMsg
+toggleSidenavButton : Html Msg
 toggleSidenavButton =
     a
         [ href "javascript:void(0);"
@@ -78,7 +107,7 @@ sideNavtransform isOpen =
         "translateX(-105%)"
 
 
-layout messageMap model taco view =
+render messageMap model taco view =
     div
         []
         [ Html.Styled.map messageMap (navbar model taco)

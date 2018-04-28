@@ -1,10 +1,10 @@
-module View.QuestDetailsView.SideQuestForm exposing (sideQuestForm)
+module Page.QuestDetails.SideQuestForm exposing (sideQuestForm)
 
+import Page.QuestDetails.Update exposing (Msg, Msg(..))
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
-import Update.QuestDetailsUpdate exposing (QuestDetailsMsg, QuestDetailsMsg(..))
 import Component.TextField exposing (textField)
 import Component.TextArea exposing (textArea)
 import Component.RaisedButton exposing (raisedButton)
@@ -20,7 +20,7 @@ type alias FormParams =
     }
 
 
-sideQuestForm : FormParams -> Html QuestDetailsMsg
+sideQuestForm : FormParams -> Html Msg
 sideQuestForm formParams =
     div
         [ css

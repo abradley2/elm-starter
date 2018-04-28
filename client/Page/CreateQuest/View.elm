@@ -1,13 +1,12 @@
-module View.CreateQuestView.Main exposing (createQuestView)
+module Page.CreateQuest.View exposing (render)
 
-import Array
+import Page.CreateQuest.Update exposing (..)
 import Theme
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (..)
-import Types exposing (Taco)
-import Update.CreateQuestUpdate exposing (CreateQuestModel, CreateQuestMsg, CreateQuestMsg(..))
+import Types exposing (Taco, Quest)
 import Component.TextField exposing (textField)
 import Component.TextArea exposing (textArea)
 import Component.Modal exposing (modal)
@@ -22,10 +21,10 @@ THY QUEST (if you choose to accept it) IS
 """
 
 
-validQuest : CreateQuestModel -> Bool
-validQuest createQuest =
+validQuest : Model -> Bool
+validQuest model =
     List.all (\val -> val == True)
-        [ (createQuest.questName /= "")
+        [ (model.questName /= "")
         ]
 
 
@@ -33,13 +32,13 @@ fileInputId =
     "create-quest-image-upload"
 
 
-createQuestView : Taco -> CreateQuestModel -> Html CreateQuestMsg
-createQuestView taco createQuest =
+render : Taco -> Model -> Html Msg
+render taco model =
     div []
         [ div []
             [ modal
-                { open = createQuest.imageUploadModalOpen
-                , id = Maybe.withDefault "" createQuest.imageUploadModalFor
+                { open = model.imageUploadModalOpen
+                , id = Maybe.withDefault "" model.imageUploadModalFor
                 , content =
                     div []
                         [ p [ class "float-text" ] [ text "Upload a picture that describes this adventure" ]
@@ -48,7 +47,7 @@ createQuestView taco createQuest =
                                 { id = fileInputId
                                 , label = "Image (max size 2mb)"
                                 , onChange = OnFileChosen
-                                , value = Maybe.withDefault "" createQuest.imageUploadPath
+                                , value = Maybe.withDefault "" model.imageUploadPath
                                 }
                               )
                             ]
@@ -57,10 +56,10 @@ createQuestView taco createQuest =
                                 { label = "Cancel"
                                 , onClick = HideFileUploadModal
                                 }
-                            , case createQuest.imageUploadPath of
+                            , case model.imageUploadPath of
                                 Just validpath ->
                                     raisedButton
-                                        { disabled = createQuest.questImageUploadPending
+                                        { disabled = model.questImageUploadPending
                                         , label = "Upload"
                                         , icon = Just "file_upload"
                                         , onClick = ConfirmFileUpload fileInputId
@@ -71,7 +70,7 @@ createQuestView taco createQuest =
                             ]
                         , div [ css [ color Theme.errorTextColor ] ]
                             [ text
-                                (if createQuest.questImageUploadError then
+                                (if model.questImageUploadError then
                                     "There was an error uploading your image. Please ensure images are less than 2mb"
                                  else
                                     ""
@@ -98,7 +97,7 @@ createQuestView taco createQuest =
                         ]
                         [ div [ class "card" ]
                             [ div [ class "card-image" ]
-                                [ img [ src createQuest.questImageUrl ] []
+                                [ img [ src model.questImageUrl ] []
                                 , div
                                     [ class "card-title"
                                     , style [ ( "padding", "8px 8px 24px 8px" ) ]
@@ -109,7 +108,7 @@ createQuestView taco createQuest =
                                         , Css.bottom (px 0)
                                         ]
                                     ]
-                                    [ h5 [ css [ color Theme.baseTextColor, margin (px 0) ] ] [ text createQuest.questName ]
+                                    [ h5 [ css [ color Theme.baseTextColor, margin (px 0) ] ] [ text model.questName ]
                                     ]
                                 , a
                                     [ class "btn-floating halfway-fab waves-effect waves-light red"
@@ -121,21 +120,21 @@ createQuestView taco createQuest =
                             , div [ class "card-content" ]
                                 [ textField
                                     { id = "name-textfield-createquest"
-                                    , value = createQuest.questName
+                                    , value = model.questName
                                     , onInput = EditQuestName
                                     , label = "Quest Name"
                                     , class = Nothing
                                     }
                                 , textArea
                                     { id = "description-textarea-createquest"
-                                    , value = createQuest.questDescription
+                                    , value = model.questDescription
                                     , label = "Quest Description"
                                     , class = Nothing
                                     , onInput = EditQuestDescription
                                     }
                                 , raisedButton
                                     { label =
-                                        if validQuest createQuest then
+                                        if validQuest model then
                                             "embark"
                                         else
                                             "fill in details"
@@ -143,7 +142,7 @@ createQuestView taco createQuest =
                                         if
                                             List.all
                                                 (\v -> v == True)
-                                                [ validQuest createQuest, createQuest.submitPending == False ]
+                                                [ validQuest model, model.submitPending == False ]
                                         then
                                             SubmitCreateQuest
                                         else
@@ -152,14 +151,14 @@ createQuestView taco createQuest =
                                     , disabled =
                                         List.any
                                             (\v -> v == True)
-                                            [ validQuest createQuest == False, createQuest.submitPending ]
+                                            [ validQuest model == False, model.submitPending ]
                                     }
                                 , div [ css [ paddingTop (px 8) ] ]
                                     [ span
                                         [ css [ color Theme.errorTextColor ]
                                         ]
                                         [ text
-                                            (if createQuest.submitError then
+                                            (if model.submitError then
                                                 "Oops! was an error creating this quest"
                                              else
                                                 ""

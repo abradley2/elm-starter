@@ -1,23 +1,14 @@
-module Update.CreateQuestUpdate
-    exposing
-        ( onUpdate
-        , onTacoMsg
-        , createQuestInitialModel
-        , CreateQuestModel
-        , CreateQuestMsg
-        , CreateQuestMsg(..)
-        )
+module Page.CreateQuest.Update exposing (..)
 
-import Navigation
-import Html.Attributes exposing (name)
-import Request.CreateQuestRequest exposing (createQuestRequest)
-import Ports exposing (uploadQuestImage)
-import Types exposing (Quest, Taco, TacoMsg(..))
 import Array
 import Http
+import Navigation
+import Types exposing (Taco, TacoMsg, TacoMsg(..), Quest)
+import Request.CreateQuestRequest exposing (createQuestRequest)
+import Ports exposing (uploadQuestImage)
 
 
-type CreateQuestMsg
+type Msg
     = NoOp
     | EditQuestName String
     | EditQuestDescription String
@@ -30,7 +21,7 @@ type CreateQuestMsg
     | UploadQuestImageFinished ( Bool, String )
 
 
-type alias CreateQuestModel =
+type alias Model =
     { questName : String
     , questDescription : String
     , questImageUrl : String
@@ -44,7 +35,8 @@ type alias CreateQuestModel =
     }
 
 
-createQuestInitialModel =
+initialModel : Model
+initialModel =
     { questName = ""
     , questDescription = ""
     , questImageUrl = "/placeholder.png"
@@ -58,18 +50,18 @@ createQuestInitialModel =
     }
 
 
-onTacoMsg : TacoMsg -> ( CreateQuestModel, Taco ) -> ( CreateQuestModel, Cmd CreateQuestMsg )
+onTacoMsg : TacoMsg -> ( Model, Taco ) -> ( Model, Cmd Msg )
 onTacoMsg tacoMsg ( model, taco ) =
     case tacoMsg of
         CreateQuestRoute ->
-            ( createQuestInitialModel, Cmd.none )
+            ( initialModel, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
 
 
-onUpdate : CreateQuestMsg -> ( CreateQuestModel, Taco ) -> ( CreateQuestModel, Cmd CreateQuestMsg )
-onUpdate msg ( model, taco ) =
+onMsg : Msg -> ( Model, Taco ) -> ( Model, Cmd Msg )
+onMsg msg ( model, taco ) =
     case msg of
         UploadQuestImageFinished ( success, questImageUrl ) ->
             if success then
